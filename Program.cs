@@ -117,16 +117,31 @@ internal static class Program
 
     private static void LaunchGui()
     {
-        try
+        if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
         {
-            var app = new System.Windows.Application();
-            app.Run(new MainWindow());
+            RunWpfApp();
         }
-        catch (Exception ex)
+        else
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n[GUI 启动异常]: {ex.Message}");
-            Console.ResetColor();
+            var thread = new Thread(RunWpfApp);
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+        }
+
+        void RunWpfApp()
+        {
+            try
+            {
+                var app = new System.Windows.Application();
+                app.Run(new MainWindow());
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n[GUI 启动异常]: {ex.Message}");
+                Console.ResetColor();
+            }
         }
     }
 }
