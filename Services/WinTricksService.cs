@@ -5,7 +5,7 @@ namespace AgyToolbox.Services;
 
 public record WifiRecord(string Ssid, string Password);
 public record PortOccupant(int Port, int Pid, string ProcessName, string Protocol);
-public record DnsPingResult(string Provider, string Ip, bool Success, long LatencyMs, string Description);
+public record DnsPingResult(string Provider, string Ip, bool? Success, long LatencyMs, string LatencyDisplay, string Description);
 
 public class WinTricksService
 {
@@ -222,6 +222,23 @@ public class WinTricksService
     }
 
     /// <summary>
+    /// <summary>
+    /// 获取预置的主流国内外公共 DNS 列表（未测速就绪态）
+    /// </summary>
+    public List<DnsPingResult> GetDefaultDnsList()
+    {
+        return new List<DnsPingResult>
+        {
+            new("阿里公共 DNS", "223.5.5.5", null, -1, "待测速 (点击右上角测速)", "国内 Anycast 节点多，解析国内 CDN/网站最快，防运营商篡改"),
+            new("腾讯 DNSPod", "119.29.29.29", null, -1, "待测速 (点击右上角测速)", "腾讯云基础设施支持，国内智能解析调度稳定"),
+            new("114 DNS", "114.114.114.114", null, -1, "待测速 (点击右上角测速)", "老牌经典公共 DNS，国内三大运营商互联互通良好"),
+            new("百度公共 DNS", "180.76.76.76", null, -1, "待测速 (点击右上角测速)", "百度基础设施支撑，纯净无劫持"),
+            new("Cloudflare DNS", "1.1.1.1", null, -1, "待测速 (点击右上角测速)", "全球解析最快隐私 DNS，不存日志，但在国内部分地区延迟较高"),
+            new("Google DNS", "8.8.8.8", null, -1, "待测速 (点击右上角测速)", "全球知名度最高公共 DNS，国际访问基准解析器")
+        };
+    }
+
+    /// <summary>
     /// 测试主流国内外公共 DNS 服务器往返延迟
     /// </summary>
     public async Task<List<DnsPingResult>> TestPublicDnsAsync()
@@ -244,17 +261,19 @@ public class WinTricksService
             try
             {
                 var reply = await ping.SendPingAsync(t.Ip, 1500);
+                bool ok = reply.Status == System.Net.NetworkInformation.IPStatus.Success;
                 results.Add(new DnsPingResult(
                     t.Provider,
                     t.Ip,
-                    reply.Status == System.Net.NetworkInformation.IPStatus.Success,
-                    reply.RoundtripTime,
+                    ok,
+                    ok ? reply.RoundtripTime : 9999,
+                    ok ? $"{reply.RoundtripTime} ms" : "超时/丢包",
                     t.Desc
                 ));
             }
             catch (Exception ex)
             {
-                results.Add(new DnsPingResult(t.Provider, t.Ip, false, 0, ex.Message));
+                results.Add(new DnsPingResult(t.Provider, t.Ip, false, 9999, "不可达", $"{t.Desc} ({ex.Message})"));
             }
         }
 

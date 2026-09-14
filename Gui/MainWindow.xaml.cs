@@ -47,7 +47,8 @@ public partial class MainWindow : Window
         // 默认扫描路径
         TxtScanPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-        // 初始化加载系统信息
+        // 初始化加载系统信息与默认 DNS 列表
+        GridDns.ItemsSource = _winTricksService.GetDefaultDnsList();
         Loaded += async (s, e) => await LoadSysInfoAsync();
     }
 
@@ -305,6 +306,15 @@ public partial class MainWindow : Window
         finally
         {
             if (targetBtn != null) targetBtn.IsEnabled = true;
+        }
+    }
+
+    private void GridDns_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (GridDns.SelectedItem is DnsPingResult item)
+        {
+            Clipboard.SetText(item.Ip);
+            MessageBox.Show($"已复制 DNS IP 地址 [{item.Ip}] ({item.Provider}) 到剪贴板！\n可直接粘贴到网络适配器 IPv4 属性中使用。", "DNS 复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 

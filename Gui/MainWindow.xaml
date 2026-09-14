@@ -558,11 +558,13 @@
 
                                 <DataGrid x:Name="GridDns" AutoGenerateColumns="False" IsReadOnly="True"
                                           Background="White" BorderBrush="#E2E8F0" RowHeight="32" GridLinesVisibility="Horizontal"
-                                          HorizontalGridLinesBrush="#F1F5F9">
+                                          HorizontalGridLinesBrush="#F1F5F9"
+                                          MouseDoubleClick="GridDns_MouseDoubleClick"
+                                          ToolTip="💡 点击任意列标题可升序/降序排序；双击任意行可直接复制该 DNS IP 到剪贴板">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="DNS 提供商" Binding="{Binding Provider}" Width="150"/>
-                                        <DataGridTextColumn Header="主服务器 IP" Binding="{Binding Ip}" Width="140"/>
-                                        <DataGridTextColumn Header="往返延迟 (Ping)" Binding="{Binding LatencyMs, StringFormat='{}{0} ms'}" Width="120"/>
+                                        <DataGridTextColumn Header="DNS 提供商" Binding="{Binding Provider}" Width="140"/>
+                                        <DataGridTextColumn Header="主服务器 IP" Binding="{Binding Ip}" Width="130"/>
+                                        <DataGridTextColumn Header="往返延迟 (Ping)" Binding="{Binding LatencyDisplay}" Width="160"/>
                                         <DataGridTextColumn Header="权威定位与选型建议" Binding="{Binding Description}" Width="*"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
