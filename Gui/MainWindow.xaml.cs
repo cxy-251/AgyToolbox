@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using AgyToolbox.Helpers;
 using AgyToolbox.Services;
 
 namespace AgyToolbox.Gui;
@@ -72,7 +73,13 @@ public partial class MainWindow : Window
 
                 var ips = _webDropService.GetLocalIPv4Addresses();
                 string primaryUrl = ips.Count > 0 ? $"http://{ips[0]}:{_webDropService.CurrentPort}" : $"http://localhost:{_webDropService.CurrentPort}";
-                TxtDropUrl.Text = $"访问地址: {primaryUrl} (手机浏览器直接打开)";
+                TxtDropUrl.Text = $"访问地址: {primaryUrl}";
+                TxtQrTargetUrl.Text = primaryUrl;
+
+                // 生成并在界面展示二维码
+                ImgQrCode.Source = QrCodeHelper.GenerateQrBitmap(primaryUrl, 8);
+                BorderQrCard.Visibility = Visibility.Visible;
+
                 BtnOpenBrowser.IsEnabled = true;
             }
             catch (Exception ex)
@@ -96,6 +103,11 @@ public partial class MainWindow : Window
                 BtnToggleDrop.Content = "启动快传服务";
                 BtnToggleDrop.Background = PrimaryBrush;
                 TxtDropUrl.Text = "服务已停止";
+
+                // 隐藏二维码卡片并清空图片
+                BorderQrCard.Visibility = Visibility.Collapsed;
+                ImgQrCode.Source = null;
+
                 BtnOpenBrowser.IsEnabled = false;
             }
             catch (Exception ex)
@@ -106,6 +118,15 @@ public partial class MainWindow : Window
             {
                 BtnToggleDrop.IsEnabled = true;
             }
+        }
+    }
+
+    private void BtnCopyUrl_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(TxtQrTargetUrl.Text) && TxtQrTargetUrl.Text != "-")
+        {
+            Clipboard.SetText(TxtQrTargetUrl.Text);
+            MessageBox.Show("访问链接已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 

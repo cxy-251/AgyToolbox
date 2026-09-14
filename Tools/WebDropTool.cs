@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using AgyToolbox.Core;
+using AgyToolbox.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,13 +40,28 @@ public class WebDropTool : ITool
 
         var localIps = GetLocalIPv4Addresses();
         Console.WriteLine("\n[✓] 本机局域网访问地址 (请确保手机连接相同 WiFi)：");
+        string primaryUrl = "";
         foreach (var ip in localIps)
         {
+            var url = $"http://{ip}:{port}";
+            if (string.IsNullOrEmpty(primaryUrl)) primaryUrl = url;
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"   👉 http://{ip}:{port}");
+            Console.WriteLine($"   👉 {url}");
             Console.ResetColor();
         }
         Console.WriteLine($"   👉 http://localhost:{port}");
+
+        if (!string.IsNullOrEmpty(primaryUrl))
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\n[📱] 手机扫码直达 (用微信/手机自带扫一扫/相机扫描下方二维码)：");
+            Console.ResetColor();
+            try
+            {
+                Console.WriteLine(QrCodeHelper.GenerateConsoleQr(primaryUrl));
+            }
+            catch { }
+        }
 
         Console.WriteLine($"\n[📁] 文件保存路径: {receivedDir}");
         Console.WriteLine($"[📁] 待分享路径:   {sharedDir} (放入该目录的文件可在网页端下载)");
