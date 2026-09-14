@@ -322,6 +322,62 @@ public class WinTricksService
         }
     }
 
+    /// <summary>
+    /// 异步运行指定的网络诊断命令 (tracert, pathping, route print, arp -a 等) 并将输出行实时推送到回调
+    /// </summary>
+    public async Task RunNetworkDiagnosticAsync(string command, string arguments, Action<string> onLineReceived, CancellationToken ct)
+    {
+        await Task.Run(() =>
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = command,
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    StandardOutputEncoding = System.Text.Encoding.Default,
+                    StandardErrorEncoding = System.Text.Encoding.Default
+                };
+
+                using var proc = new Process { StartInfo = psi };
+                proc.OutputDataReceived += (s, e) =>
+                {
+                    if (e.Data != null) onLineReceived(e.Data);
+                };
+                proc.ErrorDataReceived += (s, e) =>
+                {
+                    if (e.Data != null) onLineReceived($"[ERR] {e.Data}");
+                };
+
+                proc.Start();
+                proc.BeginOutputReadLine();
+                proc.BeginErrorReadLine();
+
+                using (ct.Register(() =>
+                {
+                    try { if (!proc.HasExited) proc.Kill(true); } catch { }
+                }))
+                {
+                    proc.WaitForExit();
+                }
+
+                onLineReceived($"\n[诊断完成] 退出代码: {proc.ExitCode}");
+            }
+            catch (OperationCanceledException)
+            {
+                onLineReceived("\n[用户手动终止诊断]");
+            }
+            catch (Exception ex)
+            {
+                onLineReceived($"\n[诊断异常]: {ex.Message}");
+            }
+        }, ct);
+    }
+
     private static string RunProcessAndGetOutput(string fileName, string args)
     {
         var psi = new ProcessStartInfo
