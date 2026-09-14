@@ -49,6 +49,11 @@ public partial class MainWindow : Window
         Loaded += async (s, e) => await LoadSysInfoAsync();
     }
 
+    private static readonly System.Windows.Media.Brush PrimaryBrush =
+        new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 120, 212));
+    private static readonly System.Windows.Media.Brush DangerBrush =
+        new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(220, 38, 38));
+
     #region WebDrop 快传功能
 
     private async void BtnToggleDrop_Click(object sender, RoutedEventArgs e)
@@ -56,31 +61,51 @@ public partial class MainWindow : Window
         if (!_webDropService.IsRunning)
         {
             BtnToggleDrop.IsEnabled = false;
-            await _webDropService.StartAsync();
+            try
+            {
+                await _webDropService.StartAsync();
 
-            TxtDropStatus.Text = "● 服务运行中";
-            TxtDropStatus.Foreground = System.Windows.Media.Brushes.Green;
-            BtnToggleDrop.Content = "停止服务";
-            BtnToggleDrop.Background = System.Windows.Media.Brushes.Crimson;
+                TxtDropStatus.Text = "● 服务运行中";
+                TxtDropStatus.Foreground = System.Windows.Media.Brushes.Green;
+                BtnToggleDrop.Content = "停止服务";
+                BtnToggleDrop.Background = DangerBrush;
 
-            var ips = _webDropService.GetLocalIPv4Addresses();
-            string primaryUrl = ips.Count > 0 ? $"http://{ips[0]}:{_webDropService.CurrentPort}" : $"http://localhost:{_webDropService.CurrentPort}";
-            TxtDropUrl.Text = $"访问地址: {primaryUrl} (手机浏览器直接打开)";
-            BtnOpenBrowser.IsEnabled = true;
-            BtnToggleDrop.IsEnabled = true;
+                var ips = _webDropService.GetLocalIPv4Addresses();
+                string primaryUrl = ips.Count > 0 ? $"http://{ips[0]}:{_webDropService.CurrentPort}" : $"http://localhost:{_webDropService.CurrentPort}";
+                TxtDropUrl.Text = $"访问地址: {primaryUrl} (手机浏览器直接打开)";
+                BtnOpenBrowser.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"启动服务失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnToggleDrop.IsEnabled = true;
+            }
         }
         else
         {
             BtnToggleDrop.IsEnabled = false;
-            await _webDropService.StopAsync();
+            try
+            {
+                await _webDropService.StopAsync();
 
-            TxtDropStatus.Text = "● 服务未启动";
-            TxtDropStatus.Foreground = System.Windows.Media.Brushes.Gray;
-            BtnToggleDrop.Content = "启动快传服务";
-            BtnToggleDrop.Background = (System.Windows.Media.Brush)FindResource("SecondaryButton");
-            TxtDropUrl.Text = "服务已停止";
-            BtnOpenBrowser.IsEnabled = false;
-            BtnToggleDrop.IsEnabled = true;
+                TxtDropStatus.Text = "● 服务未启动";
+                TxtDropStatus.Foreground = System.Windows.Media.Brushes.Gray;
+                BtnToggleDrop.Content = "启动快传服务";
+                BtnToggleDrop.Background = PrimaryBrush;
+                TxtDropUrl.Text = "服务已停止";
+                BtnOpenBrowser.IsEnabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"停止服务失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnToggleDrop.IsEnabled = true;
+            }
         }
     }
 
