@@ -15,7 +15,8 @@ internal static class Program
         {
             new WebDropTool(),
             new DiskHunterTool(),
-            new SysInfoTool()
+            new SysInfoTool(),
+            new WinTricksTool()
         };
 
         // 1. 如果传入 gui 参数，直接打开桌面窗口
@@ -43,7 +44,7 @@ internal static class Program
         // 3. 无参数时进入控制台交互菜单
         while (true)
         {
-            Console.Clear();
+            try { if (!Console.IsOutputRedirected) Console.Clear(); } catch { }
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("===============================================================");
             Console.WriteLine("            🛠️  AGY 全能工具箱 (AgyToolbox)                   ");

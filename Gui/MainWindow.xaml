@@ -259,6 +259,100 @@
                 </ScrollViewer>
             </TabItem>
 
+            <!-- TAB 4: Windows 绝活透视镜 (WinTricks) -->
+            <TabItem Header="🤹 Windows 绝活 (WinTricks)">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="短视频常吹嘘的“神秘黑客指令”，本质全为 Windows 极其实用的自带功能："
+                                   FontSize="13" Foreground="#64748B" Margin="0,0,0,16"/>
+
+                        <!-- 功能 1: WiFi 密码一键提取 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="📶 本机已存 WiFi 密码一键导出" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (原理: netsh wlan show profile key=clear)" FontSize="12" Foreground="#94A3B8" Margin="8,2,0,0"/>
+                                    </StackPanel>
+                                    <Button Content="立即提取" HorizontalAlignment="Right" Click="BtnGetWifi_Click"/>
+                                </Grid>
+                                <DataGrid x:Name="GridWifi" Grid.Row="1" Margin="0,12,0,0" AutoGenerateColumns="False" IsReadOnly="True"
+                                          Background="White" BorderBrush="#E2E8F0" MaxHeight="180" Visibility="Collapsed"
+                                          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="WiFi 名称 (SSID)" Binding="{Binding Ssid}" Width="250"/>
+                                        <DataGridTextColumn Header="明文密码" Binding="{Binding Password}" Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </Border>
+
+                        <!-- 功能 2: 端口占用终结 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="🌐 端口占用嗅探与一键终结" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                                    <TextBlock Text=" (解决 8080/3000/5000 端口莫名被占问题)" FontSize="12" Foreground="#94A3B8" Margin="8,2,0,0"/>
+                                </StackPanel>
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="160"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="目标端口:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                                    <TextBox x:Name="TxtPortToKill" Grid.Column="1" Text="8080" Padding="6" FontSize="13" Margin="0,0,10,0"/>
+                                    <Button Grid.Column="2" Content="查占用的进程" Click="BtnCheckPort_Click"/>
+                                    <TextBlock x:Name="TxtPortResult" Grid.Column="3" VerticalAlignment="Center" Margin="14,0,0,0" FontSize="13" Foreground="#64748B"/>
+                                </Grid>
+                                <StackPanel x:Name="PanelKillPort" Orientation="Horizontal" Margin="0,10,0,0" Visibility="Collapsed">
+                                    <TextBlock x:Name="TxtPortOccupantDesc" Text="-" VerticalAlignment="Center" Foreground="#DC2626" FontWeight="SemiBold" Margin="0,0,12,0"/>
+                                    <Button Content="💥 强行杀死该进程并释放端口" Background="#DC2626" Click="BtnKillPortProcess_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 功能 3: 官方电池寿命与损耗体检报告 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="🔋 官方笔记本电池健康与损耗体检" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (原理: powercfg /batteryreport)" FontSize="12" Foreground="#94A3B8" Margin="8,2,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="无需安装任何第三方大师软件，直接调用 Windows 内核电源驱动生成权威 HTML 体检报告。"
+                                               FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="生成并打开报告" Click="BtnBatteryReport_Click" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- 功能 4: 快捷工具箱卡片组 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="🛠️ Windows 系统深度调试快捷入口" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,12"/>
+                                <WrapPanel>
+                                    <Button Content="📉 可靠性历史 (闪退查凶手)" Style="{StaticResource SecondaryButton}" Click="BtnReliability_Click" Margin="0,0,10,10"/>
+                                    <Button Content="🧙 上帝模式控制台 (GodMode)" Style="{StaticResource SecondaryButton}" Click="BtnGodMode_Click" Margin="0,0,10,10"/>
+                                    <Button Content="🛡️ 微软恶意软件查杀 (mrt)" Style="{StaticResource SecondaryButton}" Click="BtnMrt_Click" Margin="0,0,10,10"/>
+                                    <Button Content="🕹️ DirectX 硬件诊断 (dxdiag)" Style="{StaticResource SecondaryButton}" Click="BtnDxDiag_Click" Margin="0,0,10,10"/>
+                                    <Button Content="📊 深度资源监视器 (resmon)" Style="{StaticResource SecondaryButton}" Click="BtnResmon_Click" Margin="0,0,10,10"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
         </TabControl>
     </Grid>
 </Window>

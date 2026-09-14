@@ -19,6 +19,7 @@ dotnet run
 dotnet run -- drop      # 快速启动局域网快传
 dotnet run -- disk      # 启动大文件扫描
 dotnet run -- sys       # 运行系统与网络诊断
+dotnet run -- tricks   # 打开 Windows 绝活透视镜
 ```
 
 ---
@@ -33,7 +34,7 @@ dotnet publish -c Release
 `bin\Release\net8.0-windows\publish\`
 
 * **运行方式**：直接双击里面的 `AgyToolbox.exe`：
-  * 在终端菜单中输入 `4` 可直接呼出桌面窗口。
+  * 在终端菜单中输入 `5` 可直接呼出桌面窗口。
   * 或者给它建一个快捷方式，加上参数 `gui`，双击即可作为纯桌面客户端启动！
 
 ---
@@ -42,9 +43,10 @@ dotnet publish -c Release
 
 | 工具名称 | 触发命令 | GUI 页面支持 | 功能说明 |
 | :--- | :--- | :--- | :--- |
-| **局域网快传 (WebDrop)** | `drop` | 支持 | 电脑一键启动 HTTP 服务，手机连同 WiFi 即可互传文件、照片与长文本 |
-| **大文件极速猎手 (DiskHunter)** | `disk` | 支持 | 毫秒级多线程枚举磁盘，抓出 Top 20 大文件，双击或点击按钮直接在资源管理器中高亮选中 |
+| **局域网快传 (WebDrop)** | `drop` | 支持 (附带二维码) | 电脑一键启动 HTTP 服务，手机扫码即可互传文件、照片与长文本 |
+| **大文件极速猎手 (DiskHunter)** | `disk` | 支持 | 毫秒级多线程枚举磁盘，抓出 Top 20 大文件，双击直接在资源管理器中高亮定位 |
 | **系统与网络诊断 (SysInfo)** | `sys` | 支持 | 硬件信息、磁盘容量彩色进度条、活动网卡 IP 与公网 Ping 连通延迟测速 |
+| **Windows 绝活透视镜 (WinTricks)** | `tricks` | 支持 | 一键提取本机所有WiFi明文密码、官方电池寿命体检、8080端口占用强杀、可靠性崩溃历史等 |
 
 ---
 
