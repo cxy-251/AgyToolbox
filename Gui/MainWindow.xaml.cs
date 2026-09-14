@@ -280,6 +280,30 @@ public partial class MainWindow : Window
     private void BtnMrt_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenMrt();
     private void BtnDxDiag_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenDxDiag();
     private void BtnResmon_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenResMon();
+    private void BtnEditHosts_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenHostsFile();
+    private void BtnPsr_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenStepsRecorder();
+
+    private void BtnFlushDns_Click(object sender, RoutedEventArgs e)
+    {
+        var msg = _winTricksService.FlushDns();
+        MessageBox.Show(msg, "DNS 解析缓存", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    #endregion
+
+    #region Tab 滚动与交互
+
+    /// <summary>
+    /// 支持在单行 TabControl 标签栏上通过鼠标滚轮横向平滑滚动标签
+    /// </summary>
+    private void TabScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    {
+        if (sender is ScrollViewer sv)
+        {
+            sv.ScrollToHorizontalOffset(sv.HorizontalOffset - e.Delta);
+            e.Handled = true;
+        }
+    }
 
     #endregion
 }

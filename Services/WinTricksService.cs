@@ -114,6 +114,54 @@ public class WinTricksService
     }
 
     /// <summary>
+    /// 一键刷新 DNS 缓存 (解决“微信能发但网页打不开”/节点解析失效)
+    /// </summary>
+    public string FlushDns()
+    {
+        try
+        {
+            var output = RunProcessAndGetOutput("ipconfig", "/flushdns");
+            return string.IsNullOrWhiteSpace(output) ? "DNS 解析缓存已成功刷新！" : output.Trim();
+        }
+        catch (Exception ex)
+        {
+            return $"刷新失败: {ex.Message}";
+        }
+    }
+
+    /// <summary>
+    /// 管理员权限一键记事本编辑 Hosts 文件 (解决新手无法保存问题)
+    /// </summary>
+    public void OpenHostsFile()
+    {
+        string hostsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), @"drivers\etc\hosts");
+        var psi = new ProcessStartInfo
+        {
+            FileName = "notepad.exe",
+            Arguments = $"\"{hostsPath}\"",
+            UseShellExecute = true,
+            Verb = "runas" // 提升为管理员权限打开
+        };
+        try
+        {
+            Process.Start(psi);
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// 呼出问题步骤记录器 (Win+R psr，自动点击截图配字)
+    /// </summary>
+    public void OpenStepsRecorder()
+    {
+        try
+        {
+            Process.Start("psr.exe");
+        }
+        catch { }
+    }
+
+    /// <summary>
     /// 查找指定端口当前被哪个进程/软件霸占
     /// </summary>
     public List<PortOccupant> FindPortOccupants(int port)
