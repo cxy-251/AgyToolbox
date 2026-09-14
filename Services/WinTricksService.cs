@@ -5,6 +5,7 @@ namespace AgyToolbox.Services;
 
 public record WifiRecord(string Ssid, string Password);
 public record PortOccupant(int Port, int Pid, string ProcessName, string Protocol);
+public record DnsPingResult(string Provider, string Ip, bool Success, long LatencyMs, string Description);
 
 public class WinTricksService
 {
@@ -217,6 +218,88 @@ public class WinTricksService
         catch
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    /// 测试主流国内外公共 DNS 服务器往返延迟
+    /// </summary>
+    public async Task<List<DnsPingResult>> TestPublicDnsAsync()
+    {
+        var targets = new (string Provider, string Ip, string Desc)[]
+        {
+            ("阿里公共 DNS", "223.5.5.5", "国内 Anycast 节点多，解析国内 CDN/网站最快，防运营商篡改"),
+            ("腾讯 DNSPod", "119.29.29.29", "腾讯云基础设施支持，国内智能解析调度稳定"),
+            ("114 DNS", "114.114.114.114", "老牌经典公共 DNS，国内三大运营商互联互通良好"),
+            ("百度公共 DNS", "180.76.76.76", "百度基础设施支撑，纯净无劫持"),
+            ("Cloudflare DNS", "1.1.1.1", "全球解析最快隐私 DNS，不存日志，但在国内部分地区延迟较高"),
+            ("Google DNS", "8.8.8.8", "全球知名度最高公共 DNS，国际访问基准解析器")
+        };
+
+        var results = new List<DnsPingResult>();
+        using var ping = new System.Net.NetworkInformation.Ping();
+
+        foreach (var t in targets)
+        {
+            try
+            {
+                var reply = await ping.SendPingAsync(t.Ip, 1500);
+                results.Add(new DnsPingResult(
+                    t.Provider,
+                    t.Ip,
+                    reply.Status == System.Net.NetworkInformation.IPStatus.Success,
+                    reply.RoundtripTime,
+                    t.Desc
+                ));
+            }
+            catch (Exception ex)
+            {
+                results.Add(new DnsPingResult(t.Provider, t.Ip, false, 0, ex.Message));
+            }
+        }
+
+        return results;
+    }
+
+    /// <summary>
+    /// 获取现代化标准的 Anaconda / Conda .condarc 配置文件内容 (全 HTTPS、清华源、移除已废弃的 free 通道)
+    /// </summary>
+    public string GetModernCondarcContent()
+    {
+        return """
+        # 现代化清华 TUNA 镜像源标准配置 (支持 HTTPS，移除已废弃的 free 通道)
+        channels:
+          - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+          - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
+          - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
+        show_channel_urls: true
+        default_channels:
+          - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
+          - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r
+        custom_channels:
+          conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+          msys2: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+          pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
+        ssl_verify: true
+        auto_activate_base: false
+        """;
+    }
+
+    /// <summary>
+    /// 一键将现代标准的 .condarc 写入用户主目录
+    /// </summary>
+    public string ApplyModernCondarc()
+    {
+        try
+        {
+            string userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string condarcPath = Path.Combine(userHome, ".condarc");
+            File.WriteAllText(condarcPath, GetModernCondarcContent().Trim(), System.Text.Encoding.UTF8);
+            return $"已成功写入标准配置文件：{condarcPath}";
+        }
+        catch (Exception ex)
+        {
+            return $"写入失败: {ex.Message}";
         }
     }
 

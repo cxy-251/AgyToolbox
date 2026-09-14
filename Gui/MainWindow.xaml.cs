@@ -289,6 +289,55 @@ public partial class MainWindow : Window
         MessageBox.Show(msg, "DNS 解析缓存", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
+    private async void BtnTestDns_Click(object sender, RoutedEventArgs e)
+    {
+        var targetBtn = sender as Button;
+        if (targetBtn != null) targetBtn.IsEnabled = false;
+        try
+        {
+            var results = await _winTricksService.TestPublicDnsAsync();
+            GridDns.ItemsSource = results;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"DNS 测速失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            if (targetBtn != null) targetBtn.IsEnabled = true;
+        }
+    }
+
+    private void BtnApplyCondarc_Click(object sender, RoutedEventArgs e)
+    {
+        var msg = _winTricksService.ApplyModernCondarc();
+        MessageBox.Show(msg, "Conda 换源", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnCopyCondarc_Click(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText(_winTricksService.GetModernCondarcContent());
+        MessageBox.Show("现代清华源 .condarc 配置文本已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnCopyPip_Click(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText(TxtPipCmd.Text);
+        MessageBox.Show("Pip 换源命令已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnCopyNpm_Click(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText(TxtNpmCmd.Text);
+        MessageBox.Show("Npm 最新镜像源命令已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnCopyNuget_Click(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText(TxtNugetCmd.Text);
+        MessageBox.Show("NuGet 华为云镜像源命令已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
     #endregion
 
     #region Tab 滚动与交互
