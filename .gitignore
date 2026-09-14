@@ -1,0 +1,25 @@
+## Build and output directories
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio cache & temporary files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+## OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+## AgyToolbox runtime outputs
+Received/
+Shared/
+drop_texts.txt
+received_texts.txt
