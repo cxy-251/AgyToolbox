@@ -1,4 +1,4 @@
-<UserControl x:Class="AgyToolbox.Views.WebDropView"
+﻿<UserControl x:Class="AgyToolbox.Views.WebDropView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -29,9 +29,9 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <Button x:Name="BtnToggleDrop" Content="启动快传服务" Width="120" Click="BtnToggleDrop_Click" Margin="0,0,10,0"/>
-                        <Button x:Name="BtnOpenBrowser" Content="浏览器打开" Style="{StaticResource SecondaryButton}" Click="BtnOpenBrowser_Click" Margin="0,0,10,0" IsEnabled="False"/>
-                        <Button Content="接收文件夹" Style="{StaticResource SecondaryButton}" Click="BtnOpenReceived_Click" Margin="0,0,10,0"/>
-                        <Button Content="待共享文件夹" Style="{StaticResource SecondaryButton}" Click="BtnOpenShared_Click"/>
+                        <Button x:Name="BtnOpenBrowser" Content="浏览器打开" Style="{DynamicResource SecondaryButton}" Click="BtnOpenBrowser_Click" Margin="0,0,10,0" IsEnabled="False"/>
+                        <Button Content="接收文件夹" Style="{DynamicResource SecondaryButton}" Click="BtnOpenReceived_Click" Margin="0,0,10,0"/>
+                        <Button Content="待共享文件夹" Style="{DynamicResource SecondaryButton}" Click="BtnOpenShared_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -52,7 +52,7 @@
                                    FontSize="13" Foreground="#64748B" TextWrapping="Wrap" Margin="0,6,0,10"/>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock x:Name="TxtQrTargetUrl" Text="-" FontSize="13" Foreground="#0284C7" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                            <Button Content="📋 复制链接" Style="{StaticResource SecondaryButton}" Click="BtnCopyUrl_Click" Padding="10,5" FontSize="12"/>
+                            <Button Content="📋 复制链接" Style="{DynamicResource SecondaryButton}" Click="BtnCopyUrl_Click" Padding="10,5" FontSize="12"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>

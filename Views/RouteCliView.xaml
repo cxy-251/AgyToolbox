@@ -1,4 +1,4 @@
-<UserControl x:Class="AgyToolbox.Views.RouteCliView"
+﻿<UserControl x:Class="AgyToolbox.Views.RouteCliView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -30,7 +30,7 @@
                             <Button Content="🗺️ route print (本机路由表)" Margin="0,0,8,4" Click="BtnRoutePrint_Click"/>
                             <Button Content="🔎 arp -a (局域网设备映射)" Margin="0,0,8,4" Click="BtnArp_Click"/>
                             <Button x:Name="BtnStopDiag" Content="⏹️ 停止" Background="#EF4444" Margin="0,0,8,4" Click="BtnStopDiag_Click" IsEnabled="False"/>
-                            <Button Content="🧹 清空输出" Style="{StaticResource SecondaryButton}" Margin="0,0,0,4" Click="BtnClearDiagLog_Click"/>
+                            <Button Content="🧹 清空输出" Style="{DynamicResource SecondaryButton}" Margin="0,0,0,4" Click="BtnClearDiagLog_Click"/>
                         </WrapPanel>
                     </Grid>
 

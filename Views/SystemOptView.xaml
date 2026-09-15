@@ -1,4 +1,4 @@
-<UserControl x:Class="AgyToolbox.Views.SystemOptView"
+﻿<UserControl x:Class="AgyToolbox.Views.SystemOptView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -27,7 +27,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <TextBlock x:Name="TxtUpdateStatus" Text="[检测更新状态...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <Button Content="🔄 刷新状态" Style="{StaticResource SecondaryButton}" Click="BtnRefreshUpdateStatus_Click"/>
+                            <Button Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshUpdateStatus_Click"/>
                         </StackPanel>
                     </Grid>
 
@@ -60,7 +60,7 @@
                             <StackPanel>
                                 <TextBlock Text="🟢 恢复官方默认更新机制" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,4"/>
                                 <TextBlock Text="清除组策略更新限制规则，重新激活系统更新服务，恢复正常接收安全补丁。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                <Button x:Name="BtnEnableUpdate" Content="恢复官方自动更新" Style="{StaticResource SecondaryButton}" Click="BtnEnableUpdate_Click"/>
+                                <Button x:Name="BtnEnableUpdate" Content="恢复官方自动更新" Style="{DynamicResource SecondaryButton}" Click="BtnEnableUpdate_Click"/>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -75,7 +75,7 @@
                             <TextBlock Text="📁 资源管理器开荒三件套 &amp; ⚡ 卓越性能模式" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
                             <TextBlock Text=" (程序员与新机必配，安全防毒 + 极致硬件睿频)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
                         </StackPanel>
-                        <Button Content="🔄 刷新设置状态" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Right" Click="BtnRefreshExplorerSettings_Click"/>
+                        <Button Content="🔄 刷新设置状态" Style="{DynamicResource SecondaryButton}" HorizontalAlignment="Right" Click="BtnRefreshExplorerSettings_Click"/>
                     </Grid>
 
                     <Grid Margin="0,0,0,12">
@@ -225,17 +225,17 @@
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <RadioButton x:Name="RbUserPath" Content="当前用户 (User PATH)" IsChecked="True" VerticalAlignment="Center" Margin="0,0,12,0" Checked="RbPathScope_Checked"/>
                             <RadioButton x:Name="RbSysPath" Content="系统全局 (System PATH)" VerticalAlignment="Center" Margin="0,0,16,0" Checked="RbPathScope_Checked"/>
-                            <Button Content="⚡ 重新扫描" Style="{StaticResource SecondaryButton}" Click="BtnReloadPath_Click"/>
+                            <Button Content="⚡ 重新扫描" Style="{DynamicResource SecondaryButton}" Click="BtnReloadPath_Click"/>
                         </StackPanel>
                     </Grid>
 
                     <!-- 操作工具条 -->
                     <WrapPanel Margin="0,0,0,10">
                         <Button Content="🗑️ 一键清除所有已失效死路径" Background="#EF4444" Margin="0,0,8,4" Click="BtnRemoveDeadPaths_Click"/>
-                        <Button Content="⬆️ 上移 (提高优先级)" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnMovePathUp_Click"/>
-                        <Button Content="⬇️ 下移 (降低优先级)" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnMovePathDown_Click"/>
-                        <Button Content="➕ 新增路径" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnAddPath_Click"/>
-                        <Button Content="❌ 删除选中项" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnDeleteSelectedPath_Click"/>
+                        <Button Content="⬆️ 上移 (提高优先级)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,4" Click="BtnMovePathUp_Click"/>
+                        <Button Content="⬇️ 下移 (降低优先级)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,4" Click="BtnMovePathDown_Click"/>
+                        <Button Content="➕ 新增路径" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,4" Click="BtnAddPath_Click"/>
+                        <Button Content="❌ 删除选中项" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,4" Click="BtnDeleteSelectedPath_Click"/>
                         <Button Content="💾 保存修改并向系统广播生效" Background="#10B981" Margin="0,0,0,4" Click="BtnSavePath_Click"/>
                     </WrapPanel>
 

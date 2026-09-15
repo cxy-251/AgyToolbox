@@ -135,12 +135,26 @@ internal static class Program
             try
             {
                 var app = new System.Windows.Application();
+                try
+                {
+                    var dict = new System.Windows.ResourceDictionary
+                    {
+                        Source = new Uri("/AgyToolbox;component/Gui/Styles.xaml", UriKind.RelativeOrAbsolute)
+                    };
+                    app.Resources.MergedDictionaries.Add(dict);
+                }
+                catch { }
+
                 app.Run(new MainWindow());
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\n[GUI 启动异常]: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"[内部异常]: {ex.InnerException.Message}");
+                }
                 Console.ResetColor();
             }
         }

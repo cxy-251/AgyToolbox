@@ -1,4 +1,4 @@
-<UserControl x:Class="AgyToolbox.Views.WinTricksView"
+﻿<UserControl x:Class="AgyToolbox.Views.WinTricksView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -95,7 +95,7 @@
                         <TextBlock Text="【底层原理】直接聚合系统内核事件日志中的应用程序崩溃、蓝屏代码与硬件故障，生成 1~10 分的稳定性折线图。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】电脑莫名闪退、死机或蓝屏时，点击对应日期即可看到是哪个具体 DLL 模块报错，排查真凶必备。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="打开可靠性图表" Style="{StaticResource SecondaryButton}" Click="BtnReliability_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="打开可靠性图表" Style="{DynamicResource SecondaryButton}" Click="BtnReliability_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -114,7 +114,7 @@
                         <TextBlock Text="【底层原理】以 UAC 提升管理员权限调用记事本。新手直接编辑受系统保护的 hosts 时，保存必弹‘拒绝访问’或另存为 txt。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】为 GitHub、Steam 或本地开发项目绑定固定静态 IP 域名解析，直接保存生效。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="编辑 Hosts" Style="{StaticResource SecondaryButton}" Click="BtnEditHosts_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="编辑 Hosts" Style="{DynamicResource SecondaryButton}" Click="BtnEditHosts_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -130,7 +130,7 @@
                         <TextBlock Text="【底层原理】强制清空本地系统 Dnscache 驻留内存中的域名与 IP 映射表，避免继续使用旧的污染解析。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】换了网络节点、改了 Hosts、或‘微信能发消息但网页打不开’时一键还原生效。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="刷新 DNS 缓存" Style="{StaticResource SecondaryButton}" Click="BtnFlushDns_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="刷新 DNS 缓存" Style="{DynamicResource SecondaryButton}" Click="BtnFlushDns_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -146,7 +146,7 @@
                         <TextBlock Text="【底层原理】系统虚拟命名空间 GUID 文件夹，将 Windows 注册表内的全部 200+ 项系统底层控制项聚合成一个平面列表。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】Windows 11 新设置界面折叠太深，用它免翻菜单，一步搜出任意老版经典控制面板功能。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="打开上帝模式" Style="{StaticResource SecondaryButton}" Click="BtnGodMode_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="打开上帝模式" Style="{DynamicResource SecondaryButton}" Click="BtnGodMode_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -162,7 +162,7 @@
                         <TextBlock Text="【底层原理】微软内置的无感诊断工具，监听全局鼠标动作，每点击一次自动在目标控件加绿框截图并生成步骤报表。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】指导他人使用软件、或者复现复杂 Bug 发给技术支持，无需手动一步步截图打字。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="启动 PSR" Style="{StaticResource SecondaryButton}" Click="BtnPsr_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="启动 PSR" Style="{DynamicResource SecondaryButton}" Click="BtnPsr_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -178,7 +178,7 @@
                         <TextBlock Text="【底层原理】Windows 补丁日随系统更新定期下发的特种恶意代码清除工具，查杀完即退出，零常驻后台开销。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】怀疑中了流氓顽固木马，或者插了外来 U 盘需要快速离线深度体检。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="启动 MRT" Style="{StaticResource SecondaryButton}" Click="BtnMrt_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="启动 MRT" Style="{DynamicResource SecondaryButton}" Click="BtnMrt_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -194,7 +194,7 @@
                         <TextBlock Text="【底层原理】直接同 WDDM 显卡驱动内核通信，读取最真实的显存大小、Direct3D 特性级别与声卡 WHQL 签名。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】防止买到假显卡/刷过 BIOS 的矿卡，核验显示器真实高刷新率与 HDR 是否开启。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="启动 DXDiag" Style="{StaticResource SecondaryButton}" Click="BtnDxDiag_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="启动 DXDiag" Style="{DynamicResource SecondaryButton}" Click="BtnDxDiag_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -210,7 +210,7 @@
                         <TextBlock Text="【底层原理】系统内核句柄与 I/O 过滤器，比任务管理器更细粒度地监控具体进程锁定了哪个文件和哪个 TCP 端口连接。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                         <TextBlock Text="【日常场景】删除文件夹提示‘文件被占用无法删除’时，直接在里面搜关联句柄一键解除占用。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Button Grid.Column="1" Content="启动 ResMon" Style="{StaticResource SecondaryButton}" Click="BtnResmon_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Grid.Column="1" Content="启动 ResMon" Style="{DynamicResource SecondaryButton}" Click="BtnResmon_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
         </StackPanel>

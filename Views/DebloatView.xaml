@@ -1,4 +1,4 @@
-<UserControl x:Class="AgyToolbox.Views.DebloatView"
+﻿<UserControl x:Class="AgyToolbox.Views.DebloatView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -28,7 +28,7 @@
                             <TextBlock Text=" (清晰解释用途与卸载影响，彻底清理当前及新用户模板)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button Content="⚡ 重新扫描预装状态" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" Click="BtnScanUwp_Click"/>
+                            <Button Content="⚡ 重新扫描预装状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,0" Click="BtnScanUwp_Click"/>
                         </StackPanel>
                     </Grid>
 
@@ -50,7 +50,7 @@
                             <DataGridTemplateColumn Header="操作" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="🗑️ 卸载" Style="{StaticResource SecondaryButton}" Height="26" Padding="8,0"
+                                        <Button Content="🗑️ 卸载" Style="{DynamicResource SecondaryButton}" Height="26" Padding="8,0"
                                                 IsEnabled="{Binding IsInstalled}" Click="BtnUninstallSingleUwp_Click"
                                                 Tag="{Binding PackagePrefix}"/>
                                     </DataTemplate>
@@ -71,7 +71,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <TextBlock x:Name="TxtBrowserStatus" Text="[正在检测浏览器状态...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <Button Content="🔄 刷新状态" Style="{StaticResource SecondaryButton}" Click="BtnRefreshBrowserStatus_Click"/>
+                            <Button Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshBrowserStatus_Click"/>
                         </StackPanel>
                     </Grid>
 
@@ -110,7 +110,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Button x:Name="BtnInstallChrome" Grid.Column="0" Content="winget 一键安装 Chrome" Background="#10B981" Margin="0,0,4,0" Click="BtnInstallChrome_Click"/>
-                                    <Button Grid.Column="1" Content="设为默认浏览器" Style="{StaticResource SecondaryButton}" Margin="4,0,0,0" Click="BtnSetDefaultBrowser_Click"/>
+                                    <Button Grid.Column="1" Content="设为默认浏览器" Style="{DynamicResource SecondaryButton}" Margin="4,0,0,0" Click="BtnSetDefaultBrowser_Click"/>
                                 </Grid>
                             </StackPanel>
                         </Border>
@@ -128,7 +128,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             <TextBlock x:Name="TxtOneDriveStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <Button Content="🔄 刷新状态" Style="{StaticResource SecondaryButton}" Click="BtnRefreshOneDriveStatus_Click"/>
+                            <Button Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshOneDriveStatus_Click"/>
                         </StackPanel>
                     </Grid>
 
@@ -197,7 +197,7 @@
                                         <TextBlock Text="Visual Studio Code" FontWeight="Bold" FontSize="12"/>
                                         <TextBlock Text="winget install Microsoft.VisualStudioCode" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Microsoft.VisualStudioCode"/>
+                                    <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Microsoft.VisualStudioCode"/>
                                 </Grid>
                             </Border>
 
@@ -212,7 +212,7 @@
                                         <TextBlock Text="Git 版本控制" FontWeight="Bold" FontSize="12"/>
                                         <TextBlock Text="winget install Git.Git" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Git.Git"/>
+                                    <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Git.Git"/>
                                 </Grid>
                             </Border>
 
@@ -227,7 +227,7 @@
                                         <TextBlock Text="Google Chrome 浏览器" FontWeight="Bold" FontSize="12"/>
                                         <TextBlock Text="winget install Google.Chrome" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Google.Chrome"/>
+                                    <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Google.Chrome"/>
                                 </Grid>
                             </Border>
                         </StackPanel>
@@ -245,7 +245,7 @@
                                         <TextBlock Text="7-Zip 开源极简解压" FontWeight="Bold" FontSize="12"/>
                                         <TextBlock Text="winget install 7zip.7zip" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install 7zip.7zip"/>
+                                    <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install 7zip.7zip"/>
                                 </Grid>
                             </Border>
 
@@ -260,7 +260,7 @@
                                         <TextBlock Text="Node.js LTS 运行环境" FontWeight="Bold" FontSize="12"/>
                                         <TextBlock Text="winget install OpenJS.NodeJS.LTS" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install OpenJS.NodeJS.LTS"/>
+                                    <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install OpenJS.NodeJS.LTS"/>
                                 </Grid>
                             </Border>
 
@@ -275,7 +275,7 @@
                                         <TextBlock Text="微信 PC 官方纯净版" FontWeight="Bold" FontSize="12"/>
                                         <TextBlock Text="winget install Tencent.WeChat" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Tencent.WeChat"/>
+                                    <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Tencent.WeChat"/>
                                 </Grid>
                             </Border>
                         </StackPanel>
