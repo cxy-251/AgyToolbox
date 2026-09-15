@@ -340,6 +340,174 @@ public class WinOptimizerService
     }
 
     /// <summary>
+    /// 检测当前 C 盘 BitLocker 加密状态 (新机隐形地雷排查)
+    /// </summary>
+    public (bool IsEncrypted, string Details) GetBitLockerStatus()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "manage-bde",
+                Arguments = "-status C:",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd() ?? "";
+            proc?.WaitForExit(3000);
+
+            bool isEncrypted = output.Contains("已加密", StringComparison.OrdinalIgnoreCase) ||
+                               output.Contains("正在加密", StringComparison.OrdinalIgnoreCase) ||
+                               output.Contains("100%", StringComparison.OrdinalIgnoreCase) ||
+                               output.Contains("Protection On", StringComparison.OrdinalIgnoreCase);
+
+            return (isEncrypted, output.Trim());
+        }
+        catch (Exception ex)
+        {
+            return (false, $"检测失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 读取并导出 BitLocker 48 位数字恢复密钥 (防 BIOS 升级/主板重置锁机变砖)
+    /// </summary>
+    public (bool Success, string Message) GetBitLockerRecoveryKey()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "manage-bde",
+                Arguments = "-protectors -get C:",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd() ?? "";
+            proc?.WaitForExit(3000);
+
+            return (true, string.IsNullOrWhiteSpace(output) ? "未查询到 BitLocker 恢复密钥。" : output.Trim());
+        }
+        catch (Exception ex)
+        {
+            return (false, $"获取失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测系统休眠文件 (hiberfil.sys) 是否启用
+    /// </summary>
+    public bool IsHibernationEnabled()
+    {
+        try
+        {
+            return File.Exists(@"C:\hiberfil.sys");
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 一键关停/开启系统休眠文件 (台式机/长插电本关停后瞬间释放 16G~32GB C 盘 SSD 空间)
+    /// </summary>
+    public (bool Success, string Message) SetHibernation(bool enable)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powercfg",
+                Arguments = enable ? "-h on" : "-h off",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(3000);
+
+            return (true, enable
+                ? "已开启休眠文件 (C:\\hiberfil.sys)！"
+                : "已成功彻底关停休眠！系统已瞬间释放与物理内存同等大小 (16GB~32GB+) 的 C 盘宝贵空间！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 一键将当前网络位置切换为【专用网络】(Private Network，打通局域网设备互联、快传与 Ping)
+    /// </summary>
+    public (bool Success, string Message) SetNetworkToPrivate()
+    {
+        try
+        {
+            var script = "Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(5000);
+
+            return (true, "已成功将所有当前活跃网络适配器切换为【专用网络】！\n防火墙已放行局域网设备发现与端口通信。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置网络类别失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测是否已锁死 Win11 后台暗度陈仓静默安装推广与开始菜单广告
+    /// </summary>
+    public bool IsSilentAppInstallDisabled()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager");
+            var val = key?.GetValue("SilentInstalledAppsEnabled");
+            return val is int intVal && intVal == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 锁死 Win11 后台静默安装推广应用 (TikTok/Spotify/Disney+) 以及锁屏/开始菜单广告
+    /// </summary>
+    public (bool Success, string Message) SetSilentAppInstallDisabled(bool disable)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager");
+            int regVal = disable ? 0 : 1;
+            key.SetValue("SilentInstalledAppsEnabled", regVal, RegistryValueKind.DWord);
+            key.SetValue("SubscribedContent-338388Enabled", regVal, RegistryValueKind.DWord);
+            key.SetValue("SubscribedContent-338389Enabled", regVal, RegistryValueKind.DWord);
+            key.SetValue("SystemPaneSuggestionsEnabled", regVal, RegistryValueKind.DWord);
+
+            return (true, disable
+                ? "已成功锁死 Windows 11 后台静默下载推广应用策略，并屏蔽了锁屏与开始菜单商业广告！"
+                : "已恢复默认内容分发设置。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置静默推广策略失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// 一键平滑重启 Windows 资源管理器 (explorer.exe)
     /// </summary>
     public void RestartExplorer()

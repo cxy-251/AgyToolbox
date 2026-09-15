@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using AgyToolbox.Services;
 
 namespace AgyToolbox.Views;
@@ -17,9 +18,18 @@ public class UwpAppDisplayItem
     public string OpenSourceAlternative { get; set; } = "";
     public bool IsInstalled { get; set; }
     public string StatusText => IsInstalled ? "● 已安装" : "○ 未安装/已卸载";
-    public System.Windows.Media.Brush StatusBrush => IsInstalled
-        ? System.Windows.Media.Brushes.Red
-        : System.Windows.Media.Brushes.DarkGreen;
+    public Brush StatusBrush => IsInstalled ? Brushes.Red : Brushes.DarkGreen;
+}
+
+public class OemAppDisplayItem
+{
+    public string Name { get; set; } = "";
+    public string Vendor { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DebloatAdvice { get; set; } = "";
+    public bool IsDetected { get; set; }
+    public string StatusText => IsDetected ? "⚠️ 正在运行" : "✓ 未检出";
+    public Brush StatusBrush => IsDetected ? Brushes.Red : Brushes.DarkGreen;
 }
 
 public partial class DebloatView : UserControl
@@ -27,19 +37,30 @@ public partial class DebloatView : UserControl
     private readonly UwpDebloatService _uwpDebloatService = new();
     private readonly EdgeDebloatService _edgeDebloatService = new();
     private readonly OneDriveDebloatService _oneDriveDebloatService = new();
+    private readonly DebloatExtraService _debloatExtraService = new();
+    private readonly WinOptimizerService _winOptimizerService = new();
+
     private readonly ObservableCollection<UwpAppDisplayItem> _uwpItems = new();
+    private readonly ObservableCollection<OemAppDisplayItem> _oemItems = new();
+    private readonly ObservableCollection<StartupItemInfo> _startupItems = new();
 
     public DebloatView()
     {
         InitializeComponent();
 
         GridUwpApps.ItemsSource = _uwpItems;
+        GridOemApps.ItemsSource = _oemItems;
+        GridStartupItems.ItemsSource = _startupItems;
+
         _ = LoadUwpAppsAsync();
+        LoadOemApps();
+        LoadStartupItems();
+        RefreshSilentAppStatus();
         RefreshBrowserStatus();
         RefreshOneDriveStatus();
     }
 
-    #region UWP 预装应用精简
+    #region 1. UWP 预装应用精简
 
     private async Task LoadUwpAppsAsync()
     {
@@ -98,40 +119,78 @@ public partial class DebloatView : UserControl
 
     #endregion
 
-    #region Edge 彻底卸载与 Chrome 替换
+    #region 2. OEM 品牌机毒瘤排查
+
+    private void LoadOemApps()
+    {
+        _oemItems.Clear();
+        var list = _debloatExtraService.DetectOemApps();
+        foreach (var item in list)
+        {
+            _oemItems.Add(new OemAppDisplayItem
+            {
+                Name = item.Name,
+                Vendor = item.Vendor,
+                Description = item.Description,
+                DebloatAdvice = item.DebloatAdvice,
+                IsDetected = item.IsDetected
+            });
+        }
+    }
+
+    private void BtnScanOem_Click(object sender, RoutedEventArgs e)
+    {
+        LoadOemApps();
+        MessageBox.Show("OEM 预装应用扫描完成！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    #endregion
+
+    #region 3. 锁死 Win11 后台静默安装推广
+
+    private void RefreshSilentAppStatus()
+    {
+        bool disabled = _winOptimizerService.IsSilentAppInstallDisabled();
+        TxtSilentAppStatus.Text = disabled ? "[已彻底锁死静默推广策略]" : "[当前允许后台静默下载推广]";
+        TxtSilentAppStatus.Foreground = disabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+    }
+
+    private void BtnToggleSilentApps_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsSilentAppInstallDisabled();
+        var (ok, msg) = _winOptimizerService.SetSilentAppInstallDisabled(!current);
+        RefreshSilentAppStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    #endregion
+
+    #region 4. Edge 彻底卸载与 Chrome 替换
 
     private void RefreshBrowserStatus()
     {
-        bool edge = _edgeDebloatService.IsEdgeInstalled();
-        bool chrome = _edgeDebloatService.IsChromeInstalled();
+        bool edgeInstalled = _edgeDebloatService.IsEdgeInstalled();
+        bool chromeInstalled = _edgeDebloatService.IsChromeInstalled();
 
-        string edgeTxt = edge ? "Edge: 已安装" : "Edge: 已干净卸载";
-        string chromeTxt = chrome ? "Chrome: 已安装" : "Chrome: 未安装";
-
-        TxtBrowserStatus.Text = $"[{edgeTxt} | {chromeTxt}]";
-        TxtBrowserStatus.Foreground = (!edge && chrome)
-            ? System.Windows.Media.Brushes.DarkGreen
-            : System.Windows.Media.Brushes.DarkOrange;
-
-        BtnUninstallEdge.IsEnabled = edge;
-        BtnInstallChrome.IsEnabled = !chrome;
+        TxtBrowserStatus.Text = $"Edge: {(edgeInstalled ? "已安装" : "已卸载")} | Chrome: {(chromeInstalled ? "已安装" : "未安装")}";
+        BtnUninstallEdge.IsEnabled = edgeInstalled;
     }
 
     private void BtnRefreshBrowserStatus_Click(object sender, RoutedEventArgs e)
     {
         RefreshBrowserStatus();
-        MessageBox.Show("浏览器安装状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show("浏览器状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private async void BtnUninstallEdge_Click(object sender, RoutedEventArgs e)
     {
         var confirm = MessageBox.Show(
-            "确定要彻底卸载 Microsoft Edge 浏览器主体吗？\n\n" +
-            "【专业安全保证】：\n" +
-            "1. 本工具仅卸载 Edge 浏览器主体，将严格保留核心 WebView2 运行时，确保微信、钉钉等第三方软件不会白屏崩溃。\n" +
-            "2. 卸载完成后会自动写入注册表策略，阻止 Windows Update 偷偷重新安装 Edge。\n\n" +
-            "是否继续？",
-            "确认卸载 Edge",
+            "确定要彻底卸载 Microsoft Edge 浏览器吗？\n\n" +
+            "【卸载机制说明】：\n" +
+            "1. 仅移除 Edge 浏览器主体，严格保留底层的 WebView2 共享运行库，绝不影响微信、钉钉等客户端！\n" +
+            "2. 写入注册表阻止 Windows Update 下周重新静默推送 Edge。\n\n" +
+            "卸载前请确保已安装 Chrome 或其它替代浏览器。是否继续？",
+            "确认彻底卸载 Edge",
             MessageBoxButton.YesNo,
             MessageBoxImage.Warning);
 
@@ -142,7 +201,7 @@ public partial class DebloatView : UserControl
         {
             var (ok, msg) = await _edgeDebloatService.UninstallEdgeAsync();
             RefreshBrowserStatus();
-            MessageBox.Show(msg, ok ? "操作完成" : "卸载提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+            MessageBox.Show(msg, ok ? "卸载完成" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
         }
         catch (Exception ex)
         {
@@ -159,35 +218,17 @@ public partial class DebloatView : UserControl
         BtnInstallChrome.IsEnabled = false;
         try
         {
-            var (ok, msg) = await _edgeDebloatService.InstallChromeAsync(line =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    TxtBrowserStatus.Text = $"[正在安装 Chrome...]";
-                });
-            });
-
+            var (ok, msg) = await _edgeDebloatService.InstallChromeAsync(_ => { });
             RefreshBrowserStatus();
-            if (ok)
-            {
-                var ask = MessageBox.Show("Google Chrome 已成功安装！是否立即打开系统设置将其设为默认浏览器？", "安装成功", MessageBoxButton.YesNo, MessageBoxImage.Information);
-                if (ask == MessageBoxResult.Yes)
-                {
-                    _edgeDebloatService.OpenDefaultAppsSettings();
-                }
-            }
-            else
-            {
-                MessageBox.Show(msg, "安装提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
+            MessageBox.Show(msg, ok ? "安装完成" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"安装 Chrome 失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"安装失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {
-            RefreshBrowserStatus();
+            BtnInstallChrome.IsEnabled = true;
         }
     }
 
@@ -198,22 +239,20 @@ public partial class DebloatView : UserControl
 
     #endregion
 
-    #region OneDrive 彻底卸载与去盘符绑定
+    #region 5. OneDrive 深度卸载
 
     private void RefreshOneDriveStatus()
     {
         bool installed = _oneDriveDebloatService.IsOneDriveInstalled();
-        TxtOneDriveStatus.Text = installed ? "● 已安装 (常驻后台/可能在同步)" : "○ 未安装 / 已彻底卸载";
-        TxtOneDriveStatus.Foreground = installed
-            ? System.Windows.Media.Brushes.Red
-            : System.Windows.Media.Brushes.DarkGreen;
+        TxtOneDriveStatus.Text = installed ? "● 正在后台运行 / 已安装" : "○ 未运行 / 已彻底清除";
+        TxtOneDriveStatus.Foreground = installed ? Brushes.Red : Brushes.DarkGreen;
         BtnUninstallOneDrive.IsEnabled = installed;
     }
 
     private void BtnRefreshOneDriveStatus_Click(object sender, RoutedEventArgs e)
     {
         RefreshOneDriveStatus();
-        MessageBox.Show("OneDrive 安装状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show("OneDrive 状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private async void BtnUninstallOneDrive_Click(object sender, RoutedEventArgs e)
@@ -250,7 +289,46 @@ public partial class DebloatView : UserControl
 
     #endregion
 
-    #region winget 辅助操作
+    #region 6. 开机自启动项管理
+
+    private void LoadStartupItems()
+    {
+        _startupItems.Clear();
+        var items = _debloatExtraService.GetStartupItems();
+        foreach (var item in items)
+        {
+            _startupItems.Add(item);
+        }
+    }
+
+    private void BtnReloadStartup_Click(object sender, RoutedEventArgs e)
+    {
+        LoadStartupItems();
+        MessageBox.Show("开机自启动项已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnDeleteStartupItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.DataContext is StartupItemInfo item)
+        {
+            var confirm = MessageBox.Show($"确定要删除自启项【{item.Name}】吗？", "确认删除", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (confirm != MessageBoxResult.Yes) return;
+
+            if (_debloatExtraService.RemoveStartupItem(item.Name, item.Scope))
+            {
+                _startupItems.Remove(item);
+                MessageBox.Show("自启项已成功移除！下次开机不再自启动。", "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("删除失败，可能需要管理员权限。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+    }
+
+    #endregion
+
+    #region 7. winget 辅助操作
 
     private void BtnCopyWingetUpgrade_Click(object sender, RoutedEventArgs e)
     {

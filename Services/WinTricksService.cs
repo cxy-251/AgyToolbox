@@ -399,6 +399,92 @@ public class WinTricksService
         }
     }
 
+    /// <summary>
+    /// 启动管理员权限 CMD 窗口并自动执行 SFC 系统完整性扫描 (sfc /scannow)
+    /// </summary>
+    public (bool Success, string Message) RunSfcScanInConsole()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/k echo [正在执行 Windows 系统核心文件完整性扫描修复] && sfc /scannow",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, "已呼出管理员终端执行 sfc /scannow 修复！请观察控制台进度。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"执行失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 启动管理员权限 CMD 执行 DISM 在线组件库深度修复 (DISM /Online /Cleanup-Image /RestoreHealth)
+    /// </summary>
+    public (bool Success, string Message) RunDismRepairInConsole()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/k echo [正在连接官方镜像源深度修复 Windows 系统组件库] && DISM /Online /Cleanup-Image /RestoreHealth",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, "已呼出管理员终端执行 DISM 深度组件库修复！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"执行失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 网络协议栈终极急救复位 (netsh winsock reset + netsh int ip reset)
+    /// </summary>
+    public (bool Success, string Message) ResetWinsockAndIp()
+    {
+        try
+        {
+            RunProcessAndGetOutput("netsh", "winsock reset");
+            RunProcessAndGetOutput("netsh", "int ip reset");
+            return (true, "已成功重置 Winsock 套接字目录与 TCP/IP 协议栈！\n请重启电脑使新网络协议栈彻底生效。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"重置失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 彻底抹除 WinSxS 冗余历史补丁与陈旧组件备份 (彻底释放 C 盘数 GB 到几十 GB)
+    /// </summary>
+    public (bool Success, string Message) RunDismCleanupBaseInConsole()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/k echo [正在执行 WinSxS 冗余历史更新组件库终极瘦身清理] && Dism.exe /online /Cleanup-Image /StartComponentCleanup /ResetBase",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, "已在管理员控制台中启动 WinSxS 终极组件库瘦身！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"执行失败: {ex.Message}");
+        }
+    }
+
     private static string RunProcessAndGetOutput(string fileName, string args)
     {
         var psi = new ProcessStartInfo

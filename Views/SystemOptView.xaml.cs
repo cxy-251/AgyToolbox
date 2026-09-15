@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using AgyToolbox.Services;
 
 namespace AgyToolbox.Views;
@@ -10,9 +11,7 @@ public class PathDisplayItem
     public string Path { get; set; } = "";
     public bool Exists { get; set; }
     public string ExistsText => Exists ? "✅ 路径有效" : "🚫 幽灵死路径 (不存在)";
-    public System.Windows.Media.Brush StatusBrush => Exists
-        ? System.Windows.Media.Brushes.DarkGreen
-        : System.Windows.Media.Brushes.Red;
+    public Brush StatusBrush => Exists ? Brushes.DarkGreen : Brushes.Red;
 }
 
 public partial class SystemOptView : UserControl
@@ -30,18 +29,18 @@ public partial class SystemOptView : UserControl
         LoadPathEntries(false);
         RefreshOptimizerStatus();
         RefreshUpdateStatus();
+        RefreshBitLockerStatus();
+        RefreshHiberStatus();
         RefreshExplorerSettings();
     }
 
-    #region Windows 自动更新彻底控制
+    #region 1. Windows 自动更新彻底控制
 
     private void RefreshUpdateStatus()
     {
         bool disabled = _windowsUpdateService.IsUpdateDisabled();
         TxtUpdateStatus.Text = disabled ? "● 自动更新已彻底关闭并锁定" : "○ 自动更新处于开启状态";
-        TxtUpdateStatus.Foreground = disabled
-            ? System.Windows.Media.Brushes.DarkGreen
-            : System.Windows.Media.Brushes.DarkOrange;
+        TxtUpdateStatus.Foreground = disabled ? Brushes.DarkGreen : Brushes.DarkOrange;
     }
 
     private void BtnRefreshUpdateStatus_Click(object sender, RoutedEventArgs e)
@@ -57,7 +56,7 @@ public partial class SystemOptView : UserControl
             "【防护机制】：\n" +
             "1. 组策略锁定 NoAutoUpdate=1 (杜绝后台静默下载)；\n" +
             "2. 注册表锁定 ExcludeWPDriversInQualityUpdate=1 (防止微软用公版驱动强行覆盖最新显卡驱动导致玩游戏黑屏)；\n" +
-            "3. 停止并禁用更新服务 (wuauserv) 及更新唤醒医生 (WaaSMedicSvc，防止半夜偷偷复活)。\n\n" +
+            "3. 停止并禁用更新服务 (wuauserv) 及更新唤醒看门狗 (WaaSMedicSvc)。\n\n" +
             "随时可通过旁边绿色按钮一键恢复。是否继续？",
             "确认关闭自动更新",
             MessageBoxButton.YesNo,
@@ -79,7 +78,68 @@ public partial class SystemOptView : UserControl
 
     #endregion
 
-    #region 资源管理器开荒与卓越性能
+    #region 2. BitLocker 状态透视与恢复密钥
+
+    private void RefreshBitLockerStatus()
+    {
+        var (isEncrypted, details) = _winOptimizerService.GetBitLockerStatus();
+        TxtBitLockerStatus.Text = isEncrypted ? "⚠️ C 盘已启用 BitLocker 加密" : "○ C 盘未开启加密";
+        TxtBitLockerStatus.Foreground = isEncrypted ? Brushes.Red : Brushes.DarkGreen;
+    }
+
+    private void BtnRefreshBitLocker_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshBitLockerStatus();
+        MessageBox.Show("BitLocker 状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnGetBitLockerKey_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, details) = _winOptimizerService.GetBitLockerRecoveryKey();
+        if (ok)
+        {
+            Clipboard.SetText(details);
+            MessageBox.Show(
+                $"【重要：BitLocker 保护信息已复制到剪贴板】\n\n{details}\n\n请务必拍照或记录 48 位数字恢复密钥存入手机！",
+                "BitLocker 恢复密钥",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        else
+        {
+            MessageBox.Show(details, "查询提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    #endregion
+
+    #region 3. 关停休眠 (hiberfil.sys) & 专用网络切换
+
+    private void RefreshHiberStatus()
+    {
+        bool exists = _winOptimizerService.IsHibernationEnabled();
+        TxtHiberStatus.Text = exists ? "[休眠占用中，吃 C 盘内存同等空间]" : "[已关停休眠，已释放空间]";
+        TxtHiberStatus.Foreground = exists ? Brushes.DarkOrange : Brushes.DarkGreen;
+        BtnToggleHiber.Content = exists ? "关停休眠 (立省 32G)" : "开启休眠";
+    }
+
+    private void BtnToggleHiber_Click(object sender, RoutedEventArgs e)
+    {
+        bool exists = _winOptimizerService.IsHibernationEnabled();
+        var (ok, msg) = _winOptimizerService.SetHibernation(!exists);
+        RefreshHiberStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnSetPrivateNetwork_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.SetNetworkToPrivate();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    #endregion
+
+    #region 4. 资源管理器开荒与卓越性能
 
     private void RefreshExplorerSettings()
     {
@@ -91,7 +151,7 @@ public partial class SystemOptView : UserControl
     private void BtnRefreshExplorerSettings_Click(object sender, RoutedEventArgs e)
     {
         RefreshExplorerSettings();
-        MessageBox.Show("资源管理器与系统设置状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show("资源管理器设置状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void ChkShowFileExt_Click(object sender, RoutedEventArgs e)
@@ -123,33 +183,33 @@ public partial class SystemOptView : UserControl
 
     #endregion
 
-    #region Windows 11/10 体验去魅优化
+    #region 5. Windows 11/10 体验去魅优化
 
     private void RefreshOptimizerStatus()
     {
         bool classic = _winOptimizerService.IsClassicContextMenuEnabled();
         TxtClassicMenuStatus.Text = classic ? "[已开启 Win10 经典菜单]" : "[当前为 Win11 折叠菜单]";
-        TxtClassicMenuStatus.Foreground = classic ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+        TxtClassicMenuStatus.Foreground = classic ? Brushes.DarkGreen : Brushes.DarkOrange;
 
         bool noBing = _winOptimizerService.IsBingSearchDisabled();
         TxtBingStatus.Text = noBing ? "[已关闭必应搜索广告]" : "[当前保留必应搜索与热搜]";
-        TxtBingStatus.Foreground = noBing ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+        TxtBingStatus.Foreground = noBing ? Brushes.DarkGreen : Brushes.DarkOrange;
 
         bool noTele = _winOptimizerService.IsTelemetryDisabled();
         TxtTelemetryStatus.Text = noTele ? "[已禁用个性化遥测广告]" : "[当前为默认遥测]";
-        TxtTelemetryStatus.Foreground = noTele ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+        TxtTelemetryStatus.Foreground = noTele ? Brushes.DarkGreen : Brushes.DarkOrange;
 
         bool noSticky = _winOptimizerService.IsStickyKeysPromptDisabled();
         TxtStickyStatus.Text = noSticky ? "[已禁用 5 次 Shift 弹窗]" : "[当前为系统默认弹窗]";
-        TxtStickyStatus.Foreground = noSticky ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+        TxtStickyStatus.Foreground = noSticky ? Brushes.DarkGreen : Brushes.DarkOrange;
 
         bool clipHist = _winOptimizerService.IsClipboardHistoryEnabled();
         TxtClipboardStatus.Text = clipHist ? "[已开启 Win+V 剪贴板历史]" : "[当前未开启剪贴板历史]";
-        TxtClipboardStatus.Foreground = clipHist ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+        TxtClipboardStatus.Foreground = clipHist ? Brushes.DarkGreen : Brushes.DarkOrange;
 
         bool devMode = _winOptimizerService.IsDevModeAndLongPathsEnabled();
         TxtDevModeStatus.Text = devMode ? "[已开启开发者模式与长路径]" : "[当前为标准用户限制]";
-        TxtDevModeStatus.Foreground = devMode ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+        TxtDevModeStatus.Foreground = devMode ? Brushes.DarkGreen : Brushes.DarkOrange;
     }
 
     private void BtnToggleClassicMenu_Click(object sender, RoutedEventArgs e)
@@ -208,7 +268,7 @@ public partial class SystemOptView : UserControl
 
     #endregion
 
-    #region PATH 环境变量管理
+    #region 6. PATH 环境变量管理
 
     private void LoadPathEntries(bool isSystem)
     {
@@ -235,45 +295,49 @@ public partial class SystemOptView : UserControl
     {
         bool isSystem = RbSysPath.IsChecked == true;
         LoadPathEntries(isSystem);
-        MessageBox.Show("已重新读取当前 PATH 列表！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show("PATH 环境变量列表已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void BtnRemoveDeadPaths_Click(object sender, RoutedEventArgs e)
     {
-        var deadList = _pathItems.Where(p => !p.Exists).ToList();
-        if (deadList.Count == 0)
+        var deadItems = _pathItems.Where(p => !p.Exists).ToList();
+        if (deadItems.Count == 0)
         {
-            MessageBox.Show("太棒了！当前 PATH 中未检测到任何失效死路径。", "检测提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("当前未检测到已失效的死路径！环境变量健康。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
-        var result = MessageBox.Show($"检测到 {deadList.Count} 条已不存在的幽灵死路径，是否从列表中清除？\n注意：清除后需点击【保存修改】才会真正写入注册表。", "确认清理", MessageBoxButton.YesNo, MessageBoxImage.Question);
-        if (result == MessageBoxResult.Yes)
+        var confirm = MessageBox.Show($"检测到 {deadItems.Count} 个已失效死路径，确认一键从列表中清除吗？\n(清除后需点击绿色‘保存并广播’按钮方可正式写入系统)", "清理死路径", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (confirm != MessageBoxResult.Yes) return;
+
+        foreach (var item in deadItems)
         {
-            foreach (var item in deadList)
-            {
-                _pathItems.Remove(item);
-            }
+            _pathItems.Remove(item);
         }
+        MessageBox.Show($"已清除 {deadItems.Count} 个死路径，请记得点击右侧【保存并向系统广播生效】！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void BtnMovePathUp_Click(object sender, RoutedEventArgs e)
     {
-        int idx = GridPathEntries.SelectedIndex;
-        if (idx > 0)
+        int index = GridPathEntries.SelectedIndex;
+        if (index > 0)
         {
-            _pathItems.Move(idx, idx - 1);
-            GridPathEntries.SelectedIndex = idx - 1;
+            var item = _pathItems[index];
+            _pathItems.RemoveAt(index);
+            _pathItems.Insert(index - 1, item);
+            GridPathEntries.SelectedIndex = index - 1;
         }
     }
 
     private void BtnMovePathDown_Click(object sender, RoutedEventArgs e)
     {
-        int idx = GridPathEntries.SelectedIndex;
-        if (idx >= 0 && idx < _pathItems.Count - 1)
+        int index = GridPathEntries.SelectedIndex;
+        if (index >= 0 && index < _pathItems.Count - 1)
         {
-            _pathItems.Move(idx, idx + 1);
-            GridPathEntries.SelectedIndex = idx + 1;
+            var item = _pathItems[index];
+            _pathItems.RemoveAt(index);
+            _pathItems.Insert(index + 1, item);
+            GridPathEntries.SelectedIndex = index + 1;
         }
     }
 
@@ -281,21 +345,21 @@ public partial class SystemOptView : UserControl
     {
         var dialog = new Microsoft.Win32.OpenFolderDialog
         {
-            Title = "选择要加入 PATH 环境变量的文件夹"
+            Title = "选择要添加到 PATH 的文件夹路径"
         };
-        if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.FolderName))
+        if (dialog.ShowDialog() == true)
         {
-            if (_pathItems.Any(p => string.Equals(p.Path, dialog.FolderName, StringComparison.OrdinalIgnoreCase)))
+            string path = dialog.FolderName.Trim();
+            if (_pathItems.Any(p => p.Path.Equals(path, StringComparison.OrdinalIgnoreCase)))
             {
-                MessageBox.Show("该路径已存在于列表中，无需重复添加！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("该路径已存在于 PATH 列表中！无需重复添加。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            _pathItems.Insert(0, new PathDisplayItem
+            _pathItems.Add(new PathDisplayItem
             {
-                Path = dialog.FolderName,
+                Path = path,
                 Exists = true
             });
-            GridPathEntries.SelectedIndex = 0;
         }
     }
 
@@ -305,25 +369,14 @@ public partial class SystemOptView : UserControl
         {
             _pathItems.Remove(item);
         }
-        else
-        {
-            MessageBox.Show("请先在表格中点击选中要删除的路径！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-        }
     }
 
     private void BtnSavePath_Click(object sender, RoutedEventArgs e)
     {
         bool isSystem = RbSysPath.IsChecked == true;
-        var (ok, msg) = _envManagerService.SavePathEntries(isSystem, _pathItems.Select(p => p.Path));
-        if (ok)
-        {
-            MessageBox.Show(msg, "成功", MessageBoxButton.OK, MessageBoxImage.Information);
-            LoadPathEntries(isSystem);
-        }
-        else
-        {
-            MessageBox.Show(msg, "失败", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        var paths = _pathItems.Select(p => p.Path).ToList();
+        var (ok, msg) = _envManagerService.SavePathEntries(isSystem, paths);
+        MessageBox.Show(msg, ok ? "保存成功" : "保存失败", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
     }
 
     #endregion

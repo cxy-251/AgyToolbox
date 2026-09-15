@@ -1,28 +1,48 @@
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
+using AgyToolbox.Views;
 
 namespace AgyToolbox.Gui;
 
 /// <summary>
-/// MainWindow: 工具箱主窗口，轻量宿主 10 大分类视图 UserControl
+/// MainWindow: PowerToys 风格侧边栏导航宿主窗口
 /// </summary>
 public partial class MainWindow : Window
 {
+    private readonly DebloatView _debloatView = new();
+    private readonly SystemOptView _systemOptView = new();
+    private readonly BuiltInGuideView _builtInGuideView = new();
+    private readonly NativeDevView _nativeDevView = new();
+    private readonly PortableToolboxView _portableToolboxView = new();
+
     public MainWindow()
     {
         InitializeComponent();
+
+        // 默认显示阶段一：开荒与预装精简
+        MainContentHost.Content = _debloatView;
     }
 
-    /// <summary>
-    /// 支持在单行 TabControl 标签栏上通过鼠标滚轮横向平滑滚动标签
-    /// </summary>
-    private void TabScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+    private void Nav_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is ScrollViewer sv)
+        if (NavDebloat.IsChecked == true)
         {
-            sv.ScrollToHorizontalOffset(sv.HorizontalOffset - e.Delta);
-            e.Handled = true;
+            MainContentHost.Content = _debloatView;
+        }
+        else if (NavOpt.IsChecked == true)
+        {
+            MainContentHost.Content = _systemOptView;
+        }
+        else if (NavBuiltIn.IsChecked == true)
+        {
+            MainContentHost.Content = _builtInGuideView;
+        }
+        else if (NavNativeDev.IsChecked == true)
+        {
+            MainContentHost.Content = _nativeDevView;
+        }
+        else if (NavToolbox.IsChecked == true)
+        {
+            MainContentHost.Content = _portableToolboxView;
         }
     }
 }

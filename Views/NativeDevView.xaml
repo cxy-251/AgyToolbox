@@ -5,84 +5,126 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="1000">
+             d:DesignHeight="1600" d:DesignWidth="850">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+        <StackPanel Margin="10">
 
-    <UserControl.Resources>
-        <!-- 子级选项卡 Header 样式 -->
-        <Style x:Key="SubTabItemStyle" TargetType="TabItem">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Margin" Value="0,0,4,0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Foreground" Value="#64748B"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="SubTabBorder" Background="#F1F5F9" CornerRadius="4,4,0,0" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
-                            <ContentPresenter x:Name="SubContentSite"
-                                              VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"
-                                              ContentSource="Header"/>
+            <!-- 模块说明看板 -->
+            <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="💻 步骤四：原生开发环境与现代终端基建 (Native Dev &amp; Infrastructure)" FontSize="16" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,6"/>
+                    <TextBlock Text="Windows 如今拥有极其强大的原生现代开发底座。无需装满臃肿的第三方终端或杂乱的虚拟机，本模块带你一键点亮 WSL2 官方子系统、Windows Sandbox 纯净原生沙箱、配置开机自启的 OpenSSH 认证代理，并掌握网络链路与开发高频救命指令！"
+                               FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 板块 1: WSL2 与原生沙箱基建 -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🐧 1. Windows 原生虚拟化重器：WSL2 与 Windows Sandbox 沙盒" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="微软官方深度融合的轻量级 Linux 内核与一次性纯净隔离测试环境：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- WSL2 -->
+                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="WSL2 (Linux 子系统)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TxtWslStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock Text="【开发基石】在 Windows 上近乎原生性能运行 Ubuntu/Debian，支持 Docker 原生后端与 GPU 加速计算。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                                <TextBlock Text="💡 避坑建议：默认安装在 C 盘，空间紧张者可在安装后使用 wsl --export 和 wsl --import 迁移到 D 盘！" FontSize="10" Foreground="#B45309" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckWsl_Click"/>
+                                    <Button Grid.Column="1" Content="一键安装 WSL2" Background="#0284C7" Margin="4,0,0,0" Click="BtnInstallWsl_Click"/>
+                                </Grid>
+                            </StackPanel>
                         </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
-                                <Setter Property="Foreground" Value="#0284C7"/>
-                                <Setter Property="FontWeight" Value="Bold"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="SubTabBorder" Property="Background" Value="#E2E8F0"/>
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="True"/>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
 
-    <Grid Background="#F8FAFC">
-        <!-- 步骤四：原生开发与自带工具集集成展示 -->
-        <TabControl Margin="4" Background="White" BorderBrush="#E2E8F0" BorderThickness="1"
-                    ItemContainerStyle="{StaticResource SubTabItemStyle}">
+                        <!-- Windows Sandbox -->
+                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Windows Sandbox (官方沙箱)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="TxtSandboxStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock Text="【隔离测试】微软官方原生自带的轻量级纯净虚拟机。随开随用，关闭后彻底销毁不留任何痕迹，专门用于测试可疑软件或安装包。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                                <TextBlock Text="💡 说明：启用后需重启系统一次，按 Win+S 搜 Windows Sandbox 即可运行。" FontSize="10" Foreground="#047857" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckSandbox_Click"/>
+                                    <Button Grid.Column="1" Content="启用原生沙箱" Background="#10B981" Margin="4,0,0,0" Click="BtnEnableSandbox_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
 
-            <!-- 1. 原生命令行与开发速查 -->
-            <TabItem Header="💻 原生命令行与网络链路 (CLI &amp; Route)">
-                <views:RouteCliView />
-            </TabItem>
+            <!-- 板块 2: 现代终端与 OpenSSH 免密基建 -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🔑 2. OpenSSH 密钥认证与 ssh-agent 开机自启服务" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="系统内置 OpenSSH Client，通过配置开机自启的 ssh-agent，实现全系统 Git 与终端免重复输密码：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
 
-            <!-- 2. 局域网快传 -->
-            <TabItem Header="📡 局域网跨设备快传 (WebDrop)">
-                <views:WebDropView />
-            </TabItem>
+                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="开机自启 Windows 原生 OpenSSH Agent 服务" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock x:Name="TxtSshAgentStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <TextBlock Text="【生产力提升】Windows 默认将 ssh-agent 设为禁用状态。将其设为自动并启动后，通过 ssh-add ~/.ssh/id_ed25519 添加私钥，之后所有 Git Clone、Push 与 SSH 连接永久全局免密！" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <Button x:Name="BtnEnableSshAgent" Grid.Column="1" Content="开启 ssh-agent 自启" Background="#0284C7" VerticalAlignment="Center" Click="BtnEnableSshAgent_Click"/>
+                        </Grid>
+                    </Border>
 
-            <!-- 3. 大文件极速猎手 -->
-            <TabItem Header="🔍 大文件极速猎手 (DiskHunter)">
-                <views:DiskHunterView />
-            </TabItem>
+                    <!-- SSH 快速配置卡片 -->
+                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="生成现代高安全 Ed25519 密钥 (推荐替代淘汰的 RSA):" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
+                                <TextBox Text="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="8,0,0,0"
+                                    Click="BtnCopySnippet_Click" Tag="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
 
-            <!-- 4. 硬件与网卡透视 -->
-            <TabItem Header="📊 硬件与网卡透视 (SysInfo)">
-                <views:SysInfoView />
-            </TabItem>
+            <!-- 板块 3: 嵌入式原生 CLI 速查与网络链路诊断 (嵌入 RouteCliView) -->
+            <views:RouteCliView />
 
-            <!-- 5. 开发者瑞士军刀 -->
-            <TabItem Header="🧰 开发者离线军刀 (DevTools)">
-                <views:DevToolsView />
-            </TabItem>
-
-            <!-- 6. DNS 测速与镜像源 -->
-            <TabItem Header="🌐 DNS 测速与镜像源 (NetMirrors)">
-                <views:NetMirrorsView />
-            </TabItem>
-
-        </TabControl>
-    </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
