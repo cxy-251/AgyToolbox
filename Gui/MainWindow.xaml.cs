@@ -18,6 +18,21 @@ public class PathDisplayItem
         : System.Windows.Media.Brushes.Red;
 }
 
+public class UwpAppDisplayItem
+{
+    public string Key { get; set; } = "";
+    public string DisplayName { get; set; } = "";
+    public string PackagePrefix { get; set; } = "";
+    public string Category { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DebloatAdvice { get; set; } = "";
+    public bool IsInstalled { get; set; }
+    public string StatusText => IsInstalled ? "● 已安装" : "○ 未安装/已卸载";
+    public System.Windows.Media.Brush StatusBrush => IsInstalled
+        ? System.Windows.Media.Brushes.Red
+        : System.Windows.Media.Brushes.DarkGreen;
+}
+
 public partial class MainWindow : Window
 {
     private readonly WebDropService _webDropService = new();
@@ -27,7 +42,9 @@ public partial class MainWindow : Window
     private readonly EnvManagerService _envManagerService = new();
     private readonly WinOptimizerService _winOptimizerService = new();
     private readonly DevToolsService _devToolsService = new();
+    private readonly UwpDebloatService _uwpDebloatService = new();
     private readonly ObservableCollection<PathDisplayItem> _pathItems = new();
+    private readonly ObservableCollection<UwpAppDisplayItem> _uwpItems = new();
 
     public MainWindow()
     {
@@ -64,6 +81,10 @@ public partial class MainWindow : Window
 
         // 初始化加载系统信息与默认 DNS 列表
         GridDns.ItemsSource = _winTricksService.GetDefaultDnsList();
+
+        // 初始化预装精简
+        GridUwpApps.ItemsSource = _uwpItems;
+        _ = LoadUwpAppsAsync();
 
         // 初始化环境变量与系统优化
         GridPathEntries.ItemsSource = _pathItems;
@@ -768,6 +789,91 @@ public partial class MainWindow : Window
         {
             Clipboard.SetText(TxtGuidResult.Text);
             MessageBox.Show("全新 GUID 已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    #endregion
+
+    #region 新机开荒与预装精简 (UWP Debloat & Winget)
+
+    private async Task LoadUwpAppsAsync()
+    {
+        _uwpItems.Clear();
+        var apps = await _uwpDebloatService.ScanInstalledAppsAsync();
+        foreach (var app in apps)
+        {
+            _uwpItems.Add(new UwpAppDisplayItem
+            {
+                Key = app.Key,
+                DisplayName = app.DisplayName,
+                PackagePrefix = app.PackagePrefix,
+                Category = app.Category,
+                Description = app.Description,
+                DebloatAdvice = app.DebloatAdvice,
+                IsInstalled = app.IsInstalled
+            });
+        }
+    }
+
+    private async void BtnScanUwp_Click(object sender, RoutedEventArgs e)
+    {
+        var targetBtn = sender as Button;
+        if (targetBtn != null) targetBtn.IsEnabled = false;
+        try
+        {
+            await LoadUwpAppsAsync();
+            MessageBox.Show("预装应用安装状态扫描完成！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"扫描失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            if (targetBtn != null) targetBtn.IsEnabled = true;
+        }
+    }
+
+    private async void BtnUninstallSingleUwp_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string prefix)
+        {
+            var item = _uwpItems.FirstOrDefault(i => i.PackagePrefix == prefix);
+            string name = item?.DisplayName ?? prefix;
+
+            var confirm = MessageBox.Show($"确定要从本机彻底卸载【{name}】吗？\n将同时移除当前用户包及新用户预配模板，防止后续死灰复燃。", "确认卸载", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (confirm != MessageBoxResult.Yes) return;
+
+            btn.IsEnabled = false;
+            try
+            {
+                var (ok, msg) = await _uwpDebloatService.UninstallPackageAsync(prefix);
+                MessageBox.Show(msg, ok ? "卸载成功" : "卸载提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+                await LoadUwpAppsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"卸载失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                btn.IsEnabled = true;
+            }
+        }
+    }
+
+    private void BtnCopyWingetUpgrade_Click(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText("winget upgrade --all --include-unknown");
+        MessageBox.Show("一键静默全盘升级所有软件命令已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnCopySnippet_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string snippet)
+        {
+            Clipboard.SetText(snippet);
+            MessageBox.Show($"命令已复制到剪贴板：\n{snippet}", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 

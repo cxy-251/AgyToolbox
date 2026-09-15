@@ -134,7 +134,198 @@
         <!-- 核心选项卡内容 -->
         <TabControl Grid.Row="1" Margin="12" Background="White" BorderBrush="#E2E8F0" BorderThickness="1">
 
-            <!-- TAB 1: 局域网快传 (WebDrop) -->
+            <!-- STEP 1: 🧹 步骤一：新机开荒与预装精简 (1. Debloat & Winget) -->
+            <TabItem Header="🧹 1. 新机开荒与预装精简 (Debloat)">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                    <StackPanel Margin="10">
+
+                        <!-- 模块说明看板 -->
+                        <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="💡 新电脑到手第一件事：去魅精简与告别臃肿" FontSize="15" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,6"/>
+                                <TextBlock Text="很多刚买的新电脑自带了大量微软全家桶 UWP 应用（如人脉、天气、小娜、Xbox 录屏、资讯新闻等）。它们常驻后台自启、静默拉取推送、消耗内存。本模块帮助你透视每一个预装软件到底有什么用，按需一键干净移除！"
+                                           FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                <TextBlock Text="结合现代极客理念：软件安装首选官方原生包管理器 winget，干净无捆绑、不弹窗、不写死垃圾，甚至连臃肿的应用商店都可以放心精简掉！"
+                                           FontSize="12" FontWeight="SemiBold" Foreground="#047857" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 预装应用列表 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,12">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="📋 Windows 常见预装软件透视与一键卸载" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (清晰解释用途与卸载影响，彻底清理当前及新用户模板)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Button Content="⚡ 重新扫描预装状态" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" Click="BtnScanUwp_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <DataGrid x:Name="GridUwpApps" AutoGenerateColumns="False" IsReadOnly="True" Height="300"
+                                          Background="White" BorderBrush="#E2E8F0" RowHeight="42" GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="#F1F5F9">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="软件名称" Binding="{Binding DisplayName}" Width="160"/>
+                                        <DataGridTextColumn Header="类别" Binding="{Binding Category}" Width="80"/>
+                                        <DataGridTextColumn Header="它是干什么的 (官方用途)" Binding="{Binding Description}" Width="2*"/>
+                                        <DataGridTextColumn Header="卸载建议与替代方案" Binding="{Binding DebloatAdvice}" Width="2*"/>
+                                        <DataGridTemplateColumn Header="安装状态" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="6,0"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="操作" Width="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="🗑️ 卸载" Style="{StaticResource SecondaryButton}" Height="26" Padding="8,0"
+                                                            IsEnabled="{Binding IsInstalled}" Click="BtnUninstallSingleUwp_Click"
+                                                            Tag="{Binding PackagePrefix}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- winget 极简包管理教学与常用指令 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="📦 极简主义必知：Windows 官方原生包管理器 winget 使用指南" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                                <TextBlock Text="告别百度搜索去各种‘软件下载站’下载全家桶流氓软件！Windows 10/11 官方自带 winget，一行命令直接从源站拉取纯净安装包静默安装。"
+                                           FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                                        <StackPanel>
+                                            <TextBlock Text="🌟 一行命令全盘静默更新所有软件 (极客最爱):" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                            <TextBox Text="winget upgrade --all --include-unknown" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Button Grid.Column="1" Content="📋 复制更新命令" Margin="8,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetUpgrade_Click"/>
+                                </Grid>
+
+                                <TextBlock Text="常用纯净软件一键安装命令卡片 (点击一键复制)：" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,8,0,8"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 左侧列 -->
+                                    <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                                        <!-- VSCode -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Visual Studio Code" FontWeight="Bold" FontSize="12"/>
+                                                    <TextBlock Text="winget install Microsoft.VisualStudioCode" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Microsoft.VisualStudioCode"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Git -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Git 版本控制" FontWeight="Bold" FontSize="12"/>
+                                                    <TextBlock Text="winget install Git.Git" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Git.Git"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Chrome -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Google Chrome 浏览器" FontWeight="Bold" FontSize="12"/>
+                                                    <TextBlock Text="winget install Google.Chrome" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Google.Chrome"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- 右侧列 -->
+                                    <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                                        <!-- 7-Zip -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="7-Zip 开源极简解压" FontWeight="Bold" FontSize="12"/>
+                                                    <TextBlock Text="winget install 7zip.7zip" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install 7zip.7zip"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Node.js LTS -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Node.js LTS 运行环境" FontWeight="Bold" FontSize="12"/>
+                                                    <TextBlock Text="winget install OpenJS.NodeJS.LTS" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install OpenJS.NodeJS.LTS"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- WeChat -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="微信 PC 官方纯净版" FontWeight="Bold" FontSize="12"/>
+                                                    <TextBlock Text="winget install Tencent.WeChat" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Tencent.WeChat"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- TAB 2: 局域网快传 (WebDrop) -->
             <TabItem Header="🚀 局域网快传 (WebDrop)">
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
