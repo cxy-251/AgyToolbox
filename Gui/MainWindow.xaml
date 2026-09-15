@@ -839,7 +839,303 @@
                 </ScrollViewer>
             </TabItem>
 
-            <!-- TAB 7: ⚡ 隐藏神仙快捷键 (CheatSheet) -->
+            <!-- TAB 7: ⚙️ 环境变量与系统优化 (Env & Optimizer) -->
+            <TabItem Header="⚙️ 环境变量与优化 (Env &amp; Opt)">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                    <StackPanel Margin="10">
+
+                        <!-- 第一板块：PATH 环境变量深度体检与幽灵死路径清理 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="🛠️ PATH 环境变量管理 &amp; 幽灵死路径检测" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (从上到下决定程序调用优先级，标红代表目录已丢失)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
+                                    </StackPanel>
+                                    
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <RadioButton x:Name="RbUserPath" Content="当前用户 (User PATH)" IsChecked="True" VerticalAlignment="Center" Margin="0,0,12,0" Checked="RbPathScope_Checked"/>
+                                        <RadioButton x:Name="RbSysPath" Content="系统全局 (System PATH)" VerticalAlignment="Center" Margin="0,0,16,0" Checked="RbPathScope_Checked"/>
+                                        <Button Content="⚡ 重新扫描" Style="{StaticResource SecondaryButton}" Click="BtnReloadPath_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- 操作工具条 -->
+                                <WrapPanel Margin="0,0,0,10">
+                                    <Button Content="🗑️ 一键清除所有已失效死路径" Background="#EF4444" Margin="0,0,8,4" Click="BtnRemoveDeadPaths_Click"/>
+                                    <Button Content="⬆️ 上移 (提高优先级)" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnMovePathUp_Click"/>
+                                    <Button Content="⬇️ 下移 (降低优先级)" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnMovePathDown_Click"/>
+                                    <Button Content="➕ 新增路径" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnAddPath_Click"/>
+                                    <Button Content="❌ 删除选中项" Style="{StaticResource SecondaryButton}" Margin="0,0,8,4" Click="BtnDeleteSelectedPath_Click"/>
+                                    <Button Content="💾 保存修改并向系统广播生效" Background="#10B981" Margin="0,0,0,4" Click="BtnSavePath_Click"/>
+                                </WrapPanel>
+
+                                <!-- DataGrid 展示路径 -->
+                                <DataGrid x:Name="GridPathEntries" AutoGenerateColumns="False" IsReadOnly="True" Height="220"
+                                          Background="White" BorderBrush="#E2E8F0" RowHeight="30" GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="#F1F5F9">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="物理路径 (Path)" Binding="{Binding Path}" Width="*"/>
+                                        <DataGridTemplateColumn Header="状态检测" Width="180">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding ExistsText}" Foreground="{Binding StatusBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="6,0"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
+                                <TextBlock Text="💡 原理提示：Windows 执行命令时严格自上而下匹配 PATH 中的文件夹。如果已经卸载的软件残留死路径，不仅拖慢启动，还容易导致旧版命令抢先执行。"
+                                           FontSize="11" Foreground="#64748B" Margin="0,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第二板块：Windows 11 常用去魅与体验优化 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="🎛️ Windows 11/10 体验去魅与实用优化 (安全透明可逆)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                                <TextBlock Text="每个选项仅精准调整对应注册表开关，绝不破坏系统核心组件或 Windows Update，随时可一键恢复。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- 优化项 1: Win10 经典右键完整菜单 -->
+                                    <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="📄 Win10 经典完整右键菜单" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                    <TextBlock x:Name="TxtClassicMenuStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                                                </StackPanel>
+                                                <TextBlock Text="还原右键直接展示全部功能选项，免去 Win11 每次点开都需要点击‘显示更多选项’的繁琐折叠。" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                            <Button x:Name="BtnToggleClassicMenu" Grid.Column="1" Content="切换状态" VerticalAlignment="Center" Click="BtnToggleClassicMenu_Click"/>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- 优化项 2: 关闭必应网络搜索广告 -->
+                                    <Border Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="🔍 关闭开始菜单/任务栏必应在线搜索与热搜广告" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                    <TextBlock x:Name="TxtBingStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                                                </StackPanel>
+                                                <TextBlock Text="禁用搜索时向必应服务器发包请求网络热搜与商业广告，纯粹保留本地应用和文件搜索，秒级响应。" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                            <Button x:Name="BtnToggleBing" Grid.Column="1" Content="切换状态" VerticalAlignment="Center" Click="BtnToggleBing_Click"/>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- 优化项 3: 禁用诊断数据遥测与个性化建议 -->
+                                    <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="🛡️ 禁用系统个性化遥测与广告追踪" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                    <TextBlock x:Name="TxtTelemetryStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                                                </StackPanel>
+                                                <TextBlock Text="关闭微软诊断数据跟踪与基于使用习惯的锁屏/设置广告推送，保护隐私并节省后台资源。" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                            <Button x:Name="BtnToggleTelemetry" Grid.Column="1" Content="切换状态" VerticalAlignment="Center" Click="BtnToggleTelemetry_Click"/>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- 重启资源管理器 -->
+                                    <Border Grid.Row="3" Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="🔄 一键平滑重启 Windows 资源管理器 (explorer.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                <TextBlock Text="修改上述右键菜单或搜索策略后，点击此处立即重启任务栏与资源管理器，使新配置即刻生效。" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                            <Button Grid.Column="1" Content="立即重启 Explorer" Background="#0284C7" VerticalAlignment="Center" Click="BtnRestartExplorer_Click"/>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- TAB 8: 🧰 开发者瑞士军刀 (DevTools) -->
+            <TabItem Header="🧰 开发者瑞士军刀 (DevTools)">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                    <StackPanel Margin="10">
+
+                        <!-- 第一部分：文件指纹与 Hash 比对 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="🔒 离线文件指纹计算与哈希防篡改比对" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                                <TextBlock Text="本地高速单次流式读取，一网打尽 MD5 / SHA1 / SHA256 / SHA512，自动绿色/红色高亮比对结果。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="TxtHashFilePath" Height="32" VerticalContentAlignment="Center" Padding="8,0"
+                                             Text="点击右侧选择文件，或直接拖拽文件到此处..." IsReadOnly="True" AllowDrop="True"
+                                             PreviewDragOver="TxtHashFilePath_PreviewDragOver" Drop="TxtHashFilePath_Drop"/>
+                                    <Button Grid.Column="1" Content="📁 选择文件" Margin="10,0,0,0" Click="BtnSelectHashFile_Click"/>
+                                </Grid>
+
+                                <!-- 哈希展示网格 -->
+                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="80"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- MD5 -->
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="MD5:" FontWeight="Bold" VerticalAlignment="Center"/>
+                                        <TextBox x:Name="TxtHashMd5" Grid.Row="0" Grid.Column="1" IsReadOnly="True" FontFamily="Consolas" FontSize="11" Margin="0,2,6,2"/>
+                                        <Button Grid.Row="0" Grid.Column="2" Content="📋" Style="{StaticResource SecondaryButton}" Click="BtnCopyMd5_Click"/>
+
+                                        <!-- SHA1 -->
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="SHA1:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBox x:Name="TxtHashSha1" Grid.Row="1" Grid.Column="1" IsReadOnly="True" FontFamily="Consolas" FontSize="11" Margin="0,4,6,2"/>
+                                        <Button Grid.Row="1" Grid.Column="2" Content="📋" Style="{StaticResource SecondaryButton}" Margin="0,4,0,0" Click="BtnCopySha1_Click"/>
+
+                                        <!-- SHA256 -->
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="SHA256:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBox x:Name="TxtHashSha256" Grid.Row="2" Grid.Column="1" IsReadOnly="True" FontFamily="Consolas" FontSize="11" Margin="0,4,6,2"/>
+                                        <Button Grid.Row="2" Grid.Column="2" Content="📋" Style="{StaticResource SecondaryButton}" Margin="0,4,0,0" Click="BtnCopySha256_Click"/>
+
+                                        <!-- SHA512 -->
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="SHA512:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBox x:Name="TxtHashSha512" Grid.Row="3" Grid.Column="1" IsReadOnly="True" FontFamily="Consolas" FontSize="11" Margin="0,4,6,0"/>
+                                        <Button Grid.Row="3" Grid.Column="2" Content="📋" Style="{StaticResource SecondaryButton}" Margin="0,4,0,0" Click="BtnCopySha512_Click"/>
+                                    </Grid>
+                                </Border>
+
+                                <!-- 比对框 -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="官方期望哈希比对：" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"/>
+                                    <TextBox x:Name="TxtExpectedHash" Grid.Column="1" Height="28" VerticalContentAlignment="Center" Padding="6,0"
+                                             TextChanged="TxtExpectedHash_TextChanged"/>
+                                </Grid>
+                                <TextBlock x:Name="TxtHashCompareResult" FontSize="12" FontWeight="Bold" Margin="0,6,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第二部分：离线编解码与时间戳 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+                            <StackPanel>
+                                <TextBlock Text="🔤 纯本地快速编解码 &amp; 时间戳 / GUID 工具" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                                <TextBlock Text="数据完全在本地内存处理，无需联网，防止敏感 Token 或密钥泄露给第三方在线网站。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 输入框 -->
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="输入源文本：" FontSize="12" FontWeight="SemiBold" Foreground="#475569" Margin="0,0,0,4"/>
+                                        <TextBox x:Name="TxtCodecInput" Height="100" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12" Padding="6"/>
+                                    </StackPanel>
+
+                                    <!-- 编解码按钮 -->
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                                        <Button Content="Base64 编码 ➔" Margin="0,0,0,4" Click="BtnBase64Encode_Click"/>
+                                        <Button Content="Base64 解码 ➔" Margin="0,0,0,4" Click="BtnBase64Decode_Click"/>
+                                        <Button Content="URL 编码 ➔" Margin="0,0,0,4" Click="BtnUrlEncode_Click"/>
+                                        <Button Content="URL 解码 ➔" Margin="0,0,0,0" Click="BtnUrlDecode_Click"/>
+                                    </StackPanel>
+
+                                    <!-- 输出框 -->
+                                    <StackPanel Grid.Column="2">
+                                        <Grid Margin="0,0,0,4">
+                                            <TextBlock Text="转换结果：" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Button Content="📋 复制" HorizontalAlignment="Right" Style="{StaticResource SecondaryButton}" Click="BtnCopyCodecOutput_Click"/>
+                                        </Grid>
+                                        <TextBox x:Name="TxtCodecOutput" Height="100" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="12" Padding="6" IsReadOnly="True" Background="White"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- 时间戳与 GUID -->
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 时间戳转换 -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⏰ Unix 时间戳 ↔ 本地北京时间" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,6"/>
+                                            <Grid Margin="0,0,0,6">
+                                                <TextBox x:Name="TxtTimestampInput" Height="28" VerticalContentAlignment="Center" Padding="6,0"/>
+                                                <Button Content="当前时间戳" HorizontalAlignment="Right" Style="{StaticResource SecondaryButton}" Click="BtnFillCurrentTs_Click"/>
+                                            </Grid>
+                                            <Button Content="转换时间 ➔" Click="BtnConvertTs_Click" Margin="0,0,0,6"/>
+                                            <TextBox x:Name="TxtTsResult" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="12" Padding="4"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- GUID 生成器 -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🎲 随机 GUID / UUID 生成器" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,6"/>
+                                            <WrapPanel Margin="0,0,0,6">
+                                                <CheckBox x:Name="ChkGuidUpper" Content="全大写" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                                <CheckBox x:Name="ChkGuidNoHyphen" Content="去除横线 (N格式)" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                                <Button Content="生成全新 GUID" Click="BtnGenGuid_Click"/>
+                                            </WrapPanel>
+                                            <Grid>
+                                                <TextBox x:Name="TxtGuidResult" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="12" Padding="6,4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{StaticResource SecondaryButton}" Click="BtnCopyGuid_Click"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- TAB 9: ⚡ 隐藏神仙快捷键 (CheatSheet) -->
             <TabItem Header="⚡ 隐藏神仙快捷键 (CheatSheet)">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
                     <StackPanel Margin="10">

@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,12 +8,26 @@ using AgyToolbox.Services;
 
 namespace AgyToolbox.Gui;
 
+public class PathDisplayItem
+{
+    public string Path { get; set; } = "";
+    public bool Exists { get; set; }
+    public string ExistsText => Exists ? "✅ 路径有效" : "🚫 幽灵死路径 (不存在)";
+    public System.Windows.Media.Brush StatusBrush => Exists
+        ? System.Windows.Media.Brushes.DarkGreen
+        : System.Windows.Media.Brushes.Red;
+}
+
 public partial class MainWindow : Window
 {
     private readonly WebDropService _webDropService = new();
     private readonly DiskHunterService _diskHunterService = new();
     private readonly SysInfoService _sysInfoService = new();
     private readonly WinTricksService _winTricksService = new();
+    private readonly EnvManagerService _envManagerService = new();
+    private readonly WinOptimizerService _winOptimizerService = new();
+    private readonly DevToolsService _devToolsService = new();
+    private readonly ObservableCollection<PathDisplayItem> _pathItems = new();
 
     public MainWindow()
     {
@@ -49,6 +64,14 @@ public partial class MainWindow : Window
 
         // 初始化加载系统信息与默认 DNS 列表
         GridDns.ItemsSource = _winTricksService.GetDefaultDnsList();
+
+        // 初始化环境变量与系统优化
+        GridPathEntries.ItemsSource = _pathItems;
+        LoadPathEntries(false);
+        RefreshOptimizerStatus();
+        BtnFillCurrentTs_Click(this, new RoutedEventArgs());
+        BtnGenGuid_Click(this, new RoutedEventArgs());
+
         Loaded += async (s, e) => await LoadSysInfoAsync();
     }
 
@@ -416,6 +439,336 @@ public partial class MainWindow : Window
     private void BtnClearDiagLog_Click(object sender, RoutedEventArgs e)
     {
         TxtDiagConsole.Text = "[网络诊断控制台已清空就绪]\n";
+    }
+
+    #endregion
+
+    #region 环境变量与系统优化 (Env & Optimizer)
+
+    private void LoadPathEntries(bool isSystem)
+    {
+        _pathItems.Clear();
+        var entries = _envManagerService.GetPathEntries(isSystem);
+        foreach (var entry in entries)
+        {
+            _pathItems.Add(new PathDisplayItem
+            {
+                Path = entry.Path,
+                Exists = entry.Exists
+            });
+        }
+    }
+
+    private void RbPathScope_Checked(object sender, RoutedEventArgs e)
+    {
+        if (RbSysPath == null) return;
+        LoadPathEntries(RbSysPath.IsChecked == true);
+    }
+
+    private void BtnReloadPath_Click(object sender, RoutedEventArgs e)
+    {
+        LoadPathEntries(RbSysPath.IsChecked == true);
+    }
+
+    private void BtnRemoveDeadPaths_Click(object sender, RoutedEventArgs e)
+    {
+        var deadList = _pathItems.Where(p => !p.Exists).ToList();
+        if (deadList.Count == 0)
+        {
+            MessageBox.Show("太棒了！当前 PATH 中未检测到任何失效死路径。", "检测提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
+        var result = MessageBox.Show($"检测到 {deadList.Count} 条已不存在的幽灵死路径，是否从列表中清除？\n注意：清除后需点击【保存修改】才会真正写入注册表。", "确认清理", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (result == MessageBoxResult.Yes)
+        {
+            foreach (var item in deadList)
+            {
+                _pathItems.Remove(item);
+            }
+        }
+    }
+
+    private void BtnMovePathUp_Click(object sender, RoutedEventArgs e)
+    {
+        int idx = GridPathEntries.SelectedIndex;
+        if (idx > 0)
+        {
+            _pathItems.Move(idx, idx - 1);
+            GridPathEntries.SelectedIndex = idx - 1;
+        }
+    }
+
+    private void BtnMovePathDown_Click(object sender, RoutedEventArgs e)
+    {
+        int idx = GridPathEntries.SelectedIndex;
+        if (idx >= 0 && idx < _pathItems.Count - 1)
+        {
+            _pathItems.Move(idx, idx + 1);
+            GridPathEntries.SelectedIndex = idx + 1;
+        }
+    }
+
+    private void BtnAddPath_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFolderDialog
+        {
+            Title = "选择要加入 PATH 环境变量的文件夹"
+        };
+        if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.FolderName))
+        {
+            if (_pathItems.Any(p => string.Equals(p.Path, dialog.FolderName, StringComparison.OrdinalIgnoreCase)))
+            {
+                MessageBox.Show("该路径已存在于列表中，无需重复添加！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            _pathItems.Insert(0, new PathDisplayItem
+            {
+                Path = dialog.FolderName,
+                Exists = true
+            });
+            GridPathEntries.SelectedIndex = 0;
+        }
+    }
+
+    private void BtnDeleteSelectedPath_Click(object sender, RoutedEventArgs e)
+    {
+        if (GridPathEntries.SelectedItem is PathDisplayItem item)
+        {
+            _pathItems.Remove(item);
+        }
+        else
+        {
+            MessageBox.Show("请先在表格中点击选中要删除的路径！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void BtnSavePath_Click(object sender, RoutedEventArgs e)
+    {
+        bool isSystem = RbSysPath.IsChecked == true;
+        var (ok, msg) = _envManagerService.SavePathEntries(isSystem, _pathItems.Select(p => p.Path));
+        if (ok)
+        {
+            MessageBox.Show(msg, "成功", MessageBoxButton.OK, MessageBoxImage.Information);
+            LoadPathEntries(isSystem);
+        }
+        else
+        {
+            MessageBox.Show(msg, "失败", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void RefreshOptimizerStatus()
+    {
+        bool classic = _winOptimizerService.IsClassicContextMenuEnabled();
+        TxtClassicMenuStatus.Text = classic ? "[已开启 Win10 经典菜单]" : "[当前为 Win11 折叠菜单]";
+        TxtClassicMenuStatus.Foreground = classic ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+
+        bool noBing = _winOptimizerService.IsBingSearchDisabled();
+        TxtBingStatus.Text = noBing ? "[已关闭必应搜索广告]" : "[当前保留必应搜索与热搜]";
+        TxtBingStatus.Foreground = noBing ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+
+        bool noTele = _winOptimizerService.IsTelemetryDisabled();
+        TxtTelemetryStatus.Text = noTele ? "[已禁用个性化遥测广告]" : "[当前为默认遥测]";
+        TxtTelemetryStatus.Foreground = noTele ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+    }
+
+    private void BtnToggleClassicMenu_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsClassicContextMenuEnabled();
+        var (ok, msg) = _winOptimizerService.SetClassicContextMenu(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnToggleBing_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsBingSearchDisabled();
+        var (ok, msg) = _winOptimizerService.SetBingSearchDisabled(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnToggleTelemetry_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsTelemetryDisabled();
+        var (ok, msg) = _winOptimizerService.SetTelemetryDisabled(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnRestartExplorer_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.RestartExplorer();
+        MessageBox.Show("已向资源管理器发送重启指令，桌面与任务栏将在 1~2 秒内刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    #endregion
+
+    #region 开发者轻量工具箱 (DevTools)
+
+    private async void ProcessHashFile(string path)
+    {
+        if (!System.IO.File.Exists(path)) return;
+        TxtHashFilePath.Text = path;
+        TxtHashMd5.Text = "计算中...";
+        TxtHashSha1.Text = "计算中...";
+        TxtHashSha256.Text = "计算中...";
+        TxtHashSha512.Text = "计算中...";
+        TxtHashCompareResult.Text = "";
+
+        try
+        {
+            var res = await _devToolsService.ComputeFileHashesAsync(path);
+            TxtHashMd5.Text = res.Md5;
+            TxtHashSha1.Text = res.Sha1;
+            TxtHashSha256.Text = res.Sha256;
+            TxtHashSha512.Text = res.Sha512;
+            CompareHash();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"计算哈希失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void BtnSelectHashFile_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "选择要计算哈希指纹的文件"
+        };
+        if (dialog.ShowDialog() == true)
+        {
+            ProcessHashFile(dialog.FileName);
+        }
+    }
+
+    private void TxtHashFilePath_PreviewDragOver(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            e.Effects = DragDropEffects.Copy;
+            e.Handled = true;
+        }
+    }
+
+    private void TxtHashFilePath_Drop(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files != null && files.Length > 0)
+            {
+                ProcessHashFile(files[0]);
+            }
+        }
+    }
+
+    private void TxtExpectedHash_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        CompareHash();
+    }
+
+    private void CompareHash()
+    {
+        string expected = TxtExpectedHash.Text.Trim().ToLowerInvariant();
+        if (string.IsNullOrEmpty(expected))
+        {
+            TxtHashCompareResult.Text = "";
+            return;
+        }
+
+        if (expected == TxtHashMd5.Text || expected == TxtHashSha1.Text ||
+            expected == TxtHashSha256.Text || expected == TxtHashSha512.Text)
+        {
+            TxtHashCompareResult.Text = "✅ 哈希完全匹配！文件完整无篡改。";
+            TxtHashCompareResult.Foreground = System.Windows.Media.Brushes.DarkGreen;
+        }
+        else
+        {
+            TxtHashCompareResult.Text = "❌ 哈希不匹配！文件可能已损坏或被修改。";
+            TxtHashCompareResult.Foreground = System.Windows.Media.Brushes.Red;
+        }
+    }
+
+    private void BtnCopyMd5_Click(object sender, RoutedEventArgs e) => CopyText(TxtHashMd5.Text, "MD5");
+    private void BtnCopySha1_Click(object sender, RoutedEventArgs e) => CopyText(TxtHashSha1.Text, "SHA1");
+    private void BtnCopySha256_Click(object sender, RoutedEventArgs e) => CopyText(TxtHashSha256.Text, "SHA256");
+    private void BtnCopySha512_Click(object sender, RoutedEventArgs e) => CopyText(TxtHashSha512.Text, "SHA512");
+
+    private void CopyText(string text, string label)
+    {
+        if (!string.IsNullOrEmpty(text) && text != "计算中...")
+        {
+            Clipboard.SetText(text);
+            MessageBox.Show($"{label} 已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    private void BtnBase64Encode_Click(object sender, RoutedEventArgs e)
+    {
+        TxtCodecOutput.Text = _devToolsService.Base64Encode(TxtCodecInput.Text);
+    }
+
+    private void BtnBase64Decode_Click(object sender, RoutedEventArgs e)
+    {
+        try { TxtCodecOutput.Text = _devToolsService.Base64Decode(TxtCodecInput.Text); }
+        catch (Exception ex) { MessageBox.Show($"Base64 解码失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error); }
+    }
+
+    private void BtnUrlEncode_Click(object sender, RoutedEventArgs e)
+    {
+        TxtCodecOutput.Text = _devToolsService.UrlEncode(TxtCodecInput.Text);
+    }
+
+    private void BtnUrlDecode_Click(object sender, RoutedEventArgs e)
+    {
+        TxtCodecOutput.Text = _devToolsService.UrlDecode(TxtCodecInput.Text);
+    }
+
+    private void BtnCopyCodecOutput_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(TxtCodecOutput.Text))
+        {
+            Clipboard.SetText(TxtCodecOutput.Text);
+            MessageBox.Show("转换结果已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    private void BtnFillCurrentTs_Click(object sender, RoutedEventArgs e)
+    {
+        var (sec, ms) = _devToolsService.GetCurrentTimestamps();
+        TxtTimestampInput.Text = sec.ToString();
+        TxtTsResult.Text = $"{_devToolsService.TimestampToDateTime(sec)} (当前系统时间)";
+    }
+
+    private void BtnConvertTs_Click(object sender, RoutedEventArgs e)
+    {
+        if (long.TryParse(TxtTimestampInput.Text.Trim(), out long ts))
+        {
+            TxtTsResult.Text = _devToolsService.TimestampToDateTime(ts);
+        }
+        else
+        {
+            MessageBox.Show("请输入合法的数字时间戳（10位秒或13位毫秒）！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void BtnGenGuid_Click(object sender, RoutedEventArgs e)
+    {
+        bool upper = ChkGuidUpper.IsChecked == true;
+        bool noHyphen = ChkGuidNoHyphen.IsChecked == true;
+        TxtGuidResult.Text = _devToolsService.GenerateGuid(upper, noHyphen);
+    }
+
+    private void BtnCopyGuid_Click(object sender, RoutedEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(TxtGuidResult.Text))
+        {
+            Clipboard.SetText(TxtGuidResult.Text);
+            MessageBox.Show("全新 GUID 已复制到剪贴板！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     #endregion
