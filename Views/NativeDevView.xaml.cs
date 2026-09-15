@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AgyToolbox.Services;
+using Microsoft.Win32;
 
 namespace AgyToolbox.Views;
 
@@ -19,11 +21,13 @@ public partial class NativeDevView : UserControl
 
         RefreshWslStatus();
         RefreshSandboxStatus();
+        RefreshDevDriveStatus();
         RefreshSshAgentStatus();
         RefreshDevModeStatus();
+        RefreshSudoStatus();
     }
 
-    #region 1. 虚拟化基建 (WSL2 & Sandbox)
+    #region 1. 虚拟化与驱动基建 (WSL2 / Sandbox / Dev Drive / Dev Home)
 
     private void RefreshWslStatus()
     {
@@ -65,9 +69,90 @@ public partial class NativeDevView : UserControl
         MessageBox.Show(msg, ok ? "已发起启用" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
+    private void RefreshDevDriveStatus()
+    {
+        var (supported, hasDevDrive, info) = _nativeDevService.GetDevDriveStatus();
+        if (hasDevDrive)
+        {
+            TxtDevDriveStatus.Text = "[已挂载 Dev Drive 开发驱动器]";
+            TxtDevDriveStatus.Foreground = Brushes.DarkGreen;
+        }
+        else if (supported)
+        {
+            TxtDevDriveStatus.Text = "[系统支持 Dev Drive (当前未创建)]";
+            TxtDevDriveStatus.Foreground = Brushes.DodgerBlue;
+        }
+        else
+        {
+            TxtDevDriveStatus.Text = "[当前环境暂不支持 Dev Drive]";
+            TxtDevDriveStatus.Foreground = Brushes.DarkOrange;
+        }
+    }
+
+    private void BtnRefreshDevDrive_Click(object sender, RoutedEventArgs e)
+    {
+        var (supported, hasDevDrive, info) = _nativeDevService.GetDevDriveStatus();
+        RefreshDevDriveStatus();
+        MessageBox.Show($"Dev Drive 状态检测结果：\n\n{info}", "Dev Drive 状态", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnOpenDisksSettings_Click(object sender, RoutedEventArgs e)
+    {
+        _nativeDevService.OpenDisksAndVolumesSettings();
+    }
+
+    private void BtnLaunchDevHome_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _nativeDevService.LaunchOrInstallDevHome();
+        MessageBox.Show(msg, "Dev Home", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
     #endregion
 
-    #region 2. SSH 认证与开发者模式 (Developer Mode & Symlink)
+    #region 2. 权限特权与开发者模式 (Sudo / Developer Mode / SSH / icacls)
+
+    private void RefreshSudoStatus()
+    {
+        var (supported, enabled, modeName, _) = _nativeDevService.GetSudoStatus();
+        if (!supported)
+        {
+            TxtSudoStatus.Text = "[系统未安装原生 sudo]";
+            TxtSudoStatus.Foreground = Brushes.Gray;
+        }
+        else
+        {
+            TxtSudoStatus.Text = $"[{modeName}]";
+            TxtSudoStatus.Foreground = enabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        }
+    }
+
+    private void BtnRefreshSudo_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshSudoStatus();
+        var (_, _, modeName, _) = _nativeDevService.GetSudoStatus();
+        MessageBox.Show($"当前原生 Sudo 状态：\n\n{modeName}", "Sudo 状态", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnEnableSudoNormal_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _nativeDevService.SetSudoMode("normal");
+        RefreshSudoStatus();
+        MessageBox.Show(msg + "\n模式：normal (当前终端内联执行)", "Sudo 设置", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnEnableSudoWindow_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _nativeDevService.SetSudoMode("forceNewWindow");
+        RefreshSudoStatus();
+        MessageBox.Show(msg + "\n模式：forceNewWindow (每次提权打开新独立控制台窗口)", "Sudo 设置", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnDisableSudo_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _nativeDevService.SetSudoMode("disable");
+        RefreshSudoStatus();
+        MessageBox.Show(msg, "Sudo 设置", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
 
     private void RefreshSshAgentStatus()
     {
@@ -106,7 +191,7 @@ public partial class NativeDevView : UserControl
 
     #endregion
 
-    #region 3. 原生网络链路与实时诊断
+    #region 3. 原生网络链路与系统诊断 (pktmon / 路由 / resmon / 性能)
 
     private async void RunDiagnostic(string cmd, string args)
     {
@@ -172,9 +257,52 @@ public partial class NativeDevView : UserControl
         TxtDiagConsole.Text = "[网络诊断控制台已清空就绪]\n";
     }
 
+    private void BtnStartPktMon_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _nativeDevService.StartPktMonConsole();
+        MessageBox.Show(msg, "PktMon 抓包监视器", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
     #endregion
 
-    #region 4. 通用启动与代码复制
+    #region 4. 原生实用工具（certutil / fsutil / 通用复制）
+
+    private void BtnPickFileHash_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Title = "选择要使用原生 certutil 计算 SHA256 哈希的文件"
+        };
+        if (dialog.ShowDialog() == true)
+        {
+            var (ok, hash) = _nativeDevService.ComputeFileHash(dialog.FileName, "SHA256");
+            if (ok)
+            {
+                Clipboard.SetText(hash);
+                MessageBox.Show($"文件: {Path.GetFileName(dialog.FileName)}\n\nSHA256 哈希值:\n{hash}\n\n已自动复制到剪贴板！", "哈希计算成功 (certutil)", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show(hash, "计算失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+    }
+
+    private void BtnCreateDummyFile_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SaveFileDialog
+        {
+            Title = "选择保存测试文件的位置与文件名",
+            FileName = "test_dummy_100m.dat",
+            Filter = "数据文件 (*.dat)|*.dat|所有文件 (*.*)|*.*"
+        };
+        if (dialog.ShowDialog() == true)
+        {
+            long size100Mb = 100L * 1024L * 1024L;
+            var (ok, msg) = _nativeDevService.CreateDummyFile(dialog.FileName, size100Mb);
+            MessageBox.Show(msg, "fsutil 创建测试文件", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        }
+    }
 
     private void BtnLaunchTool_Click(object sender, RoutedEventArgs e)
     {
