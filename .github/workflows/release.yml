@@ -21,17 +21,22 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
-      - name: Publish
-        run: dotnet publish -c Release
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress
 
-      - name: Package
+      - name: Install WiX Toolset
+        run: dotnet tool install --global wix --version 5.0.2
+
+      - name: Build Installers and Packages
         shell: pwsh
         run: |
-          Compress-Archive -Path "bin/Release/net8.0-windows/publish/*" -DestinationPath "AgyToolbox-${{ github.ref_name }}-win.zip"
+          .\build-installer.ps1 -Version ${{ github.ref_name }}
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: AgyToolbox-${{ github.ref_name }}-win.zip
-          draft: true
+          files: |
+            dist/*.msi
+            dist/*.exe
+          draft: false
           generate_release_notes: true

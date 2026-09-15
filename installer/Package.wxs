@@ -1,0 +1,39 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="AgyToolbox"
+           Manufacturer="Agy Developers"
+           Version="$(var.Version)"
+           UpgradeCode="E7E7A1C2-88B1-4A59-86D3-1D0A3D634509"
+           Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+    <MediaTemplate EmbedCab="yes" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="AgyToolbox" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="AgyToolbox">
+        <Component Id="ApplicationShortcut" Guid="D2A68F33-912A-4E38-95F6-0272B5E2BA91">
+          <Shortcut Id="ApplicationStartMenuShortcut"
+                    Name="AgyToolbox"
+                    Description="Agy Windows Optimization and Developer Toolbox"
+                    Target="[INSTALLFOLDER]AgyToolbox.exe"
+                    WorkingDirectory="INSTALLFOLDER" />
+          <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall" />
+          <RegistryValue Root="HKCU" Key="Software\AgyToolbox" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
+      <Files Include="$(var.PublishDir)\**" />
+    </ComponentGroup>
+
+    <Feature Id="MainFeature" Title="AgyToolbox" Level="1">
+      <ComponentGroupRef Id="AppComponents" />
+      <ComponentRef Id="ApplicationShortcut" />
+    </Feature>
+  </Package>
+</Wix>
