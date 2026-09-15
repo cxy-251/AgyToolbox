@@ -1,159 +1,604 @@
 <UserControl x:Class="AgyToolbox.Views.NativeDevView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:views="clr-namespace:AgyToolbox.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="1600" d:DesignWidth="850">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
-        <StackPanel Margin="10">
+             d:DesignHeight="700" d:DesignWidth="850">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <!-- 模块说明看板 -->
-            <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="💻 步骤四：原生开发环境与现代终端基建 (Native Dev &amp; Infrastructure)" FontSize="16" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,6"/>
-                    <TextBlock Text="Windows 现代版本提供了完善的原生开发与隔离运行环境支持。本模块协助配置 WSL2 (Windows Subsystem for Linux)、Windows Sandbox 原生沙箱隔离环境，以及开机自启的 OpenSSH Agent 认证服务，并提供原生命令行工具与网络诊断参考。"
-                               FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap"/>
-                </StackPanel>
-            </Border>
+        <!-- 模块说明看板 (保留在 TabControl 外层，始终可见) -->
+        <Border Grid.Row="0" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <StackPanel>
+                <TextBlock Text="💻 步骤四：原生开发环境与现代终端基建 (Native Dev &amp; Infrastructure)" FontSize="15" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,4"/>
+                <TextBlock Text="Windows 现代版本提供了完善的原生开发与隔离运行环境支持。本模块协助配置 WSL2、Windows Sandbox 原生沙箱隔离环境，以及开机自启的 OpenSSH Agent 认证服务，并提供免提权符号链接、原生命令行工具与网络排障诊断矩阵。"
+                           FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
 
-            <!-- 板块 1: WSL2 与原生沙箱基建 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="🐧 1. 虚拟化与系统隔离：WSL2 与 Windows Sandbox 沙箱" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="轻量级 Linux 内核子系统与一次性纯净隔离测试环境：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+        <!-- 4 个功能横向子标签 -->
+        <TabControl Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1"
+                    ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+            <!-- Tab 1: 虚拟化与隔离基建 (WSL2 + Windows Sandbox) -->
+            <TabItem Header="🐧 虚拟化与隔离基建">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <!-- WSL2 -->
-                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                            <!-- WSL2 卡片 -->
+                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,7,0">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🐧 WSL2 (Linux 子系统)" FontWeight="Bold" FontSize="14" Foreground="#1E293B" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtWslStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <TextBlock Text="在 Windows 上以原生轻量级虚拟机方式运行完整 Linux 内核环境，支持 Docker Desktop 原生后端与 GPU 加速计算开发。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                    <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,12">
+                                        <TextBlock Text="💡 存储建议：WSL 虚拟磁盘默认保存在系统 C 盘。若需迁移，可在部署后使用 wsl --export 和 wsl --import 转移至大容量数据盘。" FontSize="10" Foreground="#B45309" TextWrapping="Wrap"/>
+                                    </Border>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckWsl_Click"/>
+                                        <Button Grid.Column="1" Content="安装 WSL2" Background="#0284C7" Margin="4,0,0,0" Click="BtnInstallWsl_Click"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Windows Sandbox 沙箱卡片 -->
+                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="7,0,0,0">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="📦 Windows Sandbox (原生沙箱)" FontWeight="Bold" FontSize="14" Foreground="#1E293B" VerticalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtSandboxStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <TextBlock Text="微软官方纯净轻量隔离运行环境。每次启动均为全新初始状态，测试完毕关闭窗口后自动彻底销毁所有数据，避免流氓软件污染宿主系统。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                    <Border Background="#ECFDF5" BorderBrush="#A7F3D0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,12">
+                                        <TextBlock Text="💡 说明：仅限 Windows 专业版 / 企业版。启用后需重启系统一次，按 Win+S 搜 Windows Sandbox 即可随时启动。" FontSize="10" Foreground="#047857" TextWrapping="Wrap"/>
+                                    </Border>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckSandbox_Click"/>
+                                        <Button Grid.Column="1" Content="启用原生沙箱" Background="#10B981" Margin="4,0,0,0" Click="BtnEnableSandbox_Click"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <!-- 进阶运维指令速查 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
-                                <Grid Margin="0,0,0,4">
+                                <TextBlock Text="🛠️ WSL 与沙箱常用管理运维命令" FontWeight="Bold" FontSize="13" Foreground="#0078D4" Margin="0,0,0,8"/>
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="彻底关停 WSL 虚拟机释放内存占用:" VerticalAlignment="Center" FontSize="11" Foreground="#475569" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" Text="wsl --shutdown" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Grid.Column="2" Content="📋" Style="{DynamicResource SecondaryButton}" Padding="8,2" Margin="6,0,0,0" Click="BtnCopySnippet_Click" Tag="wsl --shutdown"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="查看已安装发行版及运行状态:" VerticalAlignment="Center" FontSize="11" Foreground="#475569" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" Text="wsl -l -v" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Grid.Column="2" Content="📋" Style="{DynamicResource SecondaryButton}" Padding="8,2" Margin="6,0,0,0" Click="BtnCopySnippet_Click" Tag="wsl -l -v"/>
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="迁移导出发行版归档 (以 Ubuntu 为例):" VerticalAlignment="Center" FontSize="11" Foreground="#475569" Margin="0,0,8,0"/>
+                                    <TextBox Grid.Column="1" Text="wsl --export Ubuntu-22.04 D:\wsl_backup\ubuntu.tar" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Grid.Column="2" Content="📋" Style="{DynamicResource SecondaryButton}" Padding="8,2" Margin="6,0,0,0" Click="BtnCopySnippet_Click" Tag="wsl --export Ubuntu-22.04 D:\wsl_backup\ubuntu.tar"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 2: SSH 与开发者模式 (OpenSSH Agent + Developer Mode & Symlink) -->
+            <TabItem Header="🔑 SSH 与开发者模式">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- OpenSSH 认证服务 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="WSL2 (Linux 子系统)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="TxtWslStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🔑 1. OpenSSH 密钥认证与 ssh-agent 开机自启服务" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (解决终端操作与 Git push 每次都提示输入私钥口令)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                                        <TextBlock x:Name="TxtSshAgentStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <Button x:Name="BtnEnableSshAgent" Content="开启 ssh-agent 自启" Background="#0284C7" Click="BtnEnableSshAgent_Click"/>
+                                    </StackPanel>
                                 </Grid>
-                                <TextBlock Text="在 Windows 上以轻量虚拟化方式运行 Linux 内核环境，支持 Docker 后端与 GPU 加速计算。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,8"/>
-                                <TextBlock Text="💡 存储建议：WSL 虚拟硬盘默认存储在系统盘。若需调整存储位置，可在部署后使用 wsl --export 和 wsl --import 迁移到数据分区。" FontSize="10" Foreground="#B45309" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                <TextBlock Text="Windows 默认将内置的 ssh-agent 认证代理服务设为禁用。将其配置为开机自启并启动后，通过 ssh-add 添加一次私钥即可在整个系统会话中持久保持认证状态。"
+                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                                <!-- SSH 快速命令卡片 -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckWsl_Click"/>
-                                    <Button Grid.Column="1" Content="安装 WSL2" Background="#0284C7" Margin="4,0,0,0" Click="BtnInstallWsl_Click"/>
+
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="生成现代高安全 Ed25519 密钥 (替代 RSA):" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="将私钥添加至代理并测试 GitHub 连通性:" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="ssh-add ~\.ssh\id_ed25519 &amp;&amp; ssh -T git@github.com" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="ssh-add ~\.ssh\id_ed25519 &amp;&amp; ssh -T git@github.com"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
                             </StackPanel>
                         </Border>
 
-                        <!-- Windows Sandbox -->
-                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                        <!-- 开发者模式与符号链接权限 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
-                                <Grid Margin="0,0,0,4">
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Windows Sandbox (原生沙箱)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
-                                    <TextBlock x:Name="TxtSandboxStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🔗 2. Windows 开发者模式与符号链接权限 (Developer Mode &amp; Symlink)" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (允许非管理员普通权限直接创建软链接)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                                        <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <Button x:Name="BtnToggleDevMode" Content="开启开发者模式" Background="#0284C7" Margin="0,0,6,0" Click="BtnToggleDevMode_Click"/>
+                                        <Button Content="打开设置页" Style="{DynamicResource SecondaryButton}" FontSize="11" Click="BtnOpenDevSettings_Click"/>
+                                    </StackPanel>
                                 </Grid>
-                                <TextBlock Text="系统内置的轻量隔离运行环境。每次启动均为纯净初始状态，关闭后自动清除运行数据，适用于隔离测试未知软件包。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,8"/>
-                                <TextBlock Text="💡 说明：启用后需重启系统一次，按 Win+S 搜 Windows Sandbox 即可运行。" FontSize="10" Foreground="#047857" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                <Border Background="#EEF2FF" BorderBrush="#C7D2FE" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="💡 为什么现代开发者必须开启 Developer Mode？" FontWeight="Bold" FontSize="12" Foreground="#3730A3" Margin="0,0,0,4"/>
+                                        <TextBlock Text="• 普通模式下，Windows 安全策略强制要求必须具备【管理员特权 (UAC 提升)】才能调用 CreateSymbolicLink API 或 mklink /D 创建软链接。&#x0a;• 开启开发者模式后，系统策略允许普通标准用户进程免提权直接创建软链接！&#x0a;• 核心收益：现代包管理器 pnpm（依赖全局目录软链接索引，不开经常报 EPERM 错误）、npm/yarn link 本地联动联调、Python 虚拟环境快速链接以及 Git core.symlinks 正常检出。"
+                                                   FontSize="11" Foreground="#4338CA" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckSandbox_Click"/>
-                                    <Button Grid.Column="1" Content="启用原生沙箱" Background="#10B981" Margin="4,0,0,0" Click="BtnEnableSandbox_Click"/>
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="免提权创建目录软链接 (cmd 语法):" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="cmd /c mklink /D link_folder target_folder" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="cmd /c mklink /D link_folder target_folder"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="PowerShell 原生创建软链接语法:" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="New-Item -ItemType SymbolicLink -Path .\link -Target .\target" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="New-Item -ItemType SymbolicLink -Path .\link -Target .\target"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
                             </StackPanel>
                         </Border>
-                    </Grid>
-                </StackPanel>
-            </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-            <!-- 板块 2: 现代终端与 OpenSSH 免密基建 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="🔑 2. OpenSSH 密钥认证与 ssh-agent 开机自启服务" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="系统内置 OpenSSH Client，通过配置开机自启的 ssh-agent，实现 Git 与终端 SSH 免重复输入私钥密码：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+            <!-- Tab 3: 原生网络与系统诊断 (链路诊断 + 实时诊断控制台 + resmon / perfmon / eventvwr / Test-NetConnection) -->
+            <TabItem Header="🩺 原生网络与系统诊断">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- 第一部分：网络路由跳数与连通性实时诊断 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="🌐 1. 网络路由跳数追踪与链路诊断 (Route &amp; Trace)" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
+                                <TextBlock Text="排查网络在哪个路由器节点中断、为什么高延迟、以及局域网物理设备发现：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
 
-                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="配置 Windows 原生 OpenSSH Agent 服务为自动启动" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock x:Name="TxtSshAgentStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                                </StackPanel>
-                                <TextBlock Text="Windows 默认将 ssh-agent 服务设为禁用。将其配置为自动启动后，可通过 ssh-add 添加私钥，使后续 Git 操作与 SSH 连接自动完成凭据认证。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <!-- 控制区 -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="180"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="目标主机 / IP：" VerticalAlignment="Center" FontSize="12" Margin="0,0,8,0"/>
+                                    <TextBox x:Name="TxtRouteHost" Grid.Column="1" Text="1.1.1.1" Height="30" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,10,0"/>
+
+                                    <WrapPanel Grid.Column="2" VerticalAlignment="Center">
+                                        <Button Content="⚡ tracert -d (极速跳数)" Margin="0,0,6,4" Click="BtnTracertFast_Click"/>
+                                        <Button Content="📊 pathping (深度丢包)" Margin="0,0,6,4" Click="BtnPathping_Click"/>
+                                        <Button Content="🗺️ route print (路由表)" Margin="0,0,6,4" Click="BtnRoutePrint_Click"/>
+                                        <Button Content="🔎 arp -a (局域网设备)" Margin="0,0,6,4" Click="BtnArp_Click"/>
+                                        <Button x:Name="BtnStopDiag" Content="⏹️ 停止" Background="#EF4444" Margin="0,0,6,4" Click="BtnStopDiag_Click" IsEnabled="False"/>
+                                        <Button Content="🧹 清空" Style="{DynamicResource SecondaryButton}" Margin="0,0,0,4" Click="BtnClearDiagLog_Click"/>
+                                    </WrapPanel>
+                                </Grid>
+
+                                <!-- 实时黑色控制台输出框 -->
+                                <TextBox x:Name="TxtDiagConsole" Height="170" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
+                                         Background="#0F172A" Foreground="#38BDF8" FontFamily="Consolas, Courier New" FontSize="11"
+                                         Padding="8" TextWrapping="Wrap"
+                                         Text="[网络诊断控制台已就绪] 请输入目标主机（如 1.1.1.1、baidu.com、github.com），并点击上方诊断命令开始执行...&#x0a;"/>
+
+                                <!-- 路由原理说明 -->
+                                <Border Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,8,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="💡 路由跳数（Hop）机制说明：" FontWeight="Bold" FontSize="11" Foreground="#1E293B" Margin="0,0,0,2"/>
+                                        <TextBlock Text="• TTL 机制：tracert 发送 IP 报文，生存时间（TTL）从 1 递增。第一跳路由器将 TTL 减为 0 后丢弃报文并返回 ICMP 超时通知，以此探测出整条传输链路。&#x0a;• -d 参数：添加 -d 参数禁止对各跳 IP 执行反向 DNS 解析，可大幅加快追踪速度。部分骨干网因安全策略禁用回显 ICMP 超时包显示为【* * * 请求超时】，只要后续节点通畅即属正常。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
-                            <Button x:Name="BtnEnableSshAgent" Grid.Column="1" Content="开启 ssh-agent 自启" Background="#0284C7" VerticalAlignment="Center" Click="BtnEnableSshAgent_Click"/>
-                        </Grid>
-                    </Border>
+                        </Border>
 
-                    <!-- SSH 快速配置卡片 -->
-                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="生成现代高安全 Ed25519 密钥 (推荐替代淘汰的 RSA):" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                <TextBox Text="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4" Margin="0,2,0,0"/>
+                        <!-- 第二部分：原生系统诊断矩阵 (resmon / perfmon / Test-NetConnection / eventvwr) -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="🩺 2. Windows 原生系统诊断、死锁句柄与性能排错矩阵" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
+                                <TextBlock Text="系统级内置诊断工具，排查文件被谁占用锁定、IOPS 瓶颈、端口连通性与应用崩溃原因：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 左侧：死锁句柄与性能剖析 -->
+                                    <StackPanel Grid.Column="0" Margin="0,0,7,0">
+                                        <!-- 资源监视器 resmon -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <Grid Margin="0,0,0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="🔒 资源监视器 (resmon) · 搜索文件死锁句柄" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                    <Button Grid.Column="1" Content="🚀 打开 resmon" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
+                                                            Click="BtnLaunchTool_Click" Tag="resmon.exe"/>
+                                                </Grid>
+                                                <TextBlock Text="【典型场景】编译报错 'locked by another process' 或删除文件夹提示被另一程序占用。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                                <TextBlock Text="【排错步骤】启动 resmon -> 切换至【CPU】选项卡 -> 展开【关联的句柄】面板 -> 输入文件名 -> 即可查看占用该文件的进程名称与 PID，右键可强制结束！" FontSize="10" Foreground="#0284C7" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- 性能监视器 perfmon -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
+                                            <StackPanel>
+                                                <Grid Margin="0,0,0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="📊 性能监视器 (perfmon) · 深度瓶颈剖析" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                    <Button Grid.Column="1" Content="🚀 打开 perfmon" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
+                                                            Click="BtnLaunchTool_Click" Tag="perfmon.exe"/>
+                                                </Grid>
+                                                <TextBlock Text="【典型场景】磁盘 IOPS 饱和排查、内核硬件中断 (DPC/ISR)、多线程争抢瓶颈定位。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                                <TextBlock Text="【排错步骤】添加自定义计数器（如 PhysicalDisk\% Disk Time、Avg. Disk Queue Length），实时监控硬件极限与系统吞吐。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- 右侧：端口探测与崩溃排错 -->
+                                    <StackPanel Grid.Column="1" Margin="7,0,0,0">
+                                        <!-- Test-NetConnection -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                            <StackPanel>
+                                                <TextBlock Text="📡 Test-NetConnection · 原生 TCP 端口测试 (免 telnet)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
+                                                <TextBlock Text="【典型场景】测试数据库 3306/5432、Redis 6379 或 Web 443 端口在远程服务器是否开放：" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                                <Grid Margin="0,0,0,4">
+                                                    <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                            Click="BtnCopySnippet_Click" Tag="Test-NetConnection github.com -Port 443"/>
+                                                </Grid>
+                                                <TextBlock Text="简写命令：tnc 192.168.1.1 -p 8080 -TraceRoute (自动探测端口并跟踪路由)" FontSize="10" Foreground="#059669"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- 事件查看器 eventvwr -->
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
+                                            <StackPanel>
+                                                <Grid Margin="0,0,0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="💥 事件查看器 (eventvwr) · 程序闪退崩溃排查" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                    <Button Grid.Column="1" Content="🚀 打开 eventvwr" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
+                                                            Click="BtnLaunchTool_Click" Tag="eventvwr.msc"/>
+                                                </Grid>
+                                                <TextBlock Text="【典型场景】程序或后台服务静默闪退、没有任何弹窗报错，需要定位抛出异常的具体模块。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                                <TextBlock Text="【排错步骤】打开 eventvwr -> 导航至【Windows 日志】->【应用程序】-> 筛选日志级别为【错误】-> 查看来源为 .NET Runtime 或 Application Error 的崩溃调用栈。" FontSize="10" Foreground="#7C3AED" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
                             </StackPanel>
-                            <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="8,0,0,0"
-                                    Click="BtnCopySnippet_Click" Tag="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;"/>
-                        </Grid>
-                    </Border>
-                </StackPanel>
-            </Border>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-            <!-- 板块 3: 开发者模式与符号链接权限 (Developer Mode & Symlink) -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
-                <StackPanel>
-                    <TextBlock Text="🔗 3. Windows 开发者模式与符号链接权限 (Developer Mode &amp; Symlink)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="开启系统级开发者模式，彻底解决现代开发工具链中最棘手的符号链接权限与跨盘依赖问题：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+            <!-- Tab 4: 原生 CLI 与搜索语法 (tar / curl / netstat / AQS 语法 / CMD vs PowerShell 对照) -->
+            <TabItem Header="📜 原生 CLI 与搜索语法">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- 第一部分：Windows 原生高频内置命令行工具速查 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="🛠️ 1. Windows 原生高频内置命令行工具速查" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
+                                <TextBlock Text="Windows 现代版本内置了完善的原生命令行实用工具，无需额外安装即可满足日常运维与操作需求：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
 
-                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="配置 Windows 开发者模式 (免提权创建 Symlink 符号链接)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                                </StackPanel>
-                                <TextBlock Text="【核心机制与开发价值】&#x0a;• 普通模式下，Windows 要求必须拥有【管理员特权】才能创建符号链接 (mklink /D 或 CreateSymbolicLink API)。&#x0a;• 开启开发者模式后，系统策略允许普通用户（非提升权限）直接创建符号链接！&#x0a;• 关键场景：现代前端包管理器 pnpm（基于全局硬链接与目录符号链接结构，不开常报 EPERM 错误）、npm/yarn link 本地多包联调、以及 Python venv 虚拟环境避免跨目录全量复制。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 1. 原生解压缩 tar -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="📦 原生归档解压工具 (tar.exe)" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                            <TextBlock Text="Win10 1803+ 内置 bsdtar，支持在终端直接提取或创建 .zip、.tar.gz 归档：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="tar -xf archive.zip -C ./output_folder" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="tar -xf archive.zip -C ./output_folder"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 2. 原生 curl 测试接口与下载 -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🌐 原生 HTTP 请求与测速 (curl.exe)" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                            <TextBlock Text="⚠️ 重要避坑：PowerShell 5.1 默认将 curl 别名给 Invoke-WebRequest，务必打 curl.exe：" FontSize="10" Foreground="#B45309" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="curl.exe -I https://github.com" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="curl.exe -I https://github.com"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 3. 重启一键直达 BIOS/UEFI -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⚡ 一步重启进入 BIOS 固件 (shutdown /r /fw)" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                            <TextBlock Text="开机速度太快来不及按 Del/F2 时，以管理员身份执行直接重启进主板 BIOS：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="shutdown /r /fw /t 0" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="shutdown /r /fw /t 0"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 4. 端口占用排查与定位 netstat -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🔍 端口占用快速定位与强制终止 (netstat + taskkill)" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                            <TextBlock Text="查询端口 PID，再用 taskkill /f /pid 强杀进程释放端口：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="netstat -ano | findstr :8080" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="netstat -ano | findstr :8080"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <Button x:Name="BtnToggleDevMode" Content="开启开发者模式" Background="#0284C7" Margin="0,0,0,6" Click="BtnToggleDevMode_Click"/>
-                                <Button Content="打开系统设置页" Style="{DynamicResource SecondaryButton}" FontSize="11" Click="BtnOpenDevSettings_Click"/>
+                        </Border>
+
+                        <!-- 第二部分：Windows 搜索 AQS 高级语法与正则真相 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="🔍 2. Windows 资源管理器 AQS 搜索语法 &amp; 正则真相" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
+                                <TextBlock Text="Windows 资源管理器搜索框原生支持 AQS (Advanced Query Syntax) 高级查询语法：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 左侧：类型与大小 -->
+                                    <StackPanel Grid.Column="0" Margin="0,0,7,0">
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                                            <StackPanel>
+                                                <TextBlock Text="📁 类型与扩展名筛选" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                <TextBlock Text="• 类型:文件夹 或 kind:folder" FontSize="11" Foreground="#475569" Margin="0,3,0,0"/>
+                                                <TextBlock Text="• 类型:图片 或 kind:pic (自动含 jpg/png/gif)" FontSize="11" Foreground="#475569" Margin="0,2,0,0"/>
+                                                <TextBlock Text="• ext:.log 或 ext:.txt (精确按扩展名匹配)" FontSize="11" Foreground="#475569" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                                            <StackPanel>
+                                                <TextBlock Text="⚖️ 大小与区间筛选" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                <TextBlock Text="• 大小:>500MB 或 size:>1GB" FontSize="11" Foreground="#475569" Margin="0,3,0,0"/>
+                                                <TextBlock Text="• 大小:空 (0 KB 占位文件)" FontSize="11" Foreground="#475569" Margin="0,2,0,0"/>
+                                                <TextBlock Text="• 大小:100MB..500MB (区间范围匹配)" FontSize="11" Foreground="#475569" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- 右侧：时间与正则真相 -->
+                                    <StackPanel Grid.Column="1" Margin="7,0,0,0">
+                                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                                            <StackPanel>
+                                                <TextBlock Text="📅 时间与内容匹配" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                <TextBlock Text="• 修改日期:今天 或 datemodified:today" FontSize="11" Foreground="#475569" Margin="0,3,0,0"/>
+                                                <TextBlock Text="• 内容:&quot;error 10054&quot; (全文检索文档内关键词)" FontSize="11" Foreground="#475569" Margin="0,2,0,0"/>
+                                                <TextBlock Text="• 逻辑组合: kind:doc AND size:>10MB NOT 名称:test" FontSize="11" Foreground="#475569" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="6" Padding="10">
+                                            <StackPanel>
+                                                <TextBlock Text="⚠️ 关于“正则表达式”的真实情况" FontWeight="Bold" FontSize="12" Foreground="#B91C1C"/>
+                                                <TextBlock Text="资源管理器搜索框默认【不支持】POSIX/PCRE 正则表达式（仅支持 * 和 ? 通配符）。若要使用纯正正则，建议使用 Everything (regex:) 或在 PowerShell 中通过 Where-Object { $_.Name -match '...' } 过滤。" FontSize="10" Foreground="#991B1B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
                             </StackPanel>
-                        </Grid>
-                    </Border>
-                </StackPanel>
-            </Border>
+                        </Border>
 
-            <!-- 板块 4: 嵌入式原生 CLI 速查、网络排障与系统性能诊断 (嵌入 RouteCliView) -->
-            <views:RouteCliView />
+                        <!-- 第三部分：CMD vs PowerShell 经典神级指令速查对比 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="💻 3. CMD vs PowerShell 必会神级指令对照" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
+                                <TextBlock Text="核心差异：CMD 输出是无格式的纯字符流 (String)；PowerShell 传递的是带有属性与方法的 .NET 强类型对象 (Object)：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
 
-        </StackPanel>
-    </ScrollViewer>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- CMD 神技 -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,7,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⬛ 传统 CMD 经典高效神技" FontWeight="Bold" FontSize="12" Foreground="#0F172A" Margin="0,0,0,6"/>
+
+                                            <TextBlock Text="1. 查可执行文件物理路径 (类似 which):" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,6">
+                                                <TextBox Text="where python" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="where python"/>
+                                            </Grid>
+
+                                            <TextBlock Text="2. Windows 最强多线程断点镜像复制:" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,6">
+                                                <TextBox Text="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1"/>
+                                            </Grid>
+
+                                            <TextBlock Text="3. 将任何命令输出直接写入系统剪贴板:" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,6">
+                                                <TextBox Text="ipconfig /all | clip" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="ipconfig /all | clip"/>
+                                            </Grid>
+
+                                            <TextBlock Text="4. 强制结束特定进程 (按名称或 PID):" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,0">
+                                                <TextBox Text="taskkill /f /im node.exe" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="taskkill /f /im node.exe"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- PowerShell 神技 -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="7,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🟦 现代 PowerShell 对象级生产力神技" FontWeight="Bold" FontSize="12" Foreground="#0284C7" Margin="0,0,0,6"/>
+
+                                            <TextBlock Text="1. 原生测试远程 TCP 端口通不通:" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,6">
+                                                <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="Test-NetConnection github.com -Port 443"/>
+                                            </Grid>
+
+                                            <TextBlock Text="2. 管道对象筛选 (找出前 5 个最吃内存的进程):" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,6">
+                                                <TextBox Text="Get-Process | Sort-Object WorkingSet64 -Desc | Select -First 5" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="Get-Process | Sort-Object WorkingSet64 -Desc | Select -First 5"/>
+                                            </Grid>
+
+                                            <TextBlock Text="3. 查看并格式化拆分环境变量 PATH:" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,6">
+                                                <TextBox Text="$env:PATH -split ';'" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="$env:PATH -split ';'"/>
+                                            </Grid>
+
+                                            <TextBlock Text="4. 计算文件 SHA256 哈希值 (防篡改校验):" FontSize="10" FontWeight="SemiBold" Foreground="#475569"/>
+                                            <Grid Margin="0,2,0,0">
+                                                <TextBox Text="Get-FileHash ./target.iso -Algorithm SHA256" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopyCli_Click" Tag="Get-FileHash ./target.iso -Algorithm SHA256"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
 </UserControl>
