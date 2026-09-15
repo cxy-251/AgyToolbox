@@ -20,9 +20,9 @@ if (-not $Version -or $Version -eq "master" -or $Version -eq "main") {
     if (Test-Path $CsprojPath) {
         $xml = [xml](Get-Content $CsprojPath)
         $Version = $xml.Project.PropertyGroup.Version
-        if (-not $Version) { $Version = "0.1.0" }
+        if (-not $Version) { $Version = "0.2.0" }
     } else {
-        $Version = "0.1.0"
+        $Version = "0.2.0"
     }
 }
 $CleanVersion = $Version.TrimStart('v')

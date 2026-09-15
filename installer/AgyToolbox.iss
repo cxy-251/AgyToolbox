@@ -2,7 +2,7 @@
 ; Builds user-friendly Setup .exe with Start Menu & Desktop shortcuts and clean uninstaller
 
 #ifndef MyAppVersion
-#define MyAppVersion "0.1.0"
+#define MyAppVersion "0.2.0"
 #endif
 
 #ifndef MySourceDir
