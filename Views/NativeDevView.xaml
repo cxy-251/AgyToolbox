@@ -1220,6 +1220,11 @@
                                             <TextBlock Text="⬛ CMD：ping 与 certutil 哈希校验" FontSize="11" FontWeight="Bold" Foreground="#0F172A"/>
                                             <TextBlock Text="ping 仅测 ICMP，certutil 测哈希需剔除多余文案：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
                                             <Grid Margin="0,0,0,4">
+                                                <TextBox Text="ping -n 4 github.com" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="ping -n 4 github.com"/>
+                                            </Grid>
+                                            <Grid>
                                                 <TextBox Text="certutil -hashfile target.zip SHA256" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
                                                         Click="BtnCopySnippet_Click" Tag="certutil -hashfile target.zip SHA256"/>
@@ -1235,6 +1240,11 @@
                                                 <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
                                                         Click="BtnCopySnippet_Click" Tag="Test-NetConnection github.com -Port 443"/>
+                                            </Grid>
+                                            <Grid>
+                                                <TextBox Text="Get-FileHash ./target.zip -Algorithm SHA256 | Format-List" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="Get-FileHash ./target.zip -Algorithm SHA256 | Format-List"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>

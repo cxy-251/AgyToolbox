@@ -571,20 +571,22 @@ public class NativeDevService
     {
         try
         {
+            // 注：Windows PowerShell 5.1 与 PowerShell 7+ (pwsh) 的 CurrentUser 作用域
+            // 底层共用同一个注册表项：SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell
+            // 路径中的 "1" 是固定历史架构路径，并非按主版本号变化，因此两代 Shell 均共用此项。
             using (var key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell"))
             {
                 key.SetValue("ExecutionPolicy", "RemoteSigned", RegistryValueKind.String);
             }
 
-            // 也为 PowerShell 7 (如果存在) 写入 CurrentUser
+            // 清理此前误建的孤儿键（若存在）
             try
             {
-                using var pwshKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\PowerShell\7\ShellIds\Microsoft.PowerShell");
-                pwshKey?.SetValue("ExecutionPolicy", "RemoteSigned", RegistryValueKind.String);
+                Registry.CurrentUser.DeleteSubKeyTree(@"SOFTWARE\Microsoft\PowerShell\7", throwOnMissingSubKey: false);
             }
             catch { }
 
-            return (true, "已成功将当前用户 (CurrentUser) 的执行策略设为【RemoteSigned】！\n\n• 本地自写脚本无需签名直接执行\n• 互联网下载脚本仍保留安全拦截\n• 无需以管理员身份运行，安全纯净。");
+            return (true, "已成功将当前用户 (CurrentUser) 的执行策略设为【RemoteSigned】！\n\n• 本地自写脚本无需签名直接执行\n• 互联网下载脚本仍保留安全拦截\n• Windows PowerShell 5.1 与 PowerShell 7+ 均已生效（两代 Shell 共用策略键）\n• 无需以管理员身份运行，安全纯净。");
         }
         catch (Exception ex)
         {
@@ -653,12 +655,13 @@ public class NativeDevService
 
 # ------------------------------------------------------------------------------
 # 1. 快捷别名 (Aliases) - 提升日常击键效率
+# 避坑提示：切勿使用 gc (系统原生 Get-Content) 与 gp (系统原生 Get-ItemProperty)
 # ------------------------------------------------------------------------------
 Set-Alias -Name ll -Value Get-ChildItem -Option AllScope
 function gs { git status }
 function ga { git add -A }
-function gc { param($m) git commit -m $m }
-function gp { git pull }
+function gcm { param($m) git commit -m $m }
+function gpl { git pull }
 function gpush { git push }
 function glog { git log --oneline --graph --decorate -n 15 }
 
