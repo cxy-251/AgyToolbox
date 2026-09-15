@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AgyToolbox.Views.SystemOptView"
+<UserControl x:Class="AgyToolbox.Views.SystemOptView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,12 +20,16 @@
             <!-- 板块一：Windows 自动更新彻底关闭 / 恢复 (Windows Update) -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <Grid Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal">
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="🛑 Windows 自动更新彻底关闭与锁定" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (组策略锁死、防自动更新显卡驱动黑屏、禁用 WaaSMedic 唤醒看门狗)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <TextBlock Text=" (组策略锁死、防自动更新显卡驱动黑屏、禁用 WaaSMedic 唤醒看门狗)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                             <TextBlock x:Name="TxtUpdateStatus" Text="[检测更新状态...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
                             <Button Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshUpdateStatus_Click"/>
                         </StackPanel>
@@ -71,11 +75,15 @@
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
-                        <StackPanel Orientation="Horizontal">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="📁 资源管理器开荒三件套 &amp; ⚡ 卓越性能模式" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (程序员与新机必配，安全防毒 + 极致硬件睿频)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
-                        </StackPanel>
-                        <Button Content="🔄 刷新设置状态" Style="{DynamicResource SecondaryButton}" HorizontalAlignment="Right" Click="BtnRefreshExplorerSettings_Click"/>
+                            <TextBlock Text=" (程序员与新机必配，安全防毒 + 极致硬件睿频)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                        </WrapPanel>
+                        <Button Grid.Column="1" Content="🔄 刷新设置状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshExplorerSettings_Click"/>
                     </Grid>
 
                     <Grid Margin="0,0,0,12">
@@ -217,14 +225,18 @@
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
-                        <StackPanel Orientation="Horizontal">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="🛠️ PATH 环境变量管理 &amp; 幽灵死路径检测" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (从上到下决定程序调用优先级，标红代表目录已丢失)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
-                        </StackPanel>
+                            <TextBlock Text=" (从上到下决定程序调用优先级，标红代表目录已丢失)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                        </WrapPanel>
                         
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <RadioButton x:Name="RbUserPath" Content="当前用户 (User PATH)" IsChecked="True" VerticalAlignment="Center" Margin="0,0,12,0" Checked="RbPathScope_Checked"/>
-                            <RadioButton x:Name="RbSysPath" Content="系统全局 (System PATH)" VerticalAlignment="Center" Margin="0,0,16,0" Checked="RbPathScope_Checked"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                            <RadioButton x:Name="RbUserPath" Content="当前用户" IsChecked="True" VerticalAlignment="Center" Margin="0,0,10,0" Checked="RbPathScope_Checked"/>
+                            <RadioButton x:Name="RbSysPath" Content="系统全局" VerticalAlignment="Center" Margin="0,0,12,0" Checked="RbPathScope_Checked"/>
                             <Button Content="⚡ 重新扫描" Style="{DynamicResource SecondaryButton}" Click="BtnReloadPath_Click"/>
                         </StackPanel>
                     </Grid>

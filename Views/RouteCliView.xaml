@@ -1,10 +1,10 @@
-﻿<UserControl x:Class="AgyToolbox.Views.RouteCliView"
+<UserControl x:Class="AgyToolbox.Views.RouteCliView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="1200" d:DesignWidth="800">
     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
         <StackPanel Margin="10">
 
@@ -35,7 +35,7 @@
                     </Grid>
 
                     <!-- 实时黑色控制台输出框 -->
-                    <TextBox x:Name="TxtDiagConsole" Height="220" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
+                    <TextBox x:Name="TxtDiagConsole" Height="200" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
                              Background="#0F172A" Foreground="#38BDF8" FontFamily="Consolas, Courier New" FontSize="12"
                              Padding="10" TextWrapping="Wrap"
                              Text="[网络诊断控制台已就绪] 请输入目标主机（如 1.1.1.1、baidu.com、github.com），并点击上方诊断命令开始执行...&#x0a;"/>
@@ -52,7 +52,249 @@
                 </StackPanel>
             </Border>
 
-            <!-- 第二部分：Windows 搜索 AQS 高级语法与正则规律速查 -->
+            <!-- 第二部分：Windows 自带高频内置命令行工具速查 (Native CLI Tools) -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🛠️ Windows 自带高频命令行神技 (无需安装任何第三方软件)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="Windows 10/11 原生深度集成了大量媲美 Linux 的优秀内置命令行工具，日常开发与运维效率翻倍。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <!-- 工具条目列表 -->
+                    <StackPanel>
+
+                        <!-- 1. 原生解压缩 tar -->
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="📦 1. 原生解压缩打包 (tar) — 免装任何压缩软件" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="Windows 10 1803+ 原生内置完整 bsdtar，终端直接解压/打包 .zip / .tar.gz / .7z，告别广告解压软件。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
+                                    <TextBox Text="tar -xf file.zip -C ./output_folder" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="📋 复制" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="10,0,0,0"
+                                        Click="BtnCopyCli_Click" Tag="tar -xf file.zip -C ./output_folder"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- 2. 原生 curl 测试接口与下载 -->
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="🌐 2. 原生 HTTP 请求与接口测速 (curl)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="直接查看服务器响应头状态码、测试 SSL 握手与 API 响应，或静默下载文件 (-O)。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
+                                    <TextBox Text="curl -I https://github.com" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="📋 复制" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="10,0,0,0"
+                                        Click="BtnCopyCli_Click" Tag="curl -I https://github.com"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- 3. 原生 OpenSSH 客户端与免密登录 -->
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="🔑 3. 原生 OpenSSH 直连 Linux 服务器 (ssh / scp)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="系统内置 OpenSSH Client，无需安装 PuTTY 或 XShell；支持使用 ssh-keygen 生成 Ed25519 高安全密钥。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
+                                    <TextBox Text="ssh root@192.168.1.100 -p 22" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="📋 复制" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="10,0,0,0"
+                                        Click="BtnCopyCli_Click" Tag="ssh root@192.168.1.100 -p 22"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- 4. 重启一键直达 BIOS/UEFI -->
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="⚡ 4. 免狂按按键、一步重启进入 BIOS 固件 (shutdown /r /fw)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="开机速度太快往往来不及狂按 Del 或 F2。以管理员身份在终端执行此命令，电脑自动重启直达主板 BIOS。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
+                                    <TextBox Text="shutdown /r /fw /t 0" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="📋 复制" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="10,0,0,0"
+                                        Click="BtnCopyCli_Click" Tag="shutdown /r /fw /t 0"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- 5. 端口占用排查与定位 netstat -->
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="🔍 5. 端口占用快速定位与强制终止 (netstat + taskkill)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="查询目标端口对应 PID，再用 taskkill /f /pid 强制结束占用进程，彻底释放端口。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
+                                    <TextBox Text="netstat -ano | findstr :8080" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="📋 复制" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="10,0,0,0"
+                                        Click="BtnCopyCli_Click" Tag="netstat -ano | findstr :8080"/>
+                            </Grid>
+                        </Border>
+
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 第三部分：常用主流开发工具命令行速查 (Git / Docker / Node / Python) -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🧰 常用开发工具极客救命命令行速查 (Git / Docker / Node / Python)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="整理最常踩坑、最容易忘记的高频开发救命命令，点击右侧即可一键复制进剪贴板。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 左侧：Git 与 Docker -->
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+
+                            <!-- Git 救命技能 -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="🌿 Git 核心救命与排错指令" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,6"/>
+
+                                    <TextBlock Text="• 撤销上次 Commit 但保留已写代码 (重新整理提交):" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="git reset --soft HEAD~1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="git reset --soft HEAD~1"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 临时急修 Bug，暂存当前手头半成品:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="git stash save &quot;temp_work&quot; &amp;&amp; git stash pop" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="git stash save &quot;temp_work&quot;"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 彻底清除工作区所有未跟踪垃圾文件与目录:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="git clean -fd" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="git clean -fd"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 彩色单行分支与拓扑图 (看分支合并分叉最清爽):" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,0">
+                                        <TextBox Text="git log --oneline --graph --all -n 10" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="git log --oneline --graph --all -n 10"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Docker 运维与清理 -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="🐳 Docker 容器管理与一键释放磁盘" FontWeight="Bold" FontSize="13" Foreground="#0284C7" Margin="0,0,0,6"/>
+
+                                    <TextBlock Text="• 查看全部运行中容器资源实时占用 (CPU/内存/IO):" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="docker stats" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="docker stats"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 一键清空所有停止容器、孤儿镜像与数据卷 (释放几十G):" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="docker system prune -a --volumes -f" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="docker system prune -a --volumes -f"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 进入正在运行的容器内部命令行终端调试:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,0">
+                                        <TextBox Text="docker exec -it &lt;container_id&gt; sh" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="docker exec -it mycontainer sh"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+
+                        <!-- 右侧：Node 与 Python -->
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+
+                            <!-- Node & Pnpm -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <TextBlock Text="🟢 Node.js / Npm / Pnpm 极速维护" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,6"/>
+
+                                    <TextBlock Text="• 强制清空 npm 损坏的本地缓存 (解决安装卡死报错):" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="npm cache clean --force" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="npm cache clean --force"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 释放 pnpm 全局硬链接存储池中未引用的无用包缓存:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="pnpm store prune" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="pnpm store prune"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 免全局安装、临时运行 npx 快速切换国内源:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,0">
+                                        <TextBox Text="npx nrm use taobao" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="npx nrm use taobao"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Python & Conda -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="🐍 Python &amp; Conda 虚拟环境标准流" FontWeight="Bold" FontSize="13" Foreground="#D97706" Margin="0,0,0,6"/>
+
+                                    <TextBlock Text="• 官方推荐：当前目录创建轻量虚拟环境并激活:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="python -m venv .venv &amp;&amp; .\.venv\Scripts\Activate.ps1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="python -m venv .venv &amp;&amp; .\.venv\Scripts\Activate.ps1"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• 一键导出当前环境所有具体依赖版本号:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,6">
+                                        <TextBox Text="pip freeze > requirements.txt" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="pip freeze > requirements.txt"/>
+                                    </Grid>
+
+                                    <TextBlock Text="• Conda 创建指定 Python 版本的独立干净环境:" FontSize="11" Foreground="#475569"/>
+                                    <Grid Margin="0,2,0,0">
+                                        <TextBox Text="conda create -n myenv python=3.10 -y" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                Click="BtnCopyCli_Click" Tag="conda create -n myenv python=3.10 -y"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 第四部分：Windows 搜索 AQS 高级语法与正则规律速查 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <TextBlock Text="🔍 Windows 资源管理器 AQS 搜索语法 &amp; 正则真相" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
@@ -111,7 +353,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- 第三部分：CMD vs PowerShell 经典神级指令速查对比 -->
+            <!-- 第五部分：CMD vs PowerShell 经典神级指令速查对比 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <TextBlock Text="💻 CMD vs PowerShell 必会神级指令对照" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
@@ -129,19 +371,39 @@
                                 <TextBlock Text="⬛ 传统 CMD 经典黑客神技" FontWeight="Bold" FontSize="13" Foreground="#0F172A" Margin="0,0,0,8"/>
                                 
                                 <TextBlock Text="1. 查程序在哪 (类似 which):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="where python" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="where python" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="where python"/>
+                                </Grid>
 
                                 <TextBlock Text="2. Windows 最强多线程断点镜像复制 (秒杀 copy):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1"/>
+                                </Grid>
 
                                 <TextBlock Text="3. 将任何命令输出直接注入系统剪贴板:" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="ipconfig /all | clip" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="ipconfig /all | clip" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="ipconfig /all | clip"/>
+                                </Grid>
 
                                 <TextBlock Text="4. 强制强杀进程 (按映像名或 PID):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="taskkill /f /im node.exe" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="taskkill /f /im node.exe" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="taskkill /f /im node.exe"/>
+                                </Grid>
 
                                 <TextBlock Text="5. 切换控制台 UTF-8 编码 (防乱码):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="chcp 65001" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
+                                <Grid Margin="0,2,0,0">
+                                    <TextBox Text="chcp 65001" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="chcp 65001"/>
+                                </Grid>
                             </StackPanel>
                         </Border>
 
@@ -151,19 +413,39 @@
                                 <TextBlock Text="🟦 现代 PowerShell 对象级生产力神技" FontWeight="Bold" FontSize="13" Foreground="#0284C7" Margin="0,0,0,8"/>
 
                                 <TextBlock Text="1. 原生测试远程 TCP 端口通不通 (替代 telnet):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="Test-NetConnection github.com -Port 443"/>
+                                </Grid>
 
                                 <TextBlock Text="2. 对象管道筛选 (找出前 5 个最吃内存的进程):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="Get-Process | Sort-Object WorkingSet64 -Desc | Select -First 5" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="Get-Process | Sort-Object WorkingSet64 -Desc | Select -First 5" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="Get-Process | Sort-Object WorkingSet64 -Desc | Select -First 5"/>
+                                </Grid>
 
                                 <TextBlock Text="3. 查看并格式化拆分环境变量 PATH:" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="$env:PATH -split ';'" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="$env:PATH -split ';'" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="$env:PATH -split ';'"/>
+                                </Grid>
 
                                 <TextBlock Text="4. 计算文件 SHA256 哈希值 (防篡改校验):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="Get-FileHash ./target.iso -Algorithm SHA256" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+                                <Grid Margin="0,2,0,6">
+                                    <TextBox Text="Get-FileHash ./target.iso -Algorithm SHA256" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="Get-FileHash ./target.iso -Algorithm SHA256"/>
+                                </Grid>
 
                                 <TextBlock Text="5. 现代网络一键执行脚本 (安全安装环境):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                                <TextBox Text="irm https://get.scoop.sh | iex" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
+                                <Grid Margin="0,2,0,0">
+                                    <TextBox Text="irm https://get.scoop.sh | iex" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                            Click="BtnCopyCli_Click" Tag="irm https://get.scoop.sh | iex"/>
+                                </Grid>
                             </StackPanel>
                         </Border>
                     </Grid>

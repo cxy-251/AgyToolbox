@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AgyToolbox.Views.WebDropView"
+<UserControl x:Class="AgyToolbox.Views.WebDropView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -21,10 +21,10 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <StackPanel Orientation="Horizontal">
+                        <WrapPanel>
                             <TextBlock x:Name="TxtDropStatus" Text="● 服务未启动" FontSize="15" FontWeight="Bold" Foreground="#64748B"/>
                             <TextBlock Text=" (手机与电脑连同 WiFi 即可互传文件)" FontSize="12" Foreground="#94A3B8" Margin="8,2,0,0"/>
-                        </StackPanel>
+                        </WrapPanel>
                         <TextBlock x:Name="TxtDropUrl" Text="点击启动服务即可生成手机扫码链接" FontSize="13" Foreground="#0284C7" Margin="0,6,0,0" FontWeight="SemiBold"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">

@@ -79,4 +79,13 @@ public partial class RouteCliView : UserControl
     {
         TxtDiagConsole.Text = "[网络诊断控制台已清空就绪]\n";
     }
+
+    private void BtnCopyCli_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string cmd && !string.IsNullOrWhiteSpace(cmd))
+        {
+            Clipboard.SetText(cmd);
+            MessageBox.Show($"已复制命令到剪贴板：\n\n{cmd}", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
 }
