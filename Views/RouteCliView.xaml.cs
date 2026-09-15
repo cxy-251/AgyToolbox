@@ -88,4 +88,23 @@ public partial class RouteCliView : UserControl
             MessageBox.Show($"已复制命令到剪贴板：\n\n{cmd}", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
+
+    private void BtnLaunchTool_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string app && !string.IsNullOrWhiteSpace(app))
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = app,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"启动工具失败: {ex.Message}", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+    }
 }

@@ -20,6 +20,7 @@
                     Name="AgyToolbox"
                     Description="Agy Windows Optimization and Developer Toolbox"
                     Target="[INSTALLFOLDER]AgyToolbox.exe"
+                    Arguments="--gui"
                     WorkingDirectory="INSTALLFOLDER" />
           <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall" />
           <RegistryValue Root="HKCU" Key="Software\AgyToolbox" Name="installed" Type="integer" Value="1" KeyPath="yes" />

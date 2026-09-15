@@ -16,6 +16,28 @@ public partial class NativeDevView : UserControl
         RefreshWslStatus();
         RefreshSandboxStatus();
         RefreshSshAgentStatus();
+        RefreshDevModeStatus();
+    }
+
+    private void RefreshDevModeStatus()
+    {
+        bool enabled = _nativeDevService.IsDeveloperModeEnabled();
+        TxtDevModeStatus.Text = enabled ? "[已开启 (免提权 Symlink 就绪)]" : "[未开启 (创建 Symlink 需管理员权限)]";
+        TxtDevModeStatus.Foreground = enabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        BtnToggleDevMode.Content = enabled ? "关闭开发者模式" : "开启开发者模式";
+    }
+
+    private void BtnToggleDevMode_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _nativeDevService.IsDeveloperModeEnabled();
+        var (ok, msg) = _nativeDevService.SetDeveloperMode(!current);
+        RefreshDevModeStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnOpenDevSettings_Click(object sender, RoutedEventArgs e)
+    {
+        _nativeDevService.OpenDeveloperSettings();
     }
 
     private void RefreshWslStatus()

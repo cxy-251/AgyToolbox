@@ -167,4 +167,52 @@ public class NativeDevService
             return (false, $"配置失败: {ex.Message}");
         }
     }
+
+    /// <summary>
+    /// 检测 Windows 开发者模式 (Developer Mode) 是否已开启
+    /// 开启后核心价值：普通用户无需管理员提权即可直接创建符号链接 (mklink / Symlink)
+    /// </summary>
+    public bool IsDeveloperModeEnabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock");
+            var val = key?.GetValue("AllowDevelopmentWithoutDevLicense");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置 Windows 开发者模式状态
+    /// </summary>
+    public (bool Success, string Message) SetDeveloperMode(bool enable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock");
+            key.SetValue("AllowDevelopmentWithoutDevLicense", enable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, enable ? "已开启 Windows 开发者模式！当前用户已获得免提权创建符号链接 (Symlink) 权限。" : "已关闭开发者模式。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置开发者模式失败: {ex.Message}\n（注意：写入 HKLM 需要管理员权限）");
+        }
+    }
+
+    /// <summary>
+    /// 打开 Windows 设置中的“开发者选项”页面
+    /// </summary>
+    public void OpenDeveloperSettings()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "ms-settings:developers",
+                UseShellExecute = true
+            });
+        }
+        catch { }
+    }
 }

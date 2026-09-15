@@ -53,6 +53,14 @@ public partial class BuiltInGuideView : UserControl
 
     private void BtnRunWinSxSCleanup_Click(object sender, RoutedEventArgs e)
     {
+        var confirm = MessageBox.Show(
+            "确定要执行 WinSxS 组件库重基准化清理吗？\n\n【关键后果与不可逆说明】\n该操作将调用 DISM 的 /StartComponentCleanup /ResetBase 参数，永久清除已被后续新补丁替换的历史组件备份。\n执行后将【永久无法回滚或卸载】当前已安装的 Windows 累积更新补丁！\n\n建议仅在当前系统运行稳定、且急需释放 C 盘空间时使用。\n\n是否确认继续？",
+            "不可逆操作确认：WinSxS 组件库重基准化清理",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
         var (ok, msg) = _winTricksService.RunDismCleanupBaseInConsole();
         MessageBox.Show(msg, ok ? "已启动" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }

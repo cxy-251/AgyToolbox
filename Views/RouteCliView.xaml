@@ -86,12 +86,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="🌐 2. 原生 HTTP 请求与接口测速 (curl)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="直接查看服务器响应头状态码、测试 SSL 握手与 API 响应，或静默下载文件 (-O)。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
-                                    <TextBox Text="curl -I https://github.com" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                    <TextBlock Text="🌐 2. 原生 HTTP 请求与接口测速 (curl.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="⚠️ 重要避坑：Windows PowerShell 5.1 默认将 'curl' 映射为 'Invoke-WebRequest' 的别名！若要使用标准的 Unix curl 语法与参数，务必在命令行输入 curl.exe。" FontSize="11" Foreground="#B45309" Margin="0,2,0,4"/>
+                                    <TextBox Text="curl.exe -I https://github.com" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                 </StackPanel>
                                 <Button Grid.Column="1" Content="📋 复制" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="10,0,0,0"
-                                        Click="BtnCopyCli_Click" Tag="curl -I https://github.com"/>
+                                        Click="BtnCopyCli_Click" Tag="curl.exe -I https://github.com"/>
                             </Grid>
                         </Border>
 
@@ -150,11 +150,11 @@
                 </StackPanel>
             </Border>
 
-            <!-- 第三部分：常用主流开发工具命令行速查 (Git / Docker / Node / Python) -->
+            <!-- 第三部分：Windows 原生系统诊断、进程死锁与性能监控矩阵 (Native Diagnostic & Performance Matrix) -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="🧰 常用开发工具极客救命命令行速查 (Git / Docker / Node / Python)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="整理最常踩坑、最容易忘记的高频开发救命命令，点击右侧即可一键复制进剪贴板。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+                    <TextBlock Text="🩺 Windows 原生系统诊断、进程死锁排查与性能监控矩阵" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="系统级自带排错工具，无需安装任何第三方软件即可快速诊断文件句柄死锁、端口冲突、网络连通性与程序崩溃根因：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -162,130 +162,79 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- 左侧：Git 与 Docker -->
+                        <!-- 左侧：句柄锁定排查与性能监控 -->
                         <StackPanel Grid.Column="0" Margin="0,0,8,0">
 
-                            <!-- Git 救命技能 -->
-                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                            <!-- 资源监视器 resmon -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
                                 <StackPanel>
-                                    <TextBlock Text="🌿 Git 核心救命与排错指令" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,6"/>
-
-                                    <TextBlock Text="• 撤销上次 Commit 但保留已写代码 (重新整理提交):" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="git reset --soft HEAD~1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="git reset --soft HEAD~1"/>
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="🔒 资源监视器 (resmon) · 搜索文件死锁句柄" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <Button Grid.Column="1" Content="🚀 打开 resmon" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
+                                                Click="BtnLaunchTool_Click" Tag="resmon.exe"/>
                                     </Grid>
-
-                                    <TextBlock Text="• 临时急修 Bug，暂存当前手头半成品:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="git stash save &quot;temp_work&quot; &amp;&amp; git stash pop" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="git stash save &quot;temp_work&quot;"/>
-                                    </Grid>
-
-                                    <TextBlock Text="• 彻底清除工作区所有未跟踪垃圾文件与目录:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="git clean -fd" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="git clean -fd"/>
-                                    </Grid>
-
-                                    <TextBlock Text="• 彩色单行分支与拓扑图 (看分支合并分叉最清爽):" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,0">
-                                        <TextBox Text="git log --oneline --graph --all -n 10" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="git log --oneline --graph --all -n 10"/>
-                                    </Grid>
+                                    <TextBlock Text="【典型场景】编译报错 'Cannot access file... locked by another process' 或删除文件夹提示被另一程序占用。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                    <TextBlock Text="【排错链路】&#x0a;1. 启动 resmon.exe -> 切换至【CPU】选项卡。&#x0a;2. 展开【关联的句柄】面板 -> 在搜索框输入被锁定的文件名或目录名。&#x0a;3. 界面会立刻列出具体持有该文件句柄的进程名称与 PID -> 右键即可结束进程释放锁定！"
+                                               FontSize="11" Foreground="#0284C7" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Border>
 
-                            <!-- Docker 运维与清理 -->
-                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                            <!-- 性能监视器 perfmon -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
                                 <StackPanel>
-                                    <TextBlock Text="🐳 Docker 容器管理与一键释放磁盘" FontWeight="Bold" FontSize="13" Foreground="#0284C7" Margin="0,0,0,6"/>
-
-                                    <TextBlock Text="• 查看全部运行中容器资源实时占用 (CPU/内存/IO):" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="docker stats" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="docker stats"/>
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="📊 性能监视器 (perfmon) · 深度瓶颈剖析" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <Button Grid.Column="1" Content="🚀 打开 perfmon" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
+                                                Click="BtnLaunchTool_Click" Tag="perfmon.exe"/>
                                     </Grid>
-
-                                    <TextBlock Text="• 一键清空所有停止容器、孤儿镜像与数据卷 (释放几十G):" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="docker system prune -a --volumes -f" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="docker system prune -a --volumes -f"/>
-                                    </Grid>
-
-                                    <TextBlock Text="• 进入正在运行的容器内部命令行终端调试:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,0">
-                                        <TextBox Text="docker exec -it &lt;container_id&gt; sh" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="docker exec -it mycontainer sh"/>
-                                    </Grid>
+                                    <TextBlock Text="【典型场景】排查磁盘 IOPS 饱和、内核硬件中断 (DPC/ISR)、分页文件争抢或多线程死锁瓶颈。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                    <TextBlock Text="【排错链路】支持自定义添加计数器（如 PhysicalDisk\% Disk Time、Avg. Disk Queue Length），实时监控硬件极限与系统吞吐。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Border>
 
                         </StackPanel>
 
-                        <!-- 右侧：Node 与 Python -->
+                        <!-- 右侧：端口连通性探测与崩溃事件查看 -->
                         <StackPanel Grid.Column="1" Margin="8,0,0,0">
 
-                            <!-- Node & Pnpm -->
-                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                            <!-- Test-NetConnection 原生 TCP 端口探测 -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
                                 <StackPanel>
-                                    <TextBlock Text="🟢 Node.js / Npm / Pnpm 极速维护" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,6"/>
-
-                                    <TextBlock Text="• 强制清空 npm 损坏的本地缓存 (解决安装卡死报错):" FontSize="11" Foreground="#475569"/>
+                                    <TextBlock Text="📡 Test-NetConnection · 原生 TCP 端口测试 (免 telnet)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
+                                    <TextBlock Text="【典型场景】测试数据库 3306/5432、Redis 6379 或 Web 443 端口是否在远程服务器开放且连通。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                    <TextBlock Text="在 PowerShell 中直接运行（无需安装第三方 telnet 或 nc 工具）：" FontSize="10" Foreground="#64748B" Margin="0,2,0,2"/>
                                     <Grid Margin="0,2,0,6">
-                                        <TextBox Text="npm cache clean --force" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                        <TextBox Text="Test-NetConnection -ComputerName github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                         <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="npm cache clean --force"/>
+                                                Click="BtnCopyCli_Click" Tag="Test-NetConnection -ComputerName github.com -Port 443"/>
                                     </Grid>
-
-                                    <TextBlock Text="• 释放 pnpm 全局硬链接存储池中未引用的无用包缓存:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="pnpm store prune" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="pnpm store prune"/>
-                                    </Grid>
-
-                                    <TextBlock Text="• 免全局安装、临时运行 npx 快速切换国内源:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,0">
-                                        <TextBox Text="npx nrm use taobao" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="npx nrm use taobao"/>
-                                    </Grid>
+                                    <TextBlock Text="简写命令：tnc 192.168.1.1 -p 8080 -TraceRoute (自动探测连通性并跟踪路由跳数)" FontSize="10" Foreground="#059669"/>
                                 </StackPanel>
                             </Border>
 
-                            <!-- Python & Conda -->
-                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                            <!-- 事件查看器 eventvwr.msc WER 崩溃追踪 -->
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
                                 <StackPanel>
-                                    <TextBlock Text="🐍 Python &amp; Conda 虚拟环境标准流" FontWeight="Bold" FontSize="13" Foreground="#D97706" Margin="0,0,0,6"/>
-
-                                    <TextBlock Text="• 官方推荐：当前目录创建轻量虚拟环境并激活:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="python -m venv .venv &amp;&amp; .\.venv\Scripts\Activate.ps1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="python -m venv .venv &amp;&amp; .\.venv\Scripts\Activate.ps1"/>
+                                    <Grid Margin="0,0,0,4">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="💥 事件查看器 (eventvwr) · 程序闪退崩溃分析" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <Button Grid.Column="1" Content="🚀 打开 eventvwr" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
+                                                Click="BtnLaunchTool_Click" Tag="eventvwr.msc"/>
                                     </Grid>
-
-                                    <TextBlock Text="• 一键导出当前环境所有具体依赖版本号:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,6">
-                                        <TextBox Text="pip freeze > requirements.txt" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="pip freeze > requirements.txt"/>
-                                    </Grid>
-
-                                    <TextBlock Text="• Conda 创建指定 Python 版本的独立干净环境:" FontSize="11" Foreground="#475569"/>
-                                    <Grid Margin="0,2,0,0">
-                                        <TextBox Text="conda create -n myenv python=3.10 -y" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                        <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCli_Click" Tag="conda create -n myenv python=3.10 -y"/>
-                                    </Grid>
+                                    <TextBlock Text="【典型场景】程序或服务静默闪退、无弹窗报错，需要定位具体抛出异常的代码位置或崩溃模块。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                    <TextBlock Text="【排错链路】&#x0a;1. 启动 eventvwr.msc -> 导航至【Windows 日志】->【应用程序】。&#x0a;2. 筛选日志级别为【错误 (Error)】。&#x0a;3. 查看事件来源为 '.NET Runtime' 或 'Application Error' 的条目，即可提取未捕获的 Exception 类型、Faulting module 与异常调用堆栈。"
+                                               FontSize="11" Foreground="#7C3AED" TextWrapping="Wrap"/>
                                 </StackPanel>
                             </Border>
 

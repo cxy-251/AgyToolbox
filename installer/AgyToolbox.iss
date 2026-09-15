@@ -44,9 +44,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "{#MySourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\AgyToolbox"; Filename: "{app}\AgyToolbox.exe"
+Name: "{group}\AgyToolbox"; Filename: "{app}\AgyToolbox.exe"; Parameters: "--gui"
 Name: "{group}\{cm:UninstallProgram,AgyToolbox}"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\AgyToolbox"; Filename: "{app}\AgyToolbox.exe"; Tasks: desktopicon
+Name: "{autodesktop}\AgyToolbox"; Filename: "{app}\AgyToolbox.exe"; Parameters: "--gui"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\AgyToolbox.exe"; Description: "{cm:LaunchProgram,AgyToolbox}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\AgyToolbox.exe"; Parameters: "--gui"; Description: "{cm:LaunchProgram,AgyToolbox}"; Flags: nowait postinstall skipifsilent

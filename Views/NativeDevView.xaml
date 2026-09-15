@@ -122,7 +122,36 @@
                 </StackPanel>
             </Border>
 
-            <!-- 板块 3: 嵌入式原生 CLI 速查与网络链路诊断 (嵌入 RouteCliView) -->
+            <!-- 板块 3: 开发者模式与符号链接权限 (Developer Mode & Symlink) -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🔗 3. Windows 开发者模式与符号链接权限 (Developer Mode &amp; Symlink)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="开启系统级开发者模式，彻底解决现代开发工具链中最棘手的符号链接权限与跨盘依赖问题：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="配置 Windows 开发者模式 (免提权创建 Symlink 符号链接)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                </StackPanel>
+                                <TextBlock Text="【核心机制与开发价值】&#x0a;• 普通模式下，Windows 要求必须拥有【管理员特权】才能创建符号链接 (mklink /D 或 CreateSymbolicLink API)。&#x0a;• 开启开发者模式后，系统策略允许普通用户（非提升权限）直接创建符号链接！&#x0a;• 关键场景：现代前端包管理器 pnpm（基于全局硬链接与目录符号链接结构，不开常报 EPERM 错误）、npm/yarn link 本地多包联调、以及 Python venv 虚拟环境避免跨目录全量复制。"
+                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <Button x:Name="BtnToggleDevMode" Content="开启开发者模式" Background="#0284C7" Margin="0,0,0,6" Click="BtnToggleDevMode_Click"/>
+                                <Button Content="打开系统设置页" Style="{DynamicResource SecondaryButton}" FontSize="11" Click="BtnOpenDevSettings_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- 板块 4: 嵌入式原生 CLI 速查、网络排障与系统性能诊断 (嵌入 RouteCliView) -->
             <views:RouteCliView />
 
         </StackPanel>

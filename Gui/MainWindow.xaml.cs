@@ -18,8 +18,67 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        CheckAdminPrivileges();
+
         // 默认显示阶段一：开荒与预装精简
         MainContentHost.Content = _debloatView;
+    }
+
+    private void CheckAdminPrivileges()
+    {
+        bool isAdmin = IsAdministrator();
+        if (isAdmin)
+        {
+            Title += " [管理员]";
+            BannerNonAdmin.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            BannerNonAdmin.Visibility = Visibility.Visible;
+        }
+    }
+
+    public static bool IsAdministrator()
+    {
+        try
+        {
+            using var identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+            var principal = new System.Security.Principal.WindowsPrincipal(identity);
+            return principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private void BtnRestartAsAdmin_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var processPath = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(processPath))
+            {
+                processPath = Process.GetCurrentProcess().MainModule?.FileName;
+            }
+
+            if (!string.IsNullOrEmpty(processPath) && File.Exists(processPath))
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = processPath,
+                    Arguments = "--gui",
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+                Process.Start(psi);
+                Application.Current.Shutdown();
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"提权重启失败或已被取消: {ex.Message}", "权限提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 
     private void Nav_Click(object sender, RoutedEventArgs e)

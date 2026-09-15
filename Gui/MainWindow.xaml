@@ -167,8 +167,28 @@
         </Border>
 
         <!-- 右侧主体内容容器 -->
-        <Border Grid.Column="1" Background="White">
-            <ContentControl x:Name="MainContentHost" />
-        </Border>
+        <Grid Grid.Column="1" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- 非管理员运行提示条 (智能感知) -->
+            <Border x:Name="BannerNonAdmin" Grid.Row="0" Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="0,0,0,1" Padding="14,9" Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="🛡️" FontSize="14" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="当前以标准用户权限运行。配置系统级项（如长路径、系统级环境变量、底层服务）需要管理员权限。" FontSize="12" Foreground="#92400E" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="以管理员身份重启" Style="{DynamicResource SecondaryButton}" Background="#FDE68A" Foreground="#78350F" Padding="10,4" FontSize="11" Click="BtnRestartAsAdmin_Click"/>
+                </Grid>
+            </Border>
+
+            <ContentControl Grid.Row="1" x:Name="MainContentHost" />
+        </Grid>
     </Grid>
 </Window>
