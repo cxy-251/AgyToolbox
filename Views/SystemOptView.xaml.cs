@@ -138,6 +138,18 @@ public partial class SystemOptView : UserControl
         bool noTele = _winOptimizerService.IsTelemetryDisabled();
         TxtTelemetryStatus.Text = noTele ? "[已禁用个性化遥测广告]" : "[当前为默认遥测]";
         TxtTelemetryStatus.Foreground = noTele ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+
+        bool noSticky = _winOptimizerService.IsStickyKeysPromptDisabled();
+        TxtStickyStatus.Text = noSticky ? "[已禁用 5 次 Shift 弹窗]" : "[当前为系统默认弹窗]";
+        TxtStickyStatus.Foreground = noSticky ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+
+        bool clipHist = _winOptimizerService.IsClipboardHistoryEnabled();
+        TxtClipboardStatus.Text = clipHist ? "[已开启 Win+V 剪贴板历史]" : "[当前未开启剪贴板历史]";
+        TxtClipboardStatus.Foreground = clipHist ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
+
+        bool devMode = _winOptimizerService.IsDevModeAndLongPathsEnabled();
+        TxtDevModeStatus.Text = devMode ? "[已开启开发者模式与长路径]" : "[当前为标准用户限制]";
+        TxtDevModeStatus.Foreground = devMode ? System.Windows.Media.Brushes.DarkGreen : System.Windows.Media.Brushes.DarkOrange;
     }
 
     private void BtnToggleClassicMenu_Click(object sender, RoutedEventArgs e)
@@ -160,6 +172,30 @@ public partial class SystemOptView : UserControl
     {
         bool current = _winOptimizerService.IsTelemetryDisabled();
         var (ok, msg) = _winOptimizerService.SetTelemetryDisabled(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnToggleSticky_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsStickyKeysPromptDisabled();
+        var (ok, msg) = _winOptimizerService.SetStickyKeysPromptDisabled(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnToggleClipboard_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsClipboardHistoryEnabled();
+        var (ok, msg) = _winOptimizerService.SetClipboardHistoryEnabled(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnToggleDevMode_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsDevModeAndLongPathsEnabled();
+        var (ok, msg) = _winOptimizerService.SetDevModeAndLongPaths(!current);
         RefreshOptimizerStatus();
         MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
     }

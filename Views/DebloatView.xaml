@@ -41,7 +41,8 @@
                             <DataGridTextColumn Header="软件名称" Binding="{Binding DisplayName}" Width="160"/>
                             <DataGridTextColumn Header="类别" Binding="{Binding Category}" Width="80"/>
                             <DataGridTextColumn Header="它是干什么的 (官方用途)" Binding="{Binding Description}" Width="2*"/>
-                            <DataGridTextColumn Header="卸载建议与替代方案" Binding="{Binding DebloatAdvice}" Width="2*"/>
+                            <DataGridTextColumn Header="为什么卸载 (影响分析)" Binding="{Binding DebloatAdvice}" Width="2*"/>
+                            <DataGridTextColumn Header="开源/轻量优质替代方案" Binding="{Binding OpenSourceAlternative}" Width="2*"/>
                             <DataGridTemplateColumn Header="安装状态" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

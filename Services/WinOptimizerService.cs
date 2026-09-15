@@ -241,6 +241,105 @@ public class WinOptimizerService
     }
 
     /// <summary>
+    /// 检测是否已禁用狂按5次Shift弹出粘滞键提示
+    /// </summary>
+    public bool IsStickyKeysPromptDisabled()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Accessibility\StickyKeys");
+            var val = key?.GetValue("Flags") as string;
+            return val == "506";
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置是否禁用狂按5次Shift弹出粘滞键提示
+    /// </summary>
+    public (bool Success, string Message) SetStickyKeysPromptDisabled(bool disable)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Control Panel\Accessibility\StickyKeys");
+            key.SetValue("Flags", disable ? "506" : "510", RegistryValueKind.String);
+            return (true, disable ? "已禁用狂按 5 次 Shift 触发粘滞键弹窗！打字和打游戏不再被中断。" : "已恢复默认粘滞键快捷键。");
+        }
+        catch (Exception ex) { return (false, ex.Message); }
+    }
+
+    /// <summary>
+    /// 检测是否已开启 Win+V 剪贴板历史记录
+    /// </summary>
+    public bool IsClipboardHistoryEnabled()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Clipboard");
+            var val = key?.GetValue("EnableClipboardHistory");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置开启或关闭 Win+V 剪贴板历史记录
+    /// </summary>
+    public (bool Success, string Message) SetClipboardHistoryEnabled(bool enable)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Clipboard");
+            key.SetValue("EnableClipboardHistory", enable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, enable ? "已成功开启 Win+V 剪贴板历史记录！" : "已关闭剪贴板历史记录。");
+        }
+        catch (Exception ex) { return (false, ex.Message); }
+    }
+
+    /// <summary>
+    /// 检测是否已开启开发者模式与解除 260 字符长路径限制
+    /// </summary>
+    public bool IsDevModeAndLongPathsEnabled()
+    {
+        try
+        {
+            using var keyDev = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock");
+            var devVal = keyDev?.GetValue("AllowDevelopmentWithoutDevLicense");
+            bool devOk = devVal is int intDev && intDev == 1;
+
+            using var keyPath = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem");
+            var pathVal = keyPath?.GetValue("LongPathsEnabled");
+            bool pathOk = pathVal is int intPath && intPath == 1;
+
+            return devOk && pathOk;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启开发者模式并解除 260 字符路径限制 (解决 deep node_modules 或 git clone 报 Filename too long)
+    /// </summary>
+    public (bool Success, string Message) SetDevModeAndLongPaths(bool enable)
+    {
+        try
+        {
+            using var keyDev = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock");
+            keyDev.SetValue("AllowDevelopmentWithoutDevLicense", enable ? 1 : 0, RegistryValueKind.DWord);
+
+            using var keyPath = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem");
+            keyPath.SetValue("LongPathsEnabled", enable ? 1 : 0, RegistryValueKind.DWord);
+
+            return (true, enable
+                ? "已开启开发者模式并解除 260 字符长路径限制！(再也不怕 node_modules 路径过长报错)"
+                : "已恢复默认限制。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置失败(可能需要管理员权限): {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// 一键平滑重启 Windows 资源管理器 (explorer.exe)
     /// </summary>
     public void RestartExplorer()

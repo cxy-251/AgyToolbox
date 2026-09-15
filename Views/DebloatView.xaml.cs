@@ -14,6 +14,7 @@ public class UwpAppDisplayItem
     public string Category { get; set; } = "";
     public string Description { get; set; } = "";
     public string DebloatAdvice { get; set; } = "";
+    public string OpenSourceAlternative { get; set; } = "";
     public bool IsInstalled { get; set; }
     public string StatusText => IsInstalled ? "● 已安装" : "○ 未安装/已卸载";
     public System.Windows.Media.Brush StatusBrush => IsInstalled
@@ -54,6 +55,7 @@ public partial class DebloatView : UserControl
                 Category = app.Category,
                 Description = app.Description,
                 DebloatAdvice = app.DebloatAdvice,
+                OpenSourceAlternative = app.OpenSourceAlternative,
                 IsInstalled = app.IsInstalled
             });
         }

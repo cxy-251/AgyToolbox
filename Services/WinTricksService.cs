@@ -378,6 +378,27 @@ public class WinTricksService
         }, ct);
     }
 
+    /// <summary>
+    /// 直接以原生外壳启动系统运行命令 (如 devmgmt.msc, ncpa.cpl 等)
+    /// </summary>
+    public (bool Success, string Message) RunSystemCommand(string command)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = command,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+            return (true, $"已成功启动 [{command}]！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"启动失败: {ex.Message}");
+        }
+    }
+
     private static string RunProcessAndGetOutput(string fileName, string args)
     {
         var psi = new ProcessStartInfo

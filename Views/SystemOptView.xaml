@@ -147,6 +147,9 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <!-- 优化项 1: Win10 经典右键完整菜单 -->
@@ -203,8 +206,62 @@
                             </Grid>
                         </Border>
 
+                        <!-- 优化项 4: 禁用连按5次Shift粘滞键弹窗 -->
+                        <Border Grid.Row="3" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="⌨️ 禁用连续按 5 次 Shift 触发粘滞键烦人弹窗" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <TextBlock x:Name="TxtStickyStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="玩游戏或打字急按 Shift 时经常意外弹出刺耳蜂鸣和‘是否启用粘滞键’确认框，新机必关。" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <Button x:Name="BtnToggleSticky" Grid.Column="1" Content="切换状态" VerticalAlignment="Center" Click="BtnToggleSticky_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- 优化项 5: 开启 Win+V 原生剪贴板历史记录 -->
+                        <Border Grid.Row="4" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="📋 开启 Win+V 系统原生剪贴板历史记录" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <TextBlock x:Name="TxtClipboardStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="多条文本/图片连续复制再也不怕覆盖！按下 Win+V 随时回溯历史并置顶常用代码片段。" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <Button x:Name="BtnToggleClipboard" Grid.Column="1" Content="切换状态" VerticalAlignment="Center" Click="BtnToggleClipboard_Click"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- 优化项 6: 开启开发者模式与解除 260 字符长路径限制 -->
+                        <Border Grid.Row="5" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="💻 开启开发者模式 &amp; 解除 260 字符长路径限制" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                    <TextBlock Text="解决深度嵌套项目 (如 node_modules、git clone 仓库) 因文件名超长报错，并允许本地未签名脚本自由测试。" FontSize="12" Foreground="#64748B" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <Button x:Name="BtnToggleDevMode" Grid.Column="1" Content="切换状态" VerticalAlignment="Center" Click="BtnToggleDevMode_Click"/>
+                            </Grid>
+                        </Border>
+
                         <!-- 重启资源管理器 -->
-                        <Border Grid.Row="3" Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12">
+                        <Border Grid.Row="6" Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
