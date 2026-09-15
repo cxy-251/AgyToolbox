@@ -509,4 +509,194 @@ public class NativeDevService
     }
 
     #endregion
+
+    #region 5. Shell 生态、ExecutionPolicy 与 配置文件 ($PROFILE)
+
+    /// <summary>
+    /// 获取当前生效的 ExecutionPolicy 与各范围策略详情
+    /// </summary>
+    public (bool Success, string CurrentPolicy, string Details) GetExecutionPolicy()
+    {
+        try
+        {
+            // 1. 检查 GPO 策略 (最高优先级)
+            using var hklmGpo = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\PowerShell");
+            string? machineGpo = hklmGpo?.GetValue("ExecutionPolicy") as string;
+
+            using var hkcuGpo = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\PowerShell");
+            string? userGpo = hkcuGpo?.GetValue("ExecutionPolicy") as string;
+
+            // 2. 检查 CurrentUser 与 LocalMachine 策略
+            using var hkcu = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell");
+            string? userPolicy = hkcu?.GetValue("ExecutionPolicy") as string;
+
+            using var hklm = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell");
+            string? machinePolicy = hklm?.GetValue("ExecutionPolicy") as string;
+
+            string effective = machineGpo ?? userGpo ?? userPolicy ?? machinePolicy ?? "Restricted";
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"当前生效策略: {effective}");
+            sb.AppendLine("────────────────────────────────────");
+            sb.AppendLine($"• 计算机组策略 (MachinePolicy) : {machineGpo ?? "Undefined (未配置)"}");
+            sb.AppendLine($"• 用户组策略   (UserPolicy)    : {userGpo ?? "Undefined (未配置)"}");
+            sb.AppendLine($"• 当前用户     (CurrentUser)   : {userPolicy ?? "Undefined (未配置)"}");
+            sb.AppendLine($"• 本地计算机   (LocalMachine)  : {machinePolicy ?? "Undefined (未配置)"}");
+            sb.AppendLine("────────────────────────────────────");
+            if (effective.Equals("RemoteSigned", StringComparison.OrdinalIgnoreCase))
+            {
+                sb.AppendLine("💡 状态解析：RemoteSigned 模式下，本地脚本可自由运行，网络下载脚本须数字签名，安全与便捷兼备。");
+            }
+            else if (effective.Equals("Restricted", StringComparison.OrdinalIgnoreCase))
+            {
+                sb.AppendLine("⚠️ 状态解析：Restricted 为系统默认严格模式，禁止运行任何 .ps1 脚本。点击下方按钮可一键切换为 RemoteSigned。");
+            }
+            else
+            {
+                sb.AppendLine($"💡 状态解析：当前策略为 {effective}。");
+            }
+
+            return (true, effective, sb.ToString().Trim());
+        }
+        catch (Exception ex)
+        {
+            return (false, "检测失败", $"获取 ExecutionPolicy 异常: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 将 CurrentUser 的 ExecutionPolicy 一键设为 RemoteSigned (无需管理员提权)
+    /// </summary>
+    public (bool Success, string Message) SetExecutionPolicyRemoteSigned()
+    {
+        try
+        {
+            using (var key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell"))
+            {
+                key.SetValue("ExecutionPolicy", "RemoteSigned", RegistryValueKind.String);
+            }
+
+            // 也为 PowerShell 7 (如果存在) 写入 CurrentUser
+            try
+            {
+                using var pwshKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\PowerShell\7\ShellIds\Microsoft.PowerShell");
+                pwshKey?.SetValue("ExecutionPolicy", "RemoteSigned", RegistryValueKind.String);
+            }
+            catch { }
+
+            return (true, "已成功将当前用户 (CurrentUser) 的执行策略设为【RemoteSigned】！\n\n• 本地自写脚本无需签名直接执行\n• 互联网下载脚本仍保留安全拦截\n• 无需以管理员身份运行，安全纯净。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置策略失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 获取指定的 PowerShell Profile 路径
+    /// </summary>
+    public string GetProfilePath(bool isPwsh7 = false)
+    {
+        string docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string folder = isPwsh7 ? "PowerShell" : "WindowsPowerShell";
+        return Path.Combine(docs, folder, "Microsoft.PowerShell_profile.ps1");
+    }
+
+    /// <summary>
+    /// 打开或初始化创建 PowerShell $PROFILE 配置文件
+    /// </summary>
+    public (bool Success, string Message) OpenOrCreateProfile(bool isPwsh7 = false)
+    {
+        try
+        {
+            string profilePath = GetProfilePath(isPwsh7);
+            string dir = Path.GetDirectoryName(profilePath)!;
+
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            if (!File.Exists(profilePath))
+            {
+                // 使用 UTF8 with BOM 写入推荐模板，以确保 Windows PowerShell 5.1 和 7 中文注释均不乱码
+                string starterTemplate = GetProfileStarterTemplate(isPwsh7);
+                File.WriteAllText(profilePath, starterTemplate, new UTF8Encoding(true));
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "notepad.exe",
+                Arguments = $"\"{profilePath}\"",
+                UseShellExecute = true
+            });
+
+            return (true, $"已在记事本中打开 $PROFILE 配置文件：\n{profilePath}");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"打开配置文件失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 获取推荐的 PowerShell 开发者个人配置文件 ($PROFILE) 模版
+    /// </summary>
+    public string GetProfileStarterTemplate(bool isPwsh7 = false)
+    {
+        return
+@"# ==============================================================================
+# PowerShell 个人配置文件 ($PROFILE)
+# 自动生成工具: AgyToolbox 原生开发工具箱
+# 提示: 保存时请确保使用 UTF-8 (建议带 BOM) 编码，避免中文注释乱码
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. 快捷别名 (Aliases) - 提升日常击键效率
+# ------------------------------------------------------------------------------
+Set-Alias -Name ll -Value Get-ChildItem -Option AllScope
+function gs { git status }
+function ga { git add -A }
+function gc { param($m) git commit -m $m }
+function gp { git pull }
+function gpush { git push }
+function glog { git log --oneline --graph --decorate -n 15 }
+
+# ------------------------------------------------------------------------------
+# 2. 终端网络代理一键开关函数 (端口请根据本地代理客户端修改，如 7890/10808)
+# ------------------------------------------------------------------------------
+function set-proxy {
+    param([int]$port = 7890)
+    $env:http_proxy = ""http://127.0.0.1:$port""
+    $env:https_proxy = ""http://127.0.0.1:$port""
+    $env:all_proxy = ""socks5://127.0.0.1:$port""
+    Write-Host ""[Proxy] 终端代理已开启 -> 127.0.0.1:$port"" -ForegroundColor Green
 }
+
+function unset-proxy {
+    $env:http_proxy = """"
+    $env:https_proxy = """"
+    $env:all_proxy = """"
+    Write-Host ""[Proxy] 终端代理已清除"" -ForegroundColor Yellow
+}
+
+# ------------------------------------------------------------------------------
+# 3. 实用效率小工具
+# ------------------------------------------------------------------------------
+# 快速清屏 (单字符 c)
+function c { Clear-Host }
+
+# 查端口占用进程 (用法: port 8080)
+function port {
+    param([int]$p)
+    Get-NetTCPConnection -LocalPort $p -ErrorAction SilentlyContinue |
+        Select-Object LocalAddress, LocalPort, State, OwningProcess,
+            @{N='Process';E={(Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue).ProcessName}} |
+        Format-Table -AutoSize
+}
+";
+    }
+
+    #endregion
+}
+

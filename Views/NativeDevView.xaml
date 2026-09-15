@@ -20,7 +20,7 @@
             </StackPanel>
         </Border>
 
-        <!-- 4 个功能横向子标签 -->
+        <!-- 5 个功能横向子标签 -->
         <TabControl Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1"
                     ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
@@ -835,6 +835,528 @@
                                 </Grid>
                             </StackPanel>
                         </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 5: Shell 生态与脚本编程 (CMD / PowerShell / pwsh / ExecutionPolicy / $PROFILE) -->
+            <TabItem Header="🐚 Shell 生态与脚本编程">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+
+                        <!-- 第一块：Shell 家族族谱与原生真值表 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🌐 1. Windows Shell 家族族谱与原生真值表" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                                        <Border Background="#DBEAFE" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="💡 核心认知" FontSize="10" FontWeight="SemiBold" Foreground="#1D4ED8"/>
+                                        </Border>
+                                    </WrapPanel>
+                                </Grid>
+                                <TextBlock Text="Windows 体系下多种命令行工具与 Shell 宿主并存，常年困扰开发者。以下为官方底层的代际脉络、原生属性与技术本质真值表："
+                                           FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                                <!-- 5 大成员对照卡片矩阵 (2 列排布) -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 1. CMD -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,8">
+                                        <StackPanel>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBlock Text="⬛ cmd.exe (传统命令提示符)" FontWeight="Bold" FontSize="12" Foreground="#0F172A"/>
+                                                <TextBlock Text="[✅ 系统原生]" HorizontalAlignment="Right" FontSize="10" FontWeight="Bold" Foreground="#16A34A"/>
+                                            </Grid>
+                                            <TextBlock Text="• 代际与基石：MS-DOS / Windows NT 诞生起原生内置，单线程纯字符流。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 依赖与性能：无任何 .NET 或外部 Runtime 依赖，启动毫秒级，极省内存。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 推荐定位：轻量秒级排障、简单环境测试、维护旧 .bat 批处理兼容。" FontSize="10" Foreground="#2563EB" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 2. Windows PowerShell 5.1 -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,8">
+                                        <StackPanel>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBlock Text="🟦 powershell.exe (Windows PowerShell 5.1)" FontWeight="Bold" FontSize="12" Foreground="#0284C7"/>
+                                                <TextBlock Text="[✅ 系统原生]" HorizontalAlignment="Right" FontSize="10" FontWeight="Bold" Foreground="#16A34A"/>
+                                            </Grid>
+                                            <TextBlock Text="• 代际与基石：Win7 起系统预装，基于 .NET Framework 4.8 强类型对象管道。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 现状与特性：微软已正式在 5.1 封板（只出安全补丁），深度整合 WMI/注册表/服务。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 推荐定位：开箱即用的原生系统管理，无额外环境依赖的生产环境部署。" FontSize="10" Foreground="#2563EB" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 3. PowerShell 7+ (pwsh) -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,8">
+                                        <StackPanel>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBlock Text="⚡ pwsh.exe (PowerShell 7+ 开源版)" FontWeight="Bold" FontSize="12" Foreground="#7C3AED"/>
+                                                <TextBlock Text="[❌ 非系统原生]" HorizontalAlignment="Right" FontSize="10" FontWeight="Bold" Foreground="#DC2626"/>
+                                            </Grid>
+                                            <TextBlock Text="• 代际与基石：基于现代跨平台 .NET 8/9 重写，支持 Win / Linux / macOS。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 优势与突破：启动与管道性能大幅飞跃，支持 ForEach-Object -Parallel 并发与现代语法。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 推荐定位：现代日常主力开发、跨平台 CI/CD 自动化（需 winget 自行安装）。" FontSize="10" Foreground="#2563EB" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 4. Windows Terminal (wt.exe) -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,8">
+                                        <StackPanel>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBlock Text="🪟 Windows Terminal (wt.exe 终端宿主)" FontWeight="Bold" FontSize="12" Foreground="#0D9488"/>
+                                                <TextBlock Text="[⚠️ 现代终端宿主]" HorizontalAlignment="Right" FontSize="10" FontWeight="Bold" Foreground="#0284C7"/>
+                                            </Grid>
+                                            <TextBlock Text="• 本质澄清：它是终端宿主容器 (Host)，不是 Shell！负责托管运行 CMD、PS、WSL。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 优势与特性：DirectX GPU 硬件加速渲染、多标签、窗格分屏、富色彩与毛玻璃。" FontSize="10" Foreground="#475569" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 状态：Win11 预装并设为默认终端；Win10 需从应用商店或 winget 获取。" FontSize="10" Foreground="#2563EB" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 5. VBScript 弃用卡片 -->
+                                <Border Background="#FFFBEB" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="⚠️ VBScript (.vbs / cscript / wscript) 微软官方淘汰声明" FontWeight="Bold" FontSize="11" Foreground="#B45309"/>
+                                            <TextBlock Text="• 现状：微软官方已正式宣布弃用 VBScript。Windows 11 24H2+ 起已将其移为【按需可选功能 (FOD)】，未来更新中将默认关闭并彻底剥离！" FontSize="10" Foreground="#92400E" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 警示：严禁在新项目中使用 .vbs；历史后台静默运行脚本应尽快迁移至现代 PowerShell (.ps1)。" FontSize="10" Foreground="#B91C1C" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <!-- 效率神技：资源管理器地址栏秒开 -->
+                                <Border Background="#F0FDF4" BorderBrush="#BBF7D0" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="🚀 开发者生产力神技：资源管理器地址栏秒开当前路径终端 (CWD Direct Launch)" FontWeight="Bold" FontSize="12" Foreground="#15803D"/>
+                                            <TextBlock Text="在 Windows 资源管理器任意文件夹中，按快捷键【Alt + D】或【Ctrl + L】聚焦地址栏，直接输入以下命令并回车，终端将秒级以当前文件夹作为工作路径启动，彻底免去手动输入漫长 cd 路径："
+                                                       FontSize="10" Foreground="#166534" TextWrapping="Wrap" Margin="0,2,0,6"/>
+                                            <WrapPanel>
+                                                <Border Background="White" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                                    <TextBlock Text="cmd ➔ 快速秒开 CMD" FontSize="10" FontFamily="Consolas" Foreground="#0F172A"/>
+                                                </Border>
+                                                <Border Background="White" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                                    <TextBlock Text="powershell ➔ 秒开 Windows PowerShell" FontSize="10" FontFamily="Consolas" Foreground="#0284C7"/>
+                                                </Border>
+                                                <Border Background="White" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="4" Padding="6,2">
+                                                    <TextBlock Text="wt ➔ 秒开多标签 Windows Terminal" FontSize="10" FontFamily="Consolas" Foreground="#0D9488"/>
+                                                </Border>
+                                            </WrapPanel>
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="📂 打开程序目录实操 Alt+D" Background="#16A34A" Padding="10,6" VerticalAlignment="Center"
+                                                Click="BtnOpenCwdTipExplorer_Click"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第二块：脚本编写避坑指南 (ExecutionPolicy + 语法陷阱 + 编码陷阱) -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🛡️ 2. PowerShell 脚本执行策略 (ExecutionPolicy) 与编写避坑" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                                        <Border Background="#FEF3C7" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="⚡ 避坑要穴" FontSize="10" FontWeight="SemiBold" Foreground="#B45309"/>
+                                        </Border>
+                                    </WrapPanel>
+                                </Grid>
+
+                                <!-- ExecutionPolicy 卡片 -->
+                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="🔐 ExecutionPolicy（脚本执行策略）深度解析与一键配置" FontWeight="Bold" FontSize="12" Foreground="#0F172A"/>
+                                            <TextBlock x:Name="TxtExecPolicyStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="Bold" Foreground="#D97706"/>
+                                        </Grid>
+                                        <TextBlock Text="• 权限认知误区：遇到【在此系统上禁止运行脚本】报错，绝非权限不够，而是触发了 Windows 默认的执行策略（安全护栏而非安全边界）。"
+                                                   FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                        <TextBlock Text="• 策略等级对比：Restricted (默认禁止运行所有脚本) | RemoteSigned (⭐最佳推荐：本地编写自由跑，网上下载需签名) | AllSigned (必须全签名) | Bypass (无视任何策略，仅供批处理自动化临时传参)。"
+                                                   FontSize="10" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                        <TextBlock Text="• 为什么无需提权：使用 -Scope CurrentUser 仅修改当前用户配置，无需管理员身份即可生效，安全纯净无弹窗！"
+                                                   FontSize="10" Foreground="#15803D" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="1.5*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="0" Content="🔄 检测策略详情" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckExecPolicy_Click"/>
+                                            <Button Grid.Column="1" Content="🛡️ 一键设为 RemoteSigned" Background="#0284C7" Margin="4,0,4,0" Click="BtnSetRemoteSigned_Click"/>
+                                            <Button Grid.Column="2" Content="📋 复制单次免改策略调用命令" Style="{DynamicResource SecondaryButton}" Margin="4,0,0,0"
+                                                    Click="BtnCopySnippet_Click" Tag="powershell.exe -ExecutionPolicy Bypass -File &quot;script.ps1&quot;"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 语法陷阱与编码陷阱 (左右双栏) -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 语法陷阱 -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⚠️ 变量与退出码陷阱 (.bat vs .ps1)" FontWeight="Bold" FontSize="12" Foreground="#DC2626" Margin="0,0,0,4"/>
+                                            
+                                            <TextBlock Text="1. 变量提取机制：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
+                                            <TextBlock Text="• CMD 批处理：%VAR%（静态只读），循环内需 setlocal enabledelayedexpansion 并用 !VAR!。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• PowerShell：$env:VAR（读写系统环境变量），$var（内部脚本变量）。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,4"/>
+
+                                            <TextBlock Text="2. 退出码与错误中断：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
+                                            <TextBlock Text="• CMD：%ERRORLEVEL% 表示上一程序退出码 (0 为成功)。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• PowerShell：$LASTEXITCODE 表示外部 .exe 退出码；$? 表示上一条 cmdlet 成功状态；遇错即停需首行声明 $ErrorActionPreference = 'Stop'。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 编码陷阱 -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🔤 脚本编码陷阱（中文乱码终结法则）" FontWeight="Bold" FontSize="12" Foreground="#D97706" Margin="0,0,0,4"/>
+                                            
+                                            <TextBlock Text="1. CMD 批处理 (.bat) 编码法则：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
+                                            <TextBlock Text="• 中文 Windows CMD 默认代码页为 CP936 (GBK)。若保存为纯 UTF-8，中文注释极易导致语法解析截断！" FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 对策：保存为 ANSI / GBK 编码，或在首行声明 chcp 65001 >nul 强制切 UTF-8。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,4"/>
+
+                                            <TextBlock Text="2. PowerShell 5.1 (.ps1) 编码法则：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
+                                            <TextBlock Text="• PowerShell 5.1 默认编码要求带 BOM 的 UTF-8（UTF-8 with BOM）。保存为无 BOM 的纯 UTF-8 时，中文极易被吞乱码！" FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• 对策：在 VS Code 状态栏右下角切换为【UTF-8 with BOM】保存；PowerShell 7+ 则全面支持无 BOM 纯 UTF-8。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第三块：CMD vs PowerShell 强类型对象级神级指令对照矩阵 -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="⚔️ 3. CMD 纯字符流 vs PowerShell 强类型对象级指令对照矩阵" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                                        <Border Background="#E0E7FF" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="🔥 生产力矩阵" FontSize="10" FontWeight="SemiBold" Foreground="#4338CA"/>
+                                        </Border>
+                                    </WrapPanel>
+                                </Grid>
+                                <TextBlock Text="核心技术代差：CMD 是基于字符流的纯文本切分（依赖 findstr、for /f）；PowerShell 是基于 .NET 强类型对象的结构化数据管道（属性直接提取、强类型排序与过滤）。"
+                                           FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                                <!-- 矩阵卡片 1: 进程查询与内存过滤 -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- CMD -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⬛ CMD：按字符搜索进程" FontSize="11" FontWeight="Bold" Foreground="#0F172A"/>
+                                            <TextBlock Text="单纯文本流匹配，无法精确提取字段或数学比较：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="tasklist | findstr /i &quot;node&quot;" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="tasklist | findstr /i &quot;node&quot;"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- PS -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🟦 PowerShell：按属性降序取内存前 5 进程" FontSize="11" FontWeight="Bold" Foreground="#0284C7"/>
+                                            <TextBlock Text="通过 WorkingSet64 强类型属性直接排序取前 5：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 5 Name, Id, WorkingSet64" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 5 Name, Id, WorkingSet64"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 矩阵卡片 2: 端口占用与反查进程 -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- CMD -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⬛ CMD：netstat 文本过滤端口" FontSize="11" FontWeight="Bold" Foreground="#0F172A"/>
+                                            <TextBlock Text="只给出数字 PID，需人眼记下再手动敲 tasklist 查名字：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="netstat -ano | findstr :8080" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="netstat -ano | findstr :8080"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- PS -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🟦 PowerShell：原生 TCP 强类型连接对象查询" FontSize="11" FontWeight="Bold" Foreground="#0284C7"/>
+                                            <TextBlock Text="原生 TCP 连接结构化对象直接过滤本地端口与归属 PID：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, State, OwningProcess" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, State, OwningProcess"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 矩阵卡片 3: 文件递归查找与时间排序 -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- CMD -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⬛ CMD：dir 递归查找文件" FontSize="11" FontWeight="Bold" Foreground="#0F172A"/>
+                                            <TextBlock Text="纯文本输出所有匹配路径，无法轻松做管道二次计算：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="dir /s /b /o:-d *.log" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="dir /s /b /o:-d *.log"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- PS -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🟦 PowerShell：对象管道按修改时间取最新 10 个" FontSize="11" FontWeight="Bold" Foreground="#0284C7"/>
+                                            <TextBlock Text="返回 FileInfo 对象，可按大小、时间精确排序和格式化输出：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="Get-ChildItem -Path . -Filter *.log -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 10 FullName, Length, LastWriteTime" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="Get-ChildItem -Path . -Filter *.log -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 10 FullName, Length, LastWriteTime"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 矩阵卡片 4: 文件内容搜索 (Grep) -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- CMD -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⬛ CMD：findstr 全局搜索文件内容" FontSize="11" FontWeight="Bold" Foreground="#0F172A"/>
+                                            <TextBlock Text="基础正则字符串检索，速度极快，适合快速找关键字：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="findstr /s /i /n &quot;TODO&quot; *.cs" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="findstr /s /i /n &quot;TODO&quot; *.cs"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- PS -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🟦 PowerShell：Select-String 对象级模式匹配" FontSize="11" FontWeight="Bold" Foreground="#0284C7"/>
+                                            <TextBlock Text="返回 MatchInfo 对象，包含行号、上下文及捕获组：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="Select-String -Path &quot;**\*.cs&quot; -Pattern &quot;TODO&quot; | Select-Object Path, LineNumber, Line" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="Select-String -Path &quot;**\*.cs&quot; -Pattern &quot;TODO&quot; | Select-Object Path, LineNumber, Line"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 矩阵卡片 5: 网络探测与哈希校验 -->
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- CMD -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⬛ CMD：ping 与 certutil 哈希校验" FontSize="11" FontWeight="Bold" Foreground="#0F172A"/>
+                                            <TextBlock Text="ping 仅测 ICMP，certutil 测哈希需剔除多余文案：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBox Text="certutil -hashfile target.zip SHA256" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="certutil -hashfile target.zip SHA256"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- PS -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🟦 PowerShell：Test-NetConnection 与 Get-FileHash" FontSize="11" FontWeight="Bold" Foreground="#0284C7"/>
+                                            <TextBlock Text="原生支持 TCP 端口三次握手探测，直接获得精准 Hash 字段：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="Test-NetConnection github.com -Port 443"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 矩阵卡片 6: 环境变量 PATH 拆分与多线程复制 -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- CMD -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⬛ CMD：robocopy 16 线程镜像与 clip 注入剪贴板" FontSize="11" FontWeight="Bold" Foreground="#0F172A"/>
+                                            <TextBlock Text="CMD 经典多线程断点传输与输出管道转剪贴板：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBox Text="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1"/>
+                                            </Grid>
+                                            <Grid>
+                                                <TextBox Text="ipconfig /all | clip" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="ipconfig /all | clip"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- PS -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🟦 PowerShell：PATH 智能拆分与网络一键执行" FontSize="11" FontWeight="Bold" Foreground="#0284C7"/>
+                                            <TextBlock Text="将粘连的 PATH 按分号逐行输出，以及现代 irm 管道执行：" FontSize="10" Foreground="#64748B" Margin="0,2,0,4"/>
+                                            <Grid Margin="0,0,0,4">
+                                                <TextBox Text="$env:PATH -split ';'" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="$env:PATH -split ';'"/>
+                                            </Grid>
+                                            <Grid>
+                                                <TextBox Text="irm https://get.scoop.sh | iex" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="irm https://get.scoop.sh | iex"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第四块：个人配置与现代演进 ($PROFILE / pwsh 7 / VBS 迁移) -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🚀 4. PowerShell $PROFILE 个人配置文件与现代演进" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                                        <Border Background="#DCFCE7" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="⚡ 效率神器" FontSize="10" FontWeight="SemiBold" Foreground="#15803D"/>
+                                        </Border>
+                                    </WrapPanel>
+                                </Grid>
+
+                                <!-- 卡片 1: $PROFILE 个人别名与函数配置 -->
+                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="📝 PowerShell $PROFILE 个人配置文件（打造你的极速工作流）" FontWeight="Bold" FontSize="12" Foreground="#0F172A" Margin="0,0,0,4"/>
+                                        <TextBlock Text="• 作用机制：类似于 Linux 环境下的 ~/.bashrc 或 ~/.zshrc，每次启动 PowerShell 时自动载入执行。可配置常用高频别名 (如 gs -> git status)、终端网络代理一键开关函数 (set-proxy / unset-proxy)、自定义端口查询函数等。"
+                                                   FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Button Grid.Column="0" Content="📝 配置 PS 5.1 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnOpenProfilePs5_Click"/>
+                                            <Button Grid.Column="1" Content="📝 配置 pwsh 7 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="4,0,4,0" Click="BtnOpenProfilePwsh7_Click"/>
+                                            <Button Grid.Column="2" Content="📋 复制推荐模板脚本" Background="#16A34A" Margin="4,0,0,0" Click="BtnCopyProfileTemplate_Click"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 卡片 2 与 卡片 3: pwsh 7 升级 与 VBS 迁移 (双栏排布) -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- pwsh 7 升级 -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⚡ 升级到 PowerShell 7+ (pwsh) 官方推荐命令" FontWeight="Bold" FontSize="12" Foreground="#7C3AED" Margin="0,0,0,4"/>
+                                            <TextBlock Text="现代化开发建议将主力 Shell 升级至 pwsh 7：启动速度大幅提升，原生并发流水线，三元表达式等现代化语法，并与 Windows Terminal 深度集成："
+                                                       FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                            <Grid>
+                                                <TextBox Text="winget install --id Microsoft.PowerShell --source winget" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="winget install --id Microsoft.PowerShell --source winget"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- VBS 迁移 -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🔄 VBScript 静默启动迁移至现代 PowerShell" FontWeight="Bold" FontSize="12" Foreground="#B45309" Margin="0,0,0,4"/>
+                                            <TextBlock Text="VBScript 即将被 Windows 彻底剥离，历史通过 WshShell.Run 静默运行程序的脚本，请全面迁移至 PowerShell 的 Start-Process："
+                                                       FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                            <Grid>
+                                                <TextBox Text="Start-Process -FilePath &quot;app.exe&quot; -ArgumentList &quot;--silent&quot; -WindowStyle Hidden" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="Start-Process -FilePath &quot;app.exe&quot; -ArgumentList &quot;--silent&quot; -WindowStyle Hidden"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
