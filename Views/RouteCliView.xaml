@@ -1,0 +1,175 @@
+<UserControl x:Class="AgyToolbox.Views.RouteCliView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+        <StackPanel Margin="10">
+
+            <!-- 第一部分：网络路由跳数与连通性实时诊断 -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🌐 网络路由跳数追踪与链路诊断 (Route &amp; Trace)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="排查网络在哪个路由器节点中断、为什么高延迟、以及局域网物理设备发现。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <!-- 控制区 -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="220"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="目标主机 / IP：" VerticalAlignment="Center" FontSize="13" Margin="0,0,8,0"/>
+                        <TextBox x:Name="TxtRouteHost" Grid.Column="1" Text="1.1.1.1" Height="32" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,10,0"/>
+                        
+                        <WrapPanel Grid.Column="2" VerticalAlignment="Center">
+                            <Button Content="⚡ tracert -d (极速路由跳数)" Margin="0,0,8,4" Click="BtnTracertFast_Click"/>
+                            <Button Content="📊 pathping (深度丢包诊断)" Margin="0,0,8,4" Click="BtnPathping_Click"/>
+                            <Button Content="🗺️ route print (本机路由表)" Margin="0,0,8,4" Click="BtnRoutePrint_Click"/>
+                            <Button Content="🔎 arp -a (局域网设备映射)" Margin="0,0,8,4" Click="BtnArp_Click"/>
+                            <Button x:Name="BtnStopDiag" Content="⏹️ 停止" Background="#EF4444" Margin="0,0,8,4" Click="BtnStopDiag_Click" IsEnabled="False"/>
+                            <Button Content="🧹 清空输出" Style="{StaticResource SecondaryButton}" Margin="0,0,0,4" Click="BtnClearDiagLog_Click"/>
+                        </WrapPanel>
+                    </Grid>
+
+                    <!-- 实时黑色控制台输出框 -->
+                    <TextBox x:Name="TxtDiagConsole" Height="220" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
+                             Background="#0F172A" Foreground="#38BDF8" FontFamily="Consolas, Courier New" FontSize="12"
+                             Padding="10" TextWrapping="Wrap"
+                             Text="[网络诊断控制台已就绪] 请输入目标主机（如 1.1.1.1、baidu.com、github.com），并点击上方诊断命令开始执行...&#x0a;"/>
+
+                    <!-- 路由原理解密卡片 -->
+                    <Border Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="💡 路由跳数（Hop）底层原理透视：" FontWeight="Bold" FontSize="12" Foreground="#1E293B" Margin="0,0,0,4"/>
+                            <TextBlock Text="• TTL 机制：tracert 发送 IP 报文，TTL 从 1 开始递增。第一台路由器将 TTL 减为 0 后抛弃报文并返回 ICMP 超时，源端由此获取该跳路由器的 IP；依次类推测出整条链路。" FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
+                            <TextBlock Text="• 为什么加 -d 速度快 10 倍？默认 tracert 会对每个中间 IP 做反向 DNS 解析（查运营商域名），极其耗时。加 -d（不解析主机名）直接输出数字 IP，几秒跑完！" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <TextBlock Text="• 为什么中间会有【* * * 请求超时】？部分骨干网防火墙为了防扫描禁止回显 ICMP 超时包，只要最后一跳通，说明中间超时并不影响链路通信。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- 第二部分：Windows 搜索 AQS 高级语法与正则规律速查 -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🔍 Windows 资源管理器 AQS 搜索语法 &amp; 正则真相" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="Windows 资源管理器搜索框原生支持 AQS (Advanced Query Syntax) 高级查询语法，告别大海捞针。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 左侧：类型与大小 -->
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                                <StackPanel>
+                                    <TextBlock Text="📁 类型与扩展名筛选" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="• 类型:文件夹 或 kind:folder" FontSize="12" Foreground="#475569" Margin="0,4,0,0"/>
+                                    <TextBlock Text="• 类型:图片 或 kind:pic (自动含 jpg/png/gif 等)" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                    <TextBlock Text="• 类型:视频 或 kind:video / kind:music" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                    <TextBlock Text="• ext:.log 或 ext:.txt (精确按后缀匹配)" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="⚖️ 大小与区间筛选" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="• 大小:>500MB 或 size:>1GB" FontSize="12" Foreground="#475569" Margin="0,4,0,0"/>
+                                    <TextBlock Text="• 大小:空 (0 KB 占位文件)" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                    <TextBlock Text="• 大小:巨大 (>128 MB) / 大小:小 (10-100 KB)" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                    <TextBlock Text="• 大小:100MB..500MB (区间匹配)" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- 右侧：时间、内容与正则真相 -->
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
+                                <StackPanel>
+                                    <TextBlock Text="📅 时间与内容匹配" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="• 修改日期:今天 或 datemodified:today" FontSize="12" Foreground="#475569" Margin="0,4,0,0"/>
+                                    <TextBlock Text="• 修改日期:2026/01/01..2026/03/01 (精确时间段)" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                    <TextBlock Text="• 内容:&quot;error 10054&quot; (全文检索文件内文本)" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                    <TextBlock Text="• 逻辑运算: kind:doc AND size:>10MB NOT 名称:test" FontSize="12" Foreground="#475569" Margin="0,2,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="6" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="⚠️ 关于“正则表达式 (Regex)”的真实真相" FontWeight="Bold" FontSize="13" Foreground="#B91C1C"/>
+                                    <TextBlock Text="Windows 资源管理器默认【不支持】POSIX/PCRE 正则表达式（仅支持 * 和 ? 通配符）。" FontSize="11" Foreground="#991B1B" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                                    <TextBlock Text="若要使用纯正正则（如 ^test_\d+\.log$），建议使用 Everything 工具输入 regex: 前缀，或在 PowerShell 中执行 Get-ChildItem -Recurse | Where-Object { $_.Name -match '正则' }。" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 第三部分：CMD vs PowerShell 经典神级指令速查对比 -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+                <StackPanel>
+                    <TextBlock Text="💻 CMD vs PowerShell 必会神级指令对照" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="核心差异：CMD 输出是无格式的纯字符流 (String)；PowerShell 传递的是带有属性与方法的 .NET 强类型对象 (Object)。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- CMD 神技 -->
+                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="⬛ 传统 CMD 经典黑客神技" FontWeight="Bold" FontSize="13" Foreground="#0F172A" Margin="0,0,0,8"/>
+                                
+                                <TextBlock Text="1. 查程序在哪 (类似 which):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="where python" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="2. Windows 最强多线程断点镜像复制 (秒杀 copy):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="3. 将任何命令输出直接注入系统剪贴板:" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="ipconfig /all | clip" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="4. 强制强杀进程 (按映像名或 PID):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="taskkill /f /im node.exe" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="5. 切换控制台 UTF-8 编码 (防乱码):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="chcp 65001" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- PowerShell 神技 -->
+                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="8,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🟦 现代 PowerShell 对象级生产力神技" FontWeight="Bold" FontSize="13" Foreground="#0284C7" Margin="0,0,0,8"/>
+
+                                <TextBlock Text="1. 原生测试远程 TCP 端口通不通 (替代 telnet):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="2. 对象管道筛选 (找出前 5 个最吃内存的进程):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="Get-Process | Sort-Object WorkingSet64 -Desc | Select -First 5" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="3. 查看并格式化拆分环境变量 PATH:" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="$env:PATH -split ';'" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="4. 计算文件 SHA256 哈希值 (防篡改校验):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="Get-FileHash ./target.iso -Algorithm SHA256" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,6"/>
+
+                                <TextBlock Text="5. 现代网络一键执行脚本 (安全安装环境):" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox Text="irm https://get.scoop.sh | iex" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

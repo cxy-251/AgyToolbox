@@ -130,6 +130,117 @@ public class WinOptimizerService
     }
 
     /// <summary>
+    /// 检测是否显示已知文件扩展名
+    /// </summary>
+    public bool IsFileExtVisible()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            var val = key?.GetValue("HideFileExt");
+            return val is int intVal && intVal == 0; // 0 代表不隐藏 = 显示
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置是否显示文件扩展名 (防伪装可执行文件病毒，程序员必开)
+    /// </summary>
+    public (bool Success, string Message) SetFileExtVisible(bool show)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            key.SetValue("HideFileExt", show ? 0 : 1, RegistryValueKind.DWord);
+            return (true, show ? "已设置为【始终显示文件扩展名】！" : "已恢复默认隐藏已知扩展名。");
+        }
+        catch (Exception ex) { return (false, ex.Message); }
+    }
+
+    /// <summary>
+    /// 检测是否显示隐藏文件与隐藏驱动器
+    /// </summary>
+    public bool IsHiddenFilesVisible()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            var val = key?.GetValue("Hidden");
+            return val is int intVal && intVal == 1; // 1 代表显示隐藏文件
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置是否显示隐藏文件 (方便查看 .git, .env, .vscode 等隐藏目录)
+    /// </summary>
+    public (bool Success, string Message) SetHiddenFilesVisible(bool show)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            key.SetValue("Hidden", show ? 1 : 2, RegistryValueKind.DWord);
+            return (true, show ? "已设置为【显示隐藏的文件和驱动器】！" : "已恢复隐藏系统隐藏文件。");
+        }
+        catch (Exception ex) { return (false, ex.Message); }
+    }
+
+    /// <summary>
+    /// 检测打开资源管理器时默认是否进入“此电脑”
+    /// </summary>
+    public bool IsOpenThisPcDefault()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            var val = key?.GetValue("LaunchTo");
+            return val is int intVal && intVal == 1; // 1 代表此电脑，2 代表快速访问/主页
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置打开资源管理器默认进入“此电脑” (告别满是推广的主页)
+    /// </summary>
+    public (bool Success, string Message) SetOpenThisPcDefault(bool thisPc)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            key.SetValue("LaunchTo", thisPc ? 1 : 2, RegistryValueKind.DWord);
+            return (true, thisPc ? "已设置 Win+E 默认打开【此电脑 (This PC)】！" : "已恢复默认打开快速访问主页。");
+        }
+        catch (Exception ex) { return (false, ex.Message); }
+    }
+
+    /// <summary>
+    /// 一键解锁 Windows 原生隐藏的“卓越性能模式” (Ultimate Performance)
+    /// </summary>
+    public (bool Success, string Message) EnableUltimatePerformance()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powercfg",
+                Arguments = "-duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string outStr = proc?.StandardOutput.ReadToEnd() ?? "";
+            proc?.WaitForExit(5000);
+
+            return (true, "已成功激活【卓越性能模式】！\n已在系统电源选项中解锁最高 CPU 睿频与硬件响应。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"激活卓越性能模式失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// 一键平滑重启 Windows 资源管理器 (explorer.exe)
     /// </summary>
     public void RestartExplorer()

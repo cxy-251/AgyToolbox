@@ -1,0 +1,68 @@
+<UserControl x:Class="AgyToolbox.Views.WebDropView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 服务控制与状态栏 -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <Border Background="#F1F5F9" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="TxtDropStatus" Text="● 服务未启动" FontSize="15" FontWeight="Bold" Foreground="#64748B"/>
+                            <TextBlock Text=" (手机与电脑连同 WiFi 即可互传文件)" FontSize="12" Foreground="#94A3B8" Margin="8,2,0,0"/>
+                        </StackPanel>
+                        <TextBlock x:Name="TxtDropUrl" Text="点击启动服务即可生成手机扫码链接" FontSize="13" Foreground="#0284C7" Margin="0,6,0,0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button x:Name="BtnToggleDrop" Content="启动快传服务" Width="120" Click="BtnToggleDrop_Click" Margin="0,0,10,0"/>
+                        <Button x:Name="BtnOpenBrowser" Content="浏览器打开" Style="{StaticResource SecondaryButton}" Click="BtnOpenBrowser_Click" Margin="0,0,10,0" IsEnabled="False"/>
+                        <Button Content="接收文件夹" Style="{StaticResource SecondaryButton}" Click="BtnOpenReceived_Click" Margin="0,0,10,0"/>
+                        <Button Content="待共享文件夹" Style="{StaticResource SecondaryButton}" Click="BtnOpenShared_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- 二维码扫码卡片 (启动后展示) -->
+            <Border x:Name="BorderQrCard" Visibility="Collapsed" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Background="White" Padding="6" CornerRadius="6" BorderBrush="#CBD5E1" BorderThickness="1">
+                        <Image x:Name="ImgQrCode" Width="130" Height="130" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="16,4,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="📱 手机扫码直达" FontSize="16" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="使用微信、手机相机或手机浏览器【扫一扫】，即可在手机端直接传图/传文本/下载文件。"
+                                   FontSize="13" Foreground="#64748B" TextWrapping="Wrap" Margin="0,6,0,10"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="TxtQrTargetUrl" Text="-" FontSize="13" Foreground="#0284C7" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            <Button Content="📋 复制链接" Style="{StaticResource SecondaryButton}" Click="BtnCopyUrl_Click" Padding="10,5" FontSize="12"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </StackPanel>
+
+        <!-- 动态接收日志 -->
+        <TextBlock Grid.Row="1" Text="实时收发动态记录：" FontSize="14" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,8"/>
+        <Border Grid.Row="2" Background="#0F172A" CornerRadius="8" Padding="12">
+            <ListBox x:Name="ListDropLogs" Background="Transparent" BorderThickness="0" Foreground="#38BDF8" FontFamily="Consolas, Courier New" FontSize="12"/>
+        </Border>
+    </Grid>
+</UserControl>
