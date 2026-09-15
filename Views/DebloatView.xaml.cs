@@ -330,10 +330,22 @@ public partial class DebloatView : UserControl
 
     #region 7. winget 辅助操作
 
-    private void BtnCopyWingetUpgrade_Click(object sender, RoutedEventArgs e)
+    private void BtnCopyWingetCheck_Click(object sender, RoutedEventArgs e)
     {
-        Clipboard.SetText("winget upgrade --all --include-unknown");
-        MessageBox.Show("已复制全盘更新命令到剪贴板！\n在终端中按下回车即可全盘静默更新所有软件。", "已复制", MessageBoxButton.OK, MessageBoxImage.Information);
+        Clipboard.SetText("winget upgrade");
+        MessageBox.Show("已复制【winget upgrade】到剪贴板！\n此命令仅用于扫描列出可升级软件列表，不会做任何修改，安全可靠。", "已复制", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnCopyWingetPin_Click(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText("winget pin add --id Python.Python.3.10");
+        MessageBox.Show("已复制【锁定版本命令】到剪贴板！\n将后面的 ID 改为需要锁定的软件包，可防止开发环境被自动升破大版本。", "已复制", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnCopyWingetUpgradeSingle_Click(object sender, RoutedEventArgs e)
+    {
+        Clipboard.SetText("winget upgrade --id 7zip.7zip");
+        MessageBox.Show("已复制【单包升级命令】到剪贴板！\n将 ID 改为实际要更新的软件，可控可追溯。", "已复制", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void BtnCopySnippet_Click(object sender, RoutedEventArgs e)

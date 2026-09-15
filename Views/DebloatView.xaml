@@ -247,12 +247,38 @@
                 </StackPanel>
             </Border>
 
-            <!-- 板块 7: 官方原生包管理器 winget 使用指南 -->
+            <!-- 板块 7: 官方原生包管理器 winget 使用指南与避坑真相 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
-                    <TextBlock Text="📦 7. 极简主义必知：Windows 官方原生包管理器 winget 使用指南" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="告别百度搜索去各种‘软件下载站’下载全家桶流氓软件！Windows 官方自带 winget，一行命令直接从源站拉取纯净安装包静默安装。"
+                    <TextBlock Text="📦 7. 官方原生包管理器 winget 实战与避坑指南 (实打实拆解，拒绝虚假宣传)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="Windows 官方自带 winget，能直接从官方源拉取纯净安装包。但在使用更新功能时必须了解其底层机制，切勿盲目全盘更新！"
                                FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <!-- 避坑警示卡片 -->
+                    <Border Background="#FEF2F2" BorderBrush="#F87171" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                        <StackPanel>
+                            <TextBlock Text="⚠️ 为什么绝不建议盲目执行【winget upgrade --all --include-unknown】？真实后果说明：" FontWeight="Bold" FontSize="12" Foreground="#991B1B" Margin="0,0,0,6"/>
+                            <TextBlock Text="① 无休止 UAC 弹窗轰炸：许多 Windows 安装包（如 Inno/NSIS）根本不支持静默模式，更新过程会连续弹出十几次管理员提权弹窗，强行抢夺桌面焦点，根本做不到‘完全静默后台更新’。" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                            <TextBlock Text="② 强行重复重装未知版本：【--include-unknown】参数会把所有无法在注册表中识别出标准版本号的软件（如微信、网易云等部分国内应用）一律视作需要更新。每次执行，它都会把这些软件从头到尾重新下载并覆盖安装一遍！" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                            <TextBlock Text="③ 冲垮开发环境大版本：该命令会无差别将系统中的 Python 3.10 强行升级为 3.12、Node.js LTS 升级为 Current 奇数版、JDK 8 升级为 JDK 21，导致现存本地项目的环境变量被改写、C++ 编译依赖直接瘫痪！" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                            <TextBlock Text="④ 网络超时与哈希报错卡死：winget 默认直连 GitHub 或海外官方源，在无代理环境下极易出现下载超时或 Hash Mismatch 报错，导致批量队列在半途卡死中断。" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- 正确实战指令推荐 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="✅ 步骤 1：仅查看可更新列表 (安全，仅检测不改动系统):" FontWeight="Bold" FontSize="12" Foreground="#166534"/>
+                                <TextBox Text="winget upgrade" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <Button Grid.Column="1" Content="📋 复制查列表命令" Margin="8,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetCheck_Click"/>
+                    </Grid>
 
                     <Grid Margin="0,0,0,8">
                         <Grid.ColumnDefinitions>
@@ -261,14 +287,28 @@
                         </Grid.ColumnDefinitions>
                         <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
                             <StackPanel>
-                                <TextBlock Text="🌟 一行命令全盘静默更新所有软件 (极客最爱):" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
-                                <TextBox Text="winget upgrade --all --include-unknown" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,4,0,0"/>
+                                <TextBlock Text="🔒 步骤 2：使用 pin 锁定核心依赖 (防止 Python/JDK 被意外升挂):" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                <TextBox Text="winget pin add --id Python.Python.3.10" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,4,0,0"/>
                             </StackPanel>
                         </Border>
-                        <Button Grid.Column="1" Content="📋 复制更新命令" Margin="8,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetUpgrade_Click"/>
+                        <Button Grid.Column="1" Content="📋 复制锁定命令" Margin="8,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetPin_Click"/>
                     </Grid>
 
-                    <TextBlock Text="常用纯净软件一键安装命令卡片 (点击一键复制)：" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,8,0,8"/>
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="🎯 步骤 3：针对性单包更新 (推荐做法，明确受控):" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                <TextBox Text="winget upgrade --id 7zip.7zip" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <Button Grid.Column="1" Content="📋 复制单包更新" Margin="8,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetUpgradeSingle_Click"/>
+                    </Grid>
+
+                    <TextBlock Text="常用纯净软件一键安装命令卡片 (点击一键复制)：" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,4,0,8"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
