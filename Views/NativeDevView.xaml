@@ -98,6 +98,9 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="🚀 3. Dev Drive (开发驱动器 / ReFS 文件系统) &amp; Dev Home" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <Border Background="#ECFDF5" BorderBrush="#A7F3D0" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                            <TextBlock Text="🔥 强烈推荐 / Win11 专属" FontSize="10" FontWeight="Bold" Foreground="#047857"/>
+                                        </Border>
                                         <TextBlock Text=" (写时复制 CoW 专治 node_modules 膨胀与编译 I/O 瓶颈)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -199,6 +202,9 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="⚡ 1. Win11 24H2+ 原生 sudo 提权控制" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <Border Background="#EEF2FF" BorderBrush="#C7D2FE" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                            <TextBlock Text="✨ 24H2 新特性 / 内联提权" FontSize="10" FontWeight="Bold" Foreground="#4338CA"/>
+                                        </Border>
                                         <TextBlock Text=" (告别右键'以管理员身份运行'，在当前终端内直接提权执行)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -303,7 +309,12 @@
                         <!-- 第三块：icacls & takeown 权限手术刀 -->
                         <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
-                                <TextBlock Text="🪓 3. icacls &amp; takeown 权限手术刀 (排查 Access is denied 拒绝访问)" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="🪓 3. icacls &amp; takeown 权限手术刀 (排查 Access is denied 拒绝访问)" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                    <Border Background="#FEE2E2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="🛡️ 进阶 / 提权赋权" FontSize="10" FontWeight="Bold" Foreground="#B91C1C"/>
+                                    </Border>
+                                </WrapPanel>
                                 <TextBlock Text="开发过程中经常遇到 npm 缓存文件锁死、Git 仓库拒绝访问或无法删除目录，原生命令行工具 2 步彻底解决：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
 
                                 <Grid>
@@ -405,6 +416,9 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="🦈 1. PktMon 内核级数据包监视器 (免装 Wireshark 抓包)" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                            <TextBlock Text="⚡ 深度排障 / 内核级" FontSize="10" FontWeight="Bold" Foreground="#B45309"/>
+                                        </Border>
                                         <TextBlock Text=" (Windows 内核自带抓包驱动，支持导出标准 .pcapng 格式)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <Button Grid.Column="1" Content="🚀 在管理员终端启动抓包" Background="#0284C7" Click="BtnStartPktMon_Click"/>
@@ -556,7 +570,12 @@
                                         <!-- wpr 性能记录器 -->
                                         <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
                                             <StackPanel>
-                                                <TextBlock Text="📈 wpr.exe (Windows 性能记录器) · ETW 内核跟踪" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                                <TextBlock Text="📈 wpr.exe (Windows 性能记录器)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                                <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="6,0,0,0" VerticalAlignment="Center">
+                                                    <TextBlock Text="⚡ 进阶 / ETW 跟踪" FontSize="10" FontWeight="Bold" Foreground="#B45309"/>
+                                                </Border>
+                                            </StackPanel>
                                                 <TextBlock Text="【典型场景】极度精确抓取 CPU 锁竞争 (Lock Contention)、线程挂起与内核调度瓶颈，配合 WPA 工具深度剖析。" FontSize="10" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,4"/>
                                                 <Grid>
                                                     <TextBox Text="wpr -start GeneralProfile &amp;&amp; echo 复现后执行: wpr -stop trace.etl" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
@@ -671,14 +690,17 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="⚡ fsutil 秒级创建测试大文件" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
-                                                <Button Grid.Column="1" Content="⚡ 生成 100MB 假文件" Background="#10B981" Padding="6,2" FontSize="10" Click="BtnCreateDummyFile_Click"/>
+                                                <TextBlock Text="⚡ fsutil 秒级创建测试大文件" FontWeight="Bold" FontSize="12" Foreground="#1E293B" VerticalAlignment="Center"/>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <Button Content="⚡ 100MB" Background="#10B981" Padding="6,2" FontSize="10" Margin="0,0,4,0" Click="BtnCreateDummyFile100M_Click"/>
+                                                    <Button Content="🚀 1GB" Background="#0284C7" Padding="6,2" FontSize="10" Click="BtnCreateDummyFile1G_Click"/>
+                                                </StackPanel>
                                             </Grid>
-                                            <TextBlock Text="通过设置文件有效长度瞬时分配簇，测试网络限速与磁盘 I/O 神器：" FontSize="10" Foreground="#64748B" Margin="0,0,0,4"/>
+                                            <TextBlock Text="瞬时分配簇空间（100MB=104857600，1GB=1073741824，10GB=10737418240），测试网络与 I/O 神器：" FontSize="10" Foreground="#64748B" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="fsutil file createnew test_10g.dat 10737418240" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="fsutil file createnew test_100m.dat 104857600" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="fsutil file createnew test_10g.dat 10737418240"/>
+                                                        Click="BtnCopySnippet_Click" Tag="fsutil file createnew test_100m.dat 104857600"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>

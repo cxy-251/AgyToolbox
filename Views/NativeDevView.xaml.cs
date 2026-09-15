@@ -290,16 +290,30 @@ public partial class NativeDevView : UserControl
 
     private void BtnCreateDummyFile_Click(object sender, RoutedEventArgs e)
     {
+        BtnCreateDummyFile100M_Click(sender, e);
+    }
+
+    private void BtnCreateDummyFile100M_Click(object sender, RoutedEventArgs e)
+    {
+        CreateDummyFileWithDialog("test_dummy_100m.dat", 100L * 1024L * 1024L);
+    }
+
+    private void BtnCreateDummyFile1G_Click(object sender, RoutedEventArgs e)
+    {
+        CreateDummyFileWithDialog("test_dummy_1g.dat", 1024L * 1024L * 1024L);
+    }
+
+    private void CreateDummyFileWithDialog(string defaultFileName, long sizeBytes)
+    {
         var dialog = new SaveFileDialog
         {
             Title = "选择保存测试文件的位置与文件名",
-            FileName = "test_dummy_100m.dat",
+            FileName = defaultFileName,
             Filter = "数据文件 (*.dat)|*.dat|所有文件 (*.*)|*.*"
         };
         if (dialog.ShowDialog() == true)
         {
-            long size100Mb = 100L * 1024L * 1024L;
-            var (ok, msg) = _nativeDevService.CreateDummyFile(dialog.FileName, size100Mb);
+            var (ok, msg) = _nativeDevService.CreateDummyFile(dialog.FileName, sizeBytes);
             MessageBox.Show(msg, "fsutil 创建测试文件", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
         }
     }

@@ -216,146 +216,138 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 系统交互体验与功能开关 -->
+                        <!-- 系统交互体验与功能开关 (紧凑设置列表) -->
                         <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="🎛️ 2. 系统交互体验与功能开关" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
-                                <TextBlock Text="纯注册表标准策略项调优，透明且随时可逆，点击按钮即可切换状态：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
+                                <TextBlock Text="🎛️ 2. 系统交互体验与功能开关 (纯注册表调优，随时可逆)" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
+                                <TextBlock Text="纯注册表标准策略项调优，透明且随时可逆，点击右侧按钮即可快速切换状态：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
 
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <!-- Win10 经典右键菜单 -->
-                                    <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="📄 Win10 经典完整右键菜单" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                                    <TextBlock x:Name="TxtClassicMenuStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- Win10 经典右键菜单 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="📄 Win10 经典完整右键菜单" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock x:Name="TxtClassicMenuStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="恢复传统右键菜单展示全部选项，避免 Win11 默认'显示更多选项'二级折叠。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
                                                 </StackPanel>
-                                                <TextBlock Text="恢复传统右键菜单完整展示全部选项，避免 Win11 默认的‘显示更多选项’二级折叠。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                            <Button x:Name="BtnToggleClassicMenu" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnToggleClassicMenu_Click"/>
-                                        </Grid>
-                                    </Border>
+                                                <Button x:Name="BtnToggleClassicMenu" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleClassicMenu_Click"/>
+                                            </Grid>
+                                        </Border>
 
-                                    <!-- 关闭必应网络搜索 -->
-                                    <Border Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="🔍 关闭开始菜单必应联机 Web 搜索" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                                    <TextBlock x:Name="TxtBingStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <!-- 关闭必应网络搜索 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="🔍 关闭开始菜单必应联机 Web 搜索" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock x:Name="TxtBingStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="禁用任务栏搜索向远程联网检索，专注于本地应用与文档的高速索引。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
                                                 </StackPanel>
-                                                <TextBlock Text="禁用任务栏搜索向远程服务器发送检索请求，专注于本地应用与文档的快速索引。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                            <Button x:Name="BtnToggleBing" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnToggleBing_Click"/>
-                                        </Grid>
-                                    </Border>
+                                                <Button x:Name="BtnToggleBing" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleBing_Click"/>
+                                            </Grid>
+                                        </Border>
 
-                                    <!-- 禁用遥测 -->
-                                    <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="🛡️ 限制系统可选诊断数据与个性化推荐" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                                    <TextBlock x:Name="TxtTelemetryStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <!-- 禁用遥测 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="🛡️ 限制系统可选诊断数据与个性化推荐" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock x:Name="TxtTelemetryStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="关闭可选遥测数据上报与基于使用习惯的系统界面推广建议。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
                                                 </StackPanel>
-                                                <TextBlock Text="关闭可选遥测数据上报与基于使用习惯的系统界面推广建议。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                            <Button x:Name="BtnToggleTelemetry" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnToggleTelemetry_Click"/>
-                                        </Grid>
-                                    </Border>
+                                                <Button x:Name="BtnToggleTelemetry" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleTelemetry_Click"/>
+                                            </Grid>
+                                        </Border>
 
-                                    <!-- 禁用按 5 次 Shift 粘滞键弹窗 -->
-                                    <Border Grid.Row="3" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="⌨️ 禁用连续按 5 次 Shift 弹出粘滞键提示" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                                    <TextBlock x:Name="TxtStickyStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <!-- 禁用按 5 次 Shift 粘滞键弹窗 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="⌨️ 禁用连续按 5 次 Shift 弹出粘滞键提示" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock x:Name="TxtStickyStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="关闭连续多次按 Shift 键时触发辅助功能粘滞键确认窗口的快捷方式。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
                                                 </StackPanel>
-                                                <TextBlock Text="关闭连续多次按 Shift 键时触发辅助功能粘滞键确认窗口的快捷方式。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                            <Button x:Name="BtnToggleSticky" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnToggleSticky_Click"/>
-                                        </Grid>
-                                    </Border>
+                                                <Button x:Name="BtnToggleSticky" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleSticky_Click"/>
+                                            </Grid>
+                                        </Border>
 
-                                    <!-- 开启 Win+V 剪贴板历史记录 -->
-                                    <Border Grid.Row="4" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="📋 开启 Win+V 系统原生剪贴板历史记录" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                                    <TextBlock x:Name="TxtClipboardStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <!-- 开启 Win+V 剪贴板历史记录 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="📋 开启 Win+V 系统原生剪贴板历史记录" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock x:Name="TxtClipboardStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="支持暂存多条复制文本与图片，按下 Win+V 可随时查看历史并直接粘贴。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
                                                 </StackPanel>
-                                                <TextBlock Text="支持暂存多条复制文本与图片，按下 Win+V 可随时查看历史并粘贴内容。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                            <Button x:Name="BtnToggleClipboard" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnToggleClipboard_Click"/>
-                                        </Grid>
-                                    </Border>
+                                                <Button x:Name="BtnToggleClipboard" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleClipboard_Click"/>
+                                            </Grid>
+                                        </Border>
 
-                                    <!-- 开启开发者模式与长路径 -->
-                                    <Border Grid.Row="5" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,8">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="💻 开启开发者模式 &amp; 解除 260 字符长路径限制" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                                    <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        <!-- 开启开发者模式与长路径 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="💻 开启开发者模式 &amp; 解除 260 字符长路径限制" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="支持免提权创建符号链接，并开启 LongPathsEnabled 解决项目路径超长报错。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
                                                 </StackPanel>
-                                                <TextBlock Text="支持旁加载应用调试，并开启 LongPathsEnabled 解决深度嵌套项目路径超长报错。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                            <Button x:Name="BtnToggleDevMode" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnToggleDevMode_Click"/>
-                                        </Grid>
-                                    </Border>
+                                                <Button x:Name="BtnToggleDevMode" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleDevMode_Click"/>
+                                            </Grid>
+                                        </Border>
 
-                                    <!-- 重启资源管理器 -->
-                                    <Border Grid.Row="6" Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="10">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="🔄 平滑重启 Windows 资源管理器 (explorer.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                                <TextBlock Text="修改上述右键菜单或任务栏策略后，点击立即重启任务栏与资源管理器，使新配置即刻生效。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                            <Button Grid.Column="1" Content="重启 Explorer" Background="#0284C7" VerticalAlignment="Center" Click="BtnRestartExplorer_Click"/>
-                                        </Grid>
-                                    </Border>
-                                </Grid>
+                                        <!-- 重启资源管理器 -->
+                                        <Border Padding="12,8" Background="#F8FAFC" CornerRadius="0,0,8,8">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <TextBlock Text="🔄 平滑重启 Windows 资源管理器 (explorer.exe)" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                    <TextBlock Text="修改上述右键菜单或任务栏策略后，点击立即刷新桌面与任务栏，使新配置即刻生效。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="重启 Explorer" Background="#0284C7" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnRestartExplorer_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </Border>
                     </StackPanel>

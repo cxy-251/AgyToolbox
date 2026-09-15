@@ -152,12 +152,24 @@ public class NativeDevService
             string output = proc?.StandardOutput.ReadToEnd() ?? "";
             proc?.WaitForExit(3000);
 
-            bool supported = output.Contains("Developer volumes are enabled", StringComparison.OrdinalIgnoreCase) ||
-                             output.Contains("启用", StringComparison.OrdinalIgnoreCase);
+            // 鲁棒性判定：
+            // 1. fsutil devdrv query 执行返回码为 0，说明内核明确支持 Dev Drive 特性
+            // 2. 或检测到已有 ReFS 分区
+            // 3. 或 Windows 11 Build >= 22621 (22H2/23H2/24H2 内核原生支持)
+            bool supported = (proc != null && proc.ExitCode == 0) ||
+                             refsDrives.Count > 0 ||
+                             (Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= 22621);
+
+            // 如果明确输出包含禁用字样
+            if (output.Contains("disabled", StringComparison.OrdinalIgnoreCase) ||
+                output.Contains("已禁用", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, false, "当前系统组策略或配置禁用了 Dev Drive 特性。");
+            }
 
             if (refsDrives.Count > 0)
             {
-                return (supported, true, $"检测到已挂载 Dev Drive 分区：\n{string.Join("\n", refsDrives)}");
+                return (true, true, $"检测到已挂载 Dev Drive 分区：\n{string.Join("\n", refsDrives)}");
             }
 
             if (supported)
@@ -165,7 +177,7 @@ public class NativeDevService
                 return (true, false, "系统已支持 Dev Drive 特性，当前尚未创建 ReFS 开发驱动器分区。可点击一键直达创建！");
             }
 
-            return (false, false, "当前 Windows 版本暂未开启或不支持 Dev Drive (需 Win11 现代版本及以上)。");
+            return (false, false, "当前 Windows 版本暂不支持 Dev Drive (需 Win11 23H2/24H2 现代版本及以上)。");
         }
         catch (Exception ex)
         {
