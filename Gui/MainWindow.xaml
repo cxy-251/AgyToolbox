@@ -192,6 +192,63 @@
                             </StackPanel>
                         </Border>
 
+                        <!-- 浏览器置换板块：彻底卸载 Edge & 替换为纯净 Chrome -->
+                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="🌐 浏览器大换血：彻底卸载 Edge 并替换为 Chrome" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (专业保留 WebView2 运行时，防第三方软件崩溃)" FontSize="12" Foreground="#64748B" Margin="8,2,0,0"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock x:Name="TxtBrowserStatus" Text="[正在检测浏览器状态...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                        <Button Content="🔄 刷新状态" Style="{StaticResource SecondaryButton}" Click="BtnRefreshBrowserStatus_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <TextBlock Text="💡 为什么系统设置里 Edge 无法卸载？以及专业卸载避坑要点：" FontWeight="Bold" FontSize="12" Foreground="#92400E" Margin="0,0,0,4"/>
+                                        <TextBlock Text="1. 微软在非欧盟地区强行将 Edge 绑定为系统核心组件，常规设置面板将卸载按钮置灰禁用。" FontSize="11" Foreground="#78350F"/>
+                                        <TextBlock Text="2. 绝不能暴力删文件夹！很多小白脚本直接把包含 WebView2 的整个目录删掉，导致微信、钉钉、网易云等依赖 WebView2 的桌面软件直接白屏崩溃。本工具仅卸载 Edge 浏览器主体，严格保留 WebView2 运行库。" FontSize="11" Foreground="#78350F" Margin="0,2,0,0"/>
+                                        <TextBlock Text="3. 防死灰复燃：卸载时自动向注册表写入 DoNotUpdateToEdgeWithChromium 策略，防止 Windows Update 下周偷偷重新安装 Edge！" FontSize="11" Foreground="#78350F" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 卸载 Edge -->
+                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🗑️ 彻底卸载 Microsoft Edge" FontWeight="Bold" FontSize="13" Foreground="#EF4444" Margin="0,0,0,4"/>
+                                            <TextBlock Text="调用官方静默卸载器，移除浏览器主体、桌面和任务栏图标，并锁定注册表策略阻止自动重装。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                            <Button x:Name="BtnUninstallEdge" Content="立即卸载 Edge 浏览器" Background="#EF4444" Click="BtnUninstallEdge_Click"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- 安装 Chrome & 设为默认 -->
+                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🚀 替换为 Google Chrome 官方纯净版" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,4"/>
+                                            <TextBlock Text="通过 winget 直接从 Google 官方服务器拉取原生安装包，静默完成安装并可一键设为默认。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Button x:Name="BtnInstallChrome" Grid.Column="0" Content="winget 一键安装 Chrome" Background="#10B981" Margin="0,0,4,0" Click="BtnInstallChrome_Click"/>
+                                                <Button Grid.Column="1" Content="设为默认浏览器" Style="{StaticResource SecondaryButton}" Margin="4,0,0,0" Click="BtnSetDefaultBrowser_Click"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
                         <!-- winget 极简包管理教学与常用指令 -->
                         <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
                             <StackPanel>

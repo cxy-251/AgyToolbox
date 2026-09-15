@@ -43,6 +43,7 @@ public partial class MainWindow : Window
     private readonly WinOptimizerService _winOptimizerService = new();
     private readonly DevToolsService _devToolsService = new();
     private readonly UwpDebloatService _uwpDebloatService = new();
+    private readonly EdgeDebloatService _edgeDebloatService = new();
     private readonly ObservableCollection<PathDisplayItem> _pathItems = new();
     private readonly ObservableCollection<UwpAppDisplayItem> _uwpItems = new();
 
@@ -82,9 +83,10 @@ public partial class MainWindow : Window
         // 初始化加载系统信息与默认 DNS 列表
         GridDns.ItemsSource = _winTricksService.GetDefaultDnsList();
 
-        // 初始化预装精简
+        // 初始化预装精简与浏览器状态
         GridUwpApps.ItemsSource = _uwpItems;
         _ = LoadUwpAppsAsync();
+        RefreshBrowserStatus();
 
         // 初始化环境变量与系统优化
         GridPathEntries.ItemsSource = _pathItems;
@@ -875,6 +877,102 @@ public partial class MainWindow : Window
             Clipboard.SetText(snippet);
             MessageBox.Show($"命令已复制到剪贴板：\n{snippet}", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+    }
+
+    private void RefreshBrowserStatus()
+    {
+        bool edge = _edgeDebloatService.IsEdgeInstalled();
+        bool chrome = _edgeDebloatService.IsChromeInstalled();
+
+        string edgeTxt = edge ? "Edge: 已安装" : "Edge: 已卸载 ✅";
+        string chromeTxt = chrome ? "Chrome: 已安装 ✅" : "Chrome: 未安装";
+
+        TxtBrowserStatus.Text = $"[{edgeTxt} | {chromeTxt}]";
+        TxtBrowserStatus.Foreground = (!edge && chrome) 
+            ? System.Windows.Media.Brushes.DarkGreen 
+            : System.Windows.Media.Brushes.DarkOrange;
+
+        BtnUninstallEdge.IsEnabled = edge;
+        BtnInstallChrome.IsEnabled = !chrome;
+    }
+
+    private void BtnRefreshBrowserStatus_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshBrowserStatus();
+        MessageBox.Show("浏览器安装状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private async void BtnUninstallEdge_Click(object sender, RoutedEventArgs e)
+    {
+        var confirm = MessageBox.Show(
+            "确定要彻底卸载 Microsoft Edge 浏览器主体吗？\n\n" +
+            "【专业安全保证】：\n" +
+            "1. 本工具仅卸载 Edge 浏览器主体，将严格保留核心 WebView2 运行时，确保微信、钉钉等第三方软件不会白屏崩溃。\n" +
+            "2. 卸载完成后会自动写入注册表策略，阻止 Windows Update 偷偷重新安装 Edge。\n\n" +
+            "是否继续？",
+            "确认卸载 Edge",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        BtnUninstallEdge.IsEnabled = false;
+        try
+        {
+            var (ok, msg) = await _edgeDebloatService.UninstallEdgeAsync();
+            RefreshBrowserStatus();
+            MessageBox.Show(msg, ok ? "操作完成" : "卸载提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"卸载失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            RefreshBrowserStatus();
+        }
+    }
+
+    private async void BtnInstallChrome_Click(object sender, RoutedEventArgs e)
+    {
+        BtnInstallChrome.IsEnabled = false;
+        try
+        {
+            var (ok, msg) = await _edgeDebloatService.InstallChromeAsync(line =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    TxtBrowserStatus.Text = $"[正在安装 Chrome...]";
+                });
+            });
+
+            RefreshBrowserStatus();
+            if (ok)
+            {
+                var ask = MessageBox.Show("Google Chrome 已成功安装！是否立即打开系统设置将其设为默认浏览器？", "安装成功", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (ask == MessageBoxResult.Yes)
+                {
+                    _edgeDebloatService.OpenDefaultAppsSettings();
+                }
+            }
+            else
+            {
+                MessageBox.Show(msg, "安装提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"安装 Chrome 失败: {ex.Message}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            RefreshBrowserStatus();
+        }
+    }
+
+    private void BtnSetDefaultBrowser_Click(object sender, RoutedEventArgs e)
+    {
+        _edgeDebloatService.OpenDefaultAppsSettings();
     }
 
     #endregion
