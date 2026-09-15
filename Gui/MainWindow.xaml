@@ -111,7 +111,7 @@
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
                                 <TextBlock Text="🧹 步骤一：开荒与预装精简" FontSize="13"/>
-                                <TextBlock Text="UWP全家桶 / OEM毒瘤 / 关静默推广" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="UWP 预装应用 / OEM 附带软件 / 禁用静默推广" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
@@ -120,7 +120,7 @@
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
                                 <TextBlock Text="⚙️ 步骤二：系统优化与安全" FontSize="13"/>
-                                <TextBlock Text="关更新 / BitLocker避坑 / 关休眠省32G" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="更新策略 / BitLocker 密钥备份 / 休眠文件管理" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
@@ -129,7 +129,7 @@
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
                                 <TextBlock Text="📖 步骤三：自带工具排错指南" FontSize="13"/>
-                                <TextBlock Text="闪退蓝屏破案 / 协议栈复位 / WinSxS瘦身" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="系统完整性修复 / 网络重置 / 组件库清理" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
@@ -138,7 +138,7 @@
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
                                 <TextBlock Text="💻 步骤四：原生开发与终端基建" FontSize="13"/>
-                                <TextBlock Text="WSL2 / 官方沙箱 / SSH-Agent / CLI" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="WSL2 / Windows 沙箱 / SSH-Agent / CLI" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
@@ -150,7 +150,7 @@
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
                                 <TextBlock Text="🧰 便携工具箱：内置独立套件" FontSize="13"/>
-                                <TextBlock Text="局域网快传 / 猎手 / 硬件 / 军刀 / 镜像" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="局域网快传 / 空间分析 / 系统信息 / 开发工具 / 镜像" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
                     </StackPanel>

@@ -31,8 +31,8 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="步骤 1: 可靠性历史监视器 (perfmon /rel) — 精准抓出报错模块" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【排查指引】点击崩溃发生日期的红叉 -> 点击‘查看技术详细信息’，直查具体故障模块路径 (如 ntdll.dll、nvlddmkm.sys 显卡驱动)，破除报错盲区！" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="步骤 1: 可靠性历史监视器 (perfmon /rel) — 异常事件与故障记录" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                <TextBlock Text="【排查指引】点击异常发生日期的事件标记 -> 查看‘技术详细信息’，可直接定位具体崩溃模块（如特定 dll、sys 驱动文件）与异常代码。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="打开可靠性图表" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnReliability_Click"/>
                         </Grid>
@@ -47,7 +47,7 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
                                 <TextBlock Text="步骤 2: 系统核心文件完整性扫描与自动修复 (sfc /scannow)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【修复原理】基于 Windows 官方签名哈希比对所有系统关键 DLL/SYS 文件，一旦发现受损或被流氓篡改，自动从备份提取纯净版本替换修复。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="【技术机制】比对受保护系统文件与官方签名哈希，若检测到文件受损或被异常修改，自动从本地 WinSxS 备份组件库中提取正确副本恢复。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="运行 SFC 扫描修复" Background="#0284C7" VerticalAlignment="Center" Click="BtnRunSfc_Click"/>
                         </Grid>
@@ -61,10 +61,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="步骤 3: DISM 在线组件库深度修复 (DISM /Online /RestoreHealth)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【修复原理】若 SFC 提示无法修复损坏，说明本地备份组件库本身受损。DISM 直接与微软官方更新服务器通信，拉取最新纯净镜像修复组件库基底。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="步骤 3: DISM 联机系统映像修复 (DISM /Online /RestoreHealth)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                <TextBlock Text="【技术机制】若 SFC 提示本地组件库损坏导致修复失败，DISM 可直接与 Windows Update 联机通信，拉取完好文件修复本地系统映像组件源。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
-                            <Button Grid.Column="1" Content="运行 DISM 深度修复" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnRunDism_Click"/>
+                            <Button Grid.Column="1" Content="运行 DISM 修复" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnRunDism_Click"/>
                         </Grid>
                     </Border>
 
@@ -76,8 +76,8 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="步骤 4: 深度资源监视器 (resmon.exe) — 文件占用秒查 &amp; 内核句柄强杀" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【实战技巧】删除文件提示‘被另一程序打开’时，打开 ResMon -> 切换到【CPU】标签 -> 在【关联的句柄】输入文件名 -> 秒搜占用它的后台进程并强制结束！" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="步骤 4: 资源监视器 (resmon.exe) — 文件句柄占用检索与进程定位" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                <TextBlock Text="【使用说明】删除或移动文件提示‘文件已被占用’时，打开资源监视器 -> 切换至【CPU】选项卡 -> 在【关联的句柄】搜索框输入文件名，即可查到持有该句柄的进程并结束任务。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="启动 ResMon" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnResmon_Click"/>
                         </Grid>
@@ -88,8 +88,8 @@
             <!-- 场景 2: 网络断网、DNS 污染与协议栈急救链路 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="🌐 场景二：断网急救、DNS 污染与网络协议栈复位链路" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="遇到“微信能发但网页打不开”、关掉代理后无法上网、或连上 Wi-Fi 报无 Internet 时执行：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+                    <TextBlock Text="🌐 场景二：网络连通性异常与协议栈重置链路" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="适用于网页无法正常加载、代理工具异常退出后残留配置导致断网、或套接字连接受阻等场景：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
 
                     <!-- 2.1 刷新 DNS 缓存 -->
                     <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
@@ -100,7 +100,7 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
                                 <TextBlock Text="步骤 1: 刷新本地 DNS 域名解析缓存 (ipconfig /flushdns)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【底层原理】清空本地内存中的过期/被污染解析映射表，使新 Hosts 配置或新 DNS 立即生效。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="【技术机制】清空本地内存中的过期解析记录，使修改后的 Hosts 配置或新配置的 DNS 解析服务器立即生效。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="刷新 DNS 缓存" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnFlushDns_Click"/>
                         </Grid>
@@ -114,10 +114,10 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="步骤 2: 网络协议栈终极复位 (netsh winsock reset + int ip reset)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【终极救命】解决代理软件崩溃导致 LSP 劫持残留、无论换什么 Wi-Fi 都断网的顽疾，将 Windows 网络底层栈还原为出厂状态。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="步骤 2: 网络套接字与协议栈重置 (netsh winsock reset + int ip reset)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                <TextBlock Text="【技术说明】解决部分网络代理异常退出导致的 Winsock 目录配置残留或无法解析 IP 的问题，将套接字与 TCP/IP 协议栈恢复为默认状态。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
-                            <Button Grid.Column="1" Content="终极重置协议栈" Background="#EF4444" VerticalAlignment="Center" Click="BtnResetWinsock_Click"/>
+                            <Button Grid.Column="1" Content="重置协议栈" Background="#EF4444" VerticalAlignment="Center" Click="BtnResetWinsock_Click"/>
                         </Grid>
                     </Border>
 
@@ -129,8 +129,8 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                <TextBlock Text="步骤 3: 管理员免权限极速编辑 Hosts 配置文件" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【使用场景】为 GitHub 加速指定静态 IP、将测试域名映射到 127.0.0.1，保存免弹拒绝访问或另存为 txt。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                <TextBlock Text="步骤 3: 以管理员身份快捷编辑 Hosts 文件" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                <TextBlock Text="【使用场景】为内网或特定测试域名指定静态解析 IP，避免保存时因权限不足提示‘拒绝访问’。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="编辑 Hosts" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnEditHosts_Click"/>
                         </Grid>
@@ -145,16 +145,16 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                    <TextBlock Text="步骤 4: 本机已存 WiFi 密码明文一键提取" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【原理】调用 netsh wlan show profile key=clear，新手机平板连 Wi-Fi 忘记密码直接查。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                    <TextBlock Text="步骤 4: 查看本机已保存的 WiFi 密码" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="【技术机制】调用 netsh wlan show profile key=clear 读取当前设备已配置的无线网络密码信息。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                 </StackPanel>
-                                <Button Grid.Column="1" Content="立即提取 WiFi 密码" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnGetWifi_Click"/>
+                                <Button Grid.Column="1" Content="查看 WiFi 密码" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnGetWifi_Click"/>
                             </Grid>
                             <DataGrid x:Name="GridWifi" Margin="0,10,0,0" AutoGenerateColumns="False" IsReadOnly="True"
                                       Background="#F8FAFC" BorderBrush="#E2E8F0" MaxHeight="140" Visibility="Collapsed">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="WiFi 名称 (SSID)" Binding="{Binding Ssid}" Width="240"/>
-                                    <DataGridTextColumn Header="明文密码" Binding="{Binding Password}" Width="*"/>
+                                    <DataGridTextColumn Header="已保存密码" Binding="{Binding Password}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
@@ -162,11 +162,11 @@
                 </StackPanel>
             </Border>
 
-            <!-- 场景 3: 磁盘空间瘦身与硬件底层健康 -->
+            <!-- 场景 3: 磁盘空间维护与硬件底层健康 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="🔋 场景三：磁盘空间瘦身与硬件底层健康透视" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="新机验机、电池健康度查验、以及彻底清除系统盘过期更新备份：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+                    <TextBlock Text="🔋 场景三：磁盘空间维护与硬件底层健康检测" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="系统组件存储管理、笔记本电池健康度查验与底层硬件诊断工具：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -184,10 +184,10 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                        <TextBlock Text="WinSxS 冗余补丁终极瘦身" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                        <TextBlock Text="调用 DISM /ResetBase 彻底抹除过期补丁备份，释放数 G 到十几 G C 盘空间。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="WinSxS 组件库清理与重基准化" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <TextBlock Text="调用 DISM /ResetBase 清理已被新更新替代的冗余组件基线，释放 C 盘存储空间。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="组件库瘦身" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnRunWinSxSCleanup_Click"/>
+                                    <Button Grid.Column="1" Content="清理组件库" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnRunWinSxSCleanup_Click"/>
                                 </Grid>
                             </Border>
 
@@ -200,7 +200,7 @@
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,8,0">
                                         <TextBlock Text="笔记本电池健康 HTML 报告" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                        <TextBlock Text="通过 powercfg /batteryreport 读取出厂设计容量与当前充放电损耗。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="通过 powercfg /batteryreport 读取出厂设计容量、完全充电容量与历史充放电周期统计。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                     </StackPanel>
                                     <Button Grid.Column="1" Content="生成电池报告" Background="#10B981" VerticalAlignment="Center" Click="BtnBatteryReport_Click"/>
                                 </Grid>
@@ -217,8 +217,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                        <TextBlock Text="DirectX 显卡驱动诊断 (dxdiag)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                        <TextBlock Text="直读显存大小、Direct3D 特性级别与声卡 WHQL 签名，验机防假显卡。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="DirectX 诊断工具 (dxdiag)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <TextBlock Text="查看显存规格、Direct3D 功能级别与显示驱动签名认证状态。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                     </StackPanel>
                                     <Button Grid.Column="1" Content="启动 DXDiag" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnDxDiag_Click"/>
                                 </Grid>
@@ -232,10 +232,10 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                        <TextBlock Text="上帝模式控制台 (GodMode)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                        <TextBlock Text="将系统底层 200+ 控制项平铺聚合，右上角直接秒搜任意控制面板老功能。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="系统全局设置聚合面板 (GodMode)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                        <TextBlock Text="将控制面板的 200 余项设置集中平铺显示，便于集中检索与配置各类系统项。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                     </StackPanel>
-                                    <Button Grid.Column="1" Content="打开上帝模式" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnGodMode_Click"/>
+                                    <Button Grid.Column="1" Content="打开全局面板" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnGodMode_Click"/>
                                 </Grid>
                             </Border>
                         </StackPanel>

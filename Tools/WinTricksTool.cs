@@ -6,8 +6,8 @@ namespace AgyToolbox.Tools;
 public class WinTricksTool : ITool
 {
     public string Key => "tricks";
-    public string Name => "Windows 绝活透视镜 (WinTricks)";
-    public string Description => "直白揭秘短视频装逼指令：WiFi密码明文提取、电池损耗体检、闪退查凶手、端口占用终结等。";
+    public string Name => "Windows 实用系统运维技巧 (WinTricks)";
+    public string Description => "基于 Windows 内置工具的实用诊断与排查技巧：WiFi 密码查看、电池健康报告、故障监视与端口占用分析。";
 
     private readonly WinTricksService _service = new();
 
@@ -18,16 +18,16 @@ public class WinTricksTool : ITool
             try { if (!Console.IsOutputRedirected) Console.Clear(); } catch { }
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("===============================================================");
-            Console.WriteLine("          🤹  Windows 绝活透视镜 (WinTricks)                  ");
+            Console.WriteLine("          🛠️  Windows 实用系统运维技巧 (WinTricks)             ");
             Console.WriteLine("===============================================================");
             Console.ResetColor();
-            Console.WriteLine(" 这些功能常被短视频包装成“神秘黑客代码”，本质全为 Windows 内置工具：\n");
+            Console.WriteLine(" 基于 Windows 原生命令行与诊断工具的快捷功能集合：\n");
 
-            Console.WriteLine("  [1] 📶 一键提取本机已存的所有 WiFi 及明文密码");
-            Console.WriteLine("  [2] 🔋 生成笔记本电池寿命与损耗官方诊断报告 (HTML)");
-            Console.WriteLine("  [3] 📉 打开系统可靠性历史监视器 (查应用闪退/蓝屏凶手)");
-            Console.WriteLine("  [4] 🌐 端口占用嗅探与一键终结 (解决 8080/5000 端口冲突)");
-            Console.WriteLine("  [5] 🛡️ 启动微软官方底层恶意软件查杀 (mrt.exe)");
+            Console.WriteLine("  [1] 📶 查看本机已连接过的 WiFi 配置文件与密码");
+            Console.WriteLine("  [2] 🔋 生成笔记本电池健康损耗官方诊断报告 (HTML)");
+            Console.WriteLine("  [3] 📉 打开系统可靠性历史监视器 (排查程序异常退出与系统故障)");
+            Console.WriteLine("  [4] 🌐 端口占用检测与进程释放 (排查本地网络端口冲突)");
+            Console.WriteLine("  [5] 🛡️ 启动微软官方恶意软件删除工具 (mrt.exe)");
             Console.WriteLine("  [6] 🧙 打开 Windows 全能上帝模式控制面板 (GodMode)");
             Console.WriteLine("  [7] 🕹️ 启动 DirectX 硬件体检工具 (dxdiag.exe)");
             Console.WriteLine("\n  [0] 返回主菜单");

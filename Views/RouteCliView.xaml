@@ -43,10 +43,10 @@
                     <!-- 路由原理解密卡片 -->
                     <Border Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,10,0,0">
                         <StackPanel>
-                            <TextBlock Text="💡 路由跳数（Hop）底层原理透视：" FontWeight="Bold" FontSize="12" Foreground="#1E293B" Margin="0,0,0,4"/>
-                            <TextBlock Text="• TTL 机制：tracert 发送 IP 报文，TTL 从 1 开始递增。第一台路由器将 TTL 减为 0 后抛弃报文并返回 ICMP 超时，源端由此获取该跳路由器的 IP；依次类推测出整条链路。" FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
-                            <TextBlock Text="• 为什么加 -d 速度快 10 倍？默认 tracert 会对每个中间 IP 做反向 DNS 解析（查运营商域名），极其耗时。加 -d（不解析主机名）直接输出数字 IP，几秒跑完！" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
-                            <TextBlock Text="• 为什么中间会有【* * * 请求超时】？部分骨干网防火墙为了防扫描禁止回显 ICMP 超时包，只要最后一跳通，说明中间超时并不影响链路通信。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <TextBlock Text="💡 路由跳数（Hop）技术机制说明：" FontWeight="Bold" FontSize="12" Foreground="#1E293B" Margin="0,0,0,4"/>
+                            <TextBlock Text="• TTL 机制：tracert 发送 IP 数据报文，生存时间（TTL）从 1 开始递增。第一跳路由器将 TTL 减为 0 后丢弃报文并返回 ICMP 超时通知，源主机由此获取该跳路由器的 IP 地址；依次类推探测出整条传输链路。" FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
+                            <TextBlock Text="• -d 参数说明：默认情况下 tracert 会尝试对中间各跳 IP 执行反向 DNS 解析。添加 -d 参数（禁止将地址解析为路由器主机名）可显著加快跳数追踪速度。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <TextBlock Text="• 关于【* * * 请求超时】：部分骨干网与边界防火墙为了安全性禁用回显 ICMP 超时包，若最终目标跳数连通，通常不影响实际链路数据通信。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -55,8 +55,8 @@
             <!-- 第二部分：Windows 自带高频内置命令行工具速查 (Native CLI Tools) -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="🛠️ Windows 自带高频命令行神技 (无需安装任何第三方软件)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="Windows 10/11 原生深度集成了大量媲美 Linux 的优秀内置命令行工具，日常开发与运维效率翻倍。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+                    <TextBlock Text="🛠️ Windows 原生高频内置命令行工具速查" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="Windows 现代版本内置了完善的原生命令行实用工具，涵盖归档解压、网络请求、权限管理与文件校验等常见场景。" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
 
                     <!-- 工具条目列表 -->
                     <StackPanel>
@@ -69,8 +69,8 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="📦 1. 原生解压缩打包 (tar) — 免装任何压缩软件" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="Windows 10 1803+ 原生内置完整 bsdtar，终端直接解压/打包 .zip / .tar.gz / .7z，告别广告解压软件。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
+                                    <TextBlock Text="📦 1. 原生归档解压工具 (tar.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                    <TextBlock Text="Windows 10 1803+ 内置 bsdtar 工具，可在命令行直接提取或创建 .zip、.tar.gz 等格式的归档文件。" FontSize="11" Foreground="#64748B" Margin="0,2,0,4"/>
                                     <TextBox Text="tar -xf file.zip -C ./output_folder" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                 </StackPanel>
                                 <Button Grid.Column="1" Content="📋 复制" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Margin="10,0,0,0"

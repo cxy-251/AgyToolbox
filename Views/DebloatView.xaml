@@ -11,13 +11,13 @@
             <!-- 模块说明看板 -->
             <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="🧹 步骤一：新机开荒与预装精简 (Debloat &amp; 开源替代)" FontSize="16" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,6"/>
-                    <TextBlock Text="买到新电脑第一件事：全盘去魅与卸载臃肿组件。透视微软全家桶 UWP、品牌商 OEM 毒瘤后台（如麦咖啡、奥创中心）、锁死后台静默推广下载，并剥离 Edge 与 OneDrive。软件安装首选原生 winget，纯净无广告！"
+                    <TextBlock Text="🧹 步骤一：新机开荒与预装管理 (Debloat &amp; 应用精简)" FontSize="16" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,6"/>
+                    <TextBlock Text="系统初始化与预装组件管理：提供 Windows 预装 UWP 应用管理、品牌厂商预装附带软件排查、关闭系统后台静默推荐安装策略，以及浏览器和 OneDrive 的管理选项。推荐使用 Windows 原生包管理器 winget 维护应用。"
                                FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
-            <!-- 板块 1: 预装 UWP 全家桶透视与一键卸载 -->
+            <!-- 板块 1: 预装 UWP 应用管理与卸载 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,12">
@@ -26,8 +26,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="📋 1. Windows 预装全家桶透视与一键卸载" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (清晰解释官方用途、为什么卸载、以及开源优质替代品)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                            <TextBlock Text="📋 1. Windows 预装应用查看与按需卸载" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                            <TextBlock Text=" (提供官方用途说明、卸载影响评估与替代方案建议)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
                         </WrapPanel>
                         <Button Grid.Column="1" Content="⚡ 重新扫描预装状态" Style="{DynamicResource SecondaryButton}" Click="BtnScanUwp_Click"/>
                     </Grid>
@@ -38,9 +38,9 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="软件名称" Binding="{Binding DisplayName}" Width="150"/>
                             <DataGridTextColumn Header="类别" Binding="{Binding Category}" Width="75"/>
-                            <DataGridTextColumn Header="它是干什么的 (官方用途)" Binding="{Binding Description}" Width="2*"/>
-                            <DataGridTextColumn Header="为什么卸载 (影响分析)" Binding="{Binding DebloatAdvice}" Width="2*"/>
-                            <DataGridTextColumn Header="开源/轻量优质替代方案" Binding="{Binding OpenSourceAlternative}" Width="2*"/>
+                            <DataGridTextColumn Header="官方用途说明" Binding="{Binding Description}" Width="2*"/>
+                            <DataGridTextColumn Header="卸载影响分析" Binding="{Binding DebloatAdvice}" Width="2*"/>
+                            <DataGridTextColumn Header="开源/轻量替代建议" Binding="{Binding OpenSourceAlternative}" Width="2*"/>
                             <DataGridTemplateColumn Header="安装状态" Width="95">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -62,7 +62,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- 板块 2: OEM 品牌厂商预装全家桶与麦咖啡 (McAfee) 避坑排查 -->
+            <!-- 板块 2: OEM 品牌厂商预装管理软件排查 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
@@ -71,17 +71,17 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="🛡️ 2. OEM 品牌机毒瘤预装与麦咖啡 (McAfee) 深度避坑" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (新电脑开机卡顿元凶，常驻 20+ 无用服务)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                            <TextBlock Text="🛡️ 2. OEM 品牌厂商预装管理软件排查与建议" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                            <TextBlock Text=" (分析后台常驻服务与系统资源开销，提供轻量替代选项)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
                         </WrapPanel>
-                        <Button Grid.Column="1" Content="🔄 扫描 OEM 毒瘤" Style="{DynamicResource SecondaryButton}" Click="BtnScanOem_Click"/>
+                        <Button Grid.Column="1" Content="🔄 扫描预装软件" Style="{DynamicResource SecondaryButton}" Click="BtnScanOem_Click"/>
                     </Grid>
 
-                    <Border Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                    <Border Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
                         <StackPanel>
-                            <TextBlock Text="⚠️ 新机特别预警：关于麦咖啡 (McAfee) 和华硕奥创中心 (Armoury Crate) 的巨大坑点：" FontWeight="Bold" FontSize="12" Foreground="#B91C1C" Margin="0,0,0,4"/>
-                            <TextBlock Text="• 麦咖啡全家桶：试用到期后天天弹窗恐吓。普通控制面板卸载常残留驱动，导致频繁断网！若已中招，建议使用官方 MCPR (McAfee Consumer Product Removal Tool) 深度清扫干净。" FontSize="11" Foreground="#991B1B" TextWrapping="Wrap"/>
-                            <TextBlock Text="• 华硕奥创中心：常驻数十个后台守护服务，占用上 GB 内存且偶发导致显卡掉驱动。华硕天选/ROG 极客强烈推荐使用开源极简的【G-Helper】直接完美平替，内存立省 95%！" FontSize="11" Foreground="#991B1B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <TextBlock Text="💡 常见厂商预装软件特性与处理说明：" FontWeight="Bold" FontSize="12" Foreground="#334155" Margin="0,0,0,4"/>
+                            <TextBlock Text="• 麦咖啡 (McAfee)：品牌机预装试用版包含多项实时监控服务。若常规卸载后遇到网络过滤组件残留，建议使用其官方专用的 MCPR (McAfee Consumer Product Removal) 工具清理。" FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
+                            <TextBlock Text="• 华硕奥创中心 (Armoury Crate)：集成了较多驱动守护进程与灯效服务。若仅需调节基础性能模式与背光，社区常使用轻量开源工具 G-Helper 作为低开销的替代选择。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Border>
 
@@ -91,8 +91,8 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="软件名称" Binding="{Binding Name}" Width="190"/>
                             <DataGridTextColumn Header="所属品牌" Binding="{Binding Vendor}" Width="80"/>
-                            <DataGridTextColumn Header="后台毒瘤危害" Binding="{Binding Description}" Width="2*"/>
-                            <DataGridTextColumn Header="极客清理与开源平替建议" Binding="{Binding DebloatAdvice}" Width="2*"/>
+                            <DataGridTextColumn Header="软件特性与资源开销" Binding="{Binding Description}" Width="2*"/>
+                            <DataGridTextColumn Header="维护建议与开源替代方案" Binding="{Binding DebloatAdvice}" Width="2*"/>
                             <DataGridTemplateColumn Header="当前状态" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -105,7 +105,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- 板块 3: 锁死 Win11 后台暗度陈仓静默安装策略 -->
+            <!-- 板块 3: Windows 11 后台静默安装推广应用策略 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -114,17 +114,17 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="0,0,10,0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🔒 3. 锁死 Win11 后台暗度陈仓静默安装策略 (防偷偷下载 TikTok/Spotify)" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                            <TextBlock Text="🔒 3. Windows 11 后台静默安装推广应用策略管理" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
                             <TextBlock x:Name="TxtSilentAppStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
                         </StackPanel>
-                        <TextBlock Text="新机连网后，微软会在后台静默推送下载预设的商业合作应用，并在锁屏和开始菜单展示商业推广推荐。一键关闭 SilentInstalledAppsEnabled 策略，将静默流氓行为锁死在摇篮中！"
+                        <TextBlock Text="新系统接入网络后，系统默认会通过内容交付管理器在后台静默安装预设的推荐应用，并在开始菜单展示建议。关闭 SilentInstalledAppsEnabled 策略可阻止此类自动下载行为。"
                                    FontSize="12" Foreground="#64748B" TextWrapping="Wrap" Margin="0,4,0,0"/>
                     </StackPanel>
-                    <Button x:Name="BtnToggleSilentApps" Grid.Column="1" Content="切换锁死状态" VerticalAlignment="Center" Click="BtnToggleSilentApps_Click"/>
+                    <Button x:Name="BtnToggleSilentApps" Grid.Column="1" Content="切换策略状态" VerticalAlignment="Center" Click="BtnToggleSilentApps_Click"/>
                 </Grid>
             </Border>
 
-            <!-- 板块 4: 浏览器大换血：彻底卸载 Edge & 替换为纯净 Chrome -->
+            <!-- 板块 4: 浏览器管理：Edge 卸载与 Chrome 安装 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
@@ -133,8 +133,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="🌐 4. 浏览器大换血：彻底卸载 Edge 并替换为 Chrome" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (专业保留 WebView2 运行时，防第三方桌面软件崩溃)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                            <TextBlock Text="🌐 4. 浏览器管理：卸载 Edge 与安装 Google Chrome" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                            <TextBlock Text=" (保留 WebView2 运行时，保障第三方桌面客户端正常运行)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
                         </WrapPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                             <TextBlock x:Name="TxtBrowserStatus" Text="[检测浏览器状态...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
@@ -143,7 +143,7 @@
                     </Grid>
 
                     <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                        <TextBlock Text="💡 避坑原则：本工具仅卸载 Edge 浏览器外壳，严格保留底层 WebView2 共享库（防止微信、网易云等软件直接白屏崩溃），并自动写入 DoNotUpdateToEdgeWithChromium 策略阻止 Windows Update 下周偷偷重装！" FontSize="11" Foreground="#78350F" TextWrapping="Wrap"/>
+                        <TextBlock Text="💡 技术说明：卸载操作仅移除 Edge 浏览器主体外壳，严格保留底层的 WebView2 运行时（确保基于 WebView2 的第三方应用正常工作），并配置策略防止后续版本更新自动重新部署。" FontSize="11" Foreground="#78350F" TextWrapping="Wrap"/>
                     </Border>
 
                     <Grid>
@@ -155,8 +155,8 @@
                         <!-- 卸载 Edge -->
                         <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
                             <StackPanel>
-                                <TextBlock Text="🗑️ 彻底卸载 Microsoft Edge" FontWeight="Bold" FontSize="13" Foreground="#EF4444" Margin="0,0,0,4"/>
-                                <TextBlock Text="调用官方静默卸载器，清除桌面图标与启动项，策略锁定防复活。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                <TextBlock Text="🗑️ 卸载 Microsoft Edge 浏览器主体" FontWeight="Bold" FontSize="13" Foreground="#EF4444" Margin="0,0,0,4"/>
+                                <TextBlock Text="调用官方静默卸载命令，移除应用外壳与快捷方式，并配置策略阻止自动重新安装。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
                                 <Button x:Name="BtnUninstallEdge" Content="立即卸载 Edge 浏览器" Background="#EF4444" Click="BtnUninstallEdge_Click"/>
                             </StackPanel>
                         </Border>
@@ -164,8 +164,8 @@
                         <!-- 安装 Chrome & 设为默认 -->
                         <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
                             <StackPanel>
-                                <TextBlock Text="🚀 替换为 Google Chrome 官方纯净版" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,4"/>
-                                <TextBlock Text="通过 winget 直接从 Google 官方源拉取安装包，静默无捆绑安全安装。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                <TextBlock Text="🚀 安装 Google Chrome 官方纯净版" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,4"/>
+                                <TextBlock Text="通过 winget 直接从 Google 官方源拉取安装包，执行静默安装。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -180,7 +180,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- 板块 5: 微软 OneDrive 深度卸载与去盘符绑定 -->
+            <!-- 板块 5: 微软 OneDrive 卸载与导航栏图标管理 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
@@ -189,8 +189,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="☁️ 5. 微软 OneDrive 深度卸载与导航栏图标清除" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (解除桌面/文档强制云端绑架，抹除资源管理器幽灵蓝云)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                            <TextBlock Text="☁️ 5. 微软 OneDrive 卸载与资源管理器导航栏清理" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                            <TextBlock Text=" (恢复本地文档与桌面目录结构，移除导航窗格常驻图标)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
                         </WrapPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                             <TextBlock x:Name="TxtOneDriveStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
@@ -204,15 +204,15 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0">
-                            <TextBlock Text="彻底移除 OneDrive 云盘程序" FontWeight="Bold" FontSize="13" Foreground="#EF4444"/>
-                            <TextBlock Text="执行系统原生卸载并完全清理残留注册表项与侧边栏常驻图标，避免桌面变成 C:\Users\xxx\OneDrive\Desktop 引发各种开发编译报错。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <TextBlock Text="卸载 OneDrive 并清理资源管理器图标" FontWeight="Bold" FontSize="13" Foreground="#EF4444"/>
+                            <TextBlock Text="执行系统自带卸载程序，并清理注册表中资源管理器侧边栏的同步目录图标。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
                         </StackPanel>
-                        <Button x:Name="BtnUninstallOneDrive" Grid.Column="1" Content="🗑️ 一键彻底卸载 OneDrive 并清侧边栏" Background="#EF4444" Click="BtnUninstallOneDrive_Click"/>
+                        <Button x:Name="BtnUninstallOneDrive" Grid.Column="1" Content="🗑️ 卸载 OneDrive 并清理侧边栏" Background="#EF4444" Click="BtnUninstallOneDrive_Click"/>
                     </Grid>
                 </StackPanel>
             </Border>
 
-            <!-- 板块 6: 开机自启动项 (Startup Items) 深度透视与管理 -->
+            <!-- 板块 6: 开机自启动项 (Startup Items) 管理 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
@@ -221,8 +221,8 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="🚀 6. 开机自启动项深度透视与一键清理" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (扫描注册表 Run 启动项，缩短开机时间从 40s 到 10s)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
+                            <TextBlock Text="🚀 6. 开机自启动项管理" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
+                            <TextBlock Text=" (审查注册表 Run 启动项，管理常驻后台进程)" FontSize="12" Foreground="#64748B" Margin="6,3,0,0"/>
                         </WrapPanel>
                         <Button Grid.Column="1" Content="🔄 刷新启动项" Style="{DynamicResource SecondaryButton}" Click="BtnReloadStartup_Click"/>
                     </Grid>
@@ -237,7 +237,7 @@
                             <DataGridTemplateColumn Header="操作" Width="90">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="🗑️ 删自启" Style="{DynamicResource SecondaryButton}" Height="24" Padding="6,0"
+                                        <Button Content="🗑️ 移除" Style="{DynamicResource SecondaryButton}" Height="24" Padding="6,0"
                                                 Click="BtnDeleteStartupItem_Click"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -247,21 +247,21 @@
                 </StackPanel>
             </Border>
 
-            <!-- 板块 7: 官方原生包管理器 winget 使用指南与避坑真相 -->
+            <!-- 板块 7: 官方包管理器 winget 使用指南与技术说明 -->
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
-                    <TextBlock Text="📦 7. 官方原生包管理器 winget 实战与避坑指南 (实打实拆解，拒绝虚假宣传)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
-                    <TextBlock Text="Windows 官方自带 winget，能直接从官方源拉取纯净安装包。但在使用更新功能时必须了解其底层机制，切勿盲目全盘更新！"
+                    <TextBlock Text="📦 7. Windows 官方包管理器 winget 实操指南与技术说明" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,6"/>
+                    <TextBlock Text="winget 是 Windows 原生软件包管理器，直接从各软件官方源或认证清单拉取纯净安装包。在管理软件更新时，了解其底层机制有助于更稳定地维护系统环境。"
                                FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
 
-                    <!-- 避坑警示卡片 -->
-                    <Border Background="#FEF2F2" BorderBrush="#F87171" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                    <!-- 技术说明与使用建议卡片 -->
+                    <Border Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
                         <StackPanel>
-                            <TextBlock Text="⚠️ 为什么绝不建议盲目执行【winget upgrade --all --include-unknown】？真实后果说明：" FontWeight="Bold" FontSize="12" Foreground="#991B1B" Margin="0,0,0,6"/>
-                            <TextBlock Text="① 无休止 UAC 弹窗轰炸：许多 Windows 安装包（如 Inno/NSIS）根本不支持静默模式，更新过程会连续弹出十几次管理员提权弹窗，强行抢夺桌面焦点，根本做不到‘完全静默后台更新’。" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
-                            <TextBlock Text="② 强行重复重装未知版本：【--include-unknown】参数会把所有无法在注册表中识别出标准版本号的软件（如微信、网易云等部分国内应用）一律视作需要更新。每次执行，它都会把这些软件从头到尾重新下载并覆盖安装一遍！" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
-                            <TextBlock Text="③ 冲垮开发环境大版本：该命令会无差别将系统中的 Python 3.10 强行升级为 3.12、Node.js LTS 升级为 Current 奇数版、JDK 8 升级为 JDK 21，导致现存本地项目的环境变量被改写、C++ 编译依赖直接瘫痪！" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
-                            <TextBlock Text="④ 网络超时与哈希报错卡死：winget 默认直连 GitHub 或海外官方源，在无代理环境下极易出现下载超时或 Hash Mismatch 报错，导致批量队列在半途卡死中断。" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                            <TextBlock Text="💡 关于批量更新命令【winget upgrade --all】的技术机制与注意事项：" FontWeight="Bold" FontSize="12" Foreground="#1E293B" Margin="0,0,0,6"/>
+                            <TextBlock Text="• 适用场景：适用于全新装机或测试环境快速部署最新软件。在已配置复杂开发依赖（如特定版本 Python/Node/JDK）的生产环境中，建议进行受控更新。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                            <TextBlock Text="• 版本检测机制：若搭配【--include-unknown】参数，winget 会将本地注册表中未规范记录版本号的应用一律视作需要更新，可能导致部分软件在每次执行时重复下载安装。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                            <TextBlock Text="• 交互式提权说明：Windows 软件安装包格式多样（exe/msi 等），部分安装程序即便带有静默参数仍需弹出用户账户控制 (UAC) 确认窗口。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                            <TextBlock Text="• 推荐工作流：建议先使用【winget upgrade】查看候选清单，使用【winget pin】锁定需要保留固定版本的生产力软件，再对通用工具进行单包更新。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,2"/>
                         </StackPanel>
                     </Border>
 

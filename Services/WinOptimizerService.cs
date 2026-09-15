@@ -470,7 +470,7 @@ public class WinOptimizerService
     }
 
     /// <summary>
-    /// 检测是否已锁死 Win11 后台暗度陈仓静默安装推广与开始菜单广告
+    /// 检测是否已禁用 Windows 11 后台静默安装推荐应用与系统建议
     /// </summary>
     public bool IsSilentAppInstallDisabled()
     {
@@ -484,7 +484,7 @@ public class WinOptimizerService
     }
 
     /// <summary>
-    /// 锁死 Win11 后台静默安装推广应用 (TikTok/Spotify/Disney+) 以及锁屏/开始菜单广告
+    /// 启用或禁用 Windows 11 后台静默安装推广应用以及锁屏/开始菜单应用建议
     /// </summary>
     public (bool Success, string Message) SetSilentAppInstallDisabled(bool disable)
     {
@@ -498,8 +498,8 @@ public class WinOptimizerService
             key.SetValue("SystemPaneSuggestionsEnabled", regVal, RegistryValueKind.DWord);
 
             return (true, disable
-                ? "已成功锁死 Windows 11 后台静默下载推广应用策略，并屏蔽了锁屏与开始菜单商业广告！"
-                : "已恢复默认内容分发设置。");
+                ? "已成功禁用 Windows 11 后台静默安装推荐应用策略，并关闭了锁屏与开始菜单建议。"
+                : "已恢复默认内容交付设置。");
         }
         catch (Exception ex)
         {

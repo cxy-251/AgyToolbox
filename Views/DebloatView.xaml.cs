@@ -119,7 +119,7 @@ public partial class DebloatView : UserControl
 
     #endregion
 
-    #region 2. OEM 品牌机毒瘤排查
+    #region 2. OEM 品牌机预装软件排查
 
     private void LoadOemApps()
     {
@@ -146,12 +146,12 @@ public partial class DebloatView : UserControl
 
     #endregion
 
-    #region 3. 锁死 Win11 后台静默安装推广
+    #region 3. 禁用 Win11 后台静默安装推广
 
     private void RefreshSilentAppStatus()
     {
         bool disabled = _winOptimizerService.IsSilentAppInstallDisabled();
-        TxtSilentAppStatus.Text = disabled ? "[已彻底锁死静默推广策略]" : "[当前允许后台静默下载推广]";
+        TxtSilentAppStatus.Text = disabled ? "[已禁用后台静默安装]" : "[未禁用后台静默安装]";
         TxtSilentAppStatus.Foreground = disabled ? Brushes.DarkGreen : Brushes.DarkOrange;
     }
 
@@ -185,14 +185,14 @@ public partial class DebloatView : UserControl
     private async void BtnUninstallEdge_Click(object sender, RoutedEventArgs e)
     {
         var confirm = MessageBox.Show(
-            "确定要彻底卸载 Microsoft Edge 浏览器吗？\n\n" +
-            "【卸载机制说明】：\n" +
-            "1. 仅移除 Edge 浏览器主体，严格保留底层的 WebView2 共享运行库，绝不影响微信、钉钉等客户端！\n" +
-            "2. 写入注册表阻止 Windows Update 下周重新静默推送 Edge。\n\n" +
-            "卸载前请确保已安装 Chrome 或其它替代浏览器。是否继续？",
-            "确认彻底卸载 Edge",
+            "确定要卸载 Microsoft Edge 浏览器吗？\n\n" +
+            "【技术说明】：\n" +
+            "1. 仅移除 Edge 浏览器主体，保留底层的 WebView2 共享运行时，保障依赖该组件的桌面应用正常运行。\n" +
+            "2. 配置注册表策略防止后续系统更新自动重新部署 Edge。\n\n" +
+            "卸载前请确保系统已安装 Chrome 或其它替代浏览器。是否继续？",
+            "确认卸载 Edge",
             MessageBoxButton.YesNo,
-            MessageBoxImage.Warning);
+            MessageBoxImage.Question);
 
         if (confirm != MessageBoxResult.Yes) return;
 

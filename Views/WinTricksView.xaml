@@ -178,9 +178,9 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="🛡️ 微软官方恶意软件急救查杀 (mrt.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】Windows 补丁日随系统更新定期下发的特种恶意代码清除工具，查杀完即退出，零常驻后台开销。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】怀疑中了流氓顽固木马，或者插了外来 U 盘需要快速离线深度体检。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="🛡️ 微软官方恶意软件删除工具 (mrt.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                        <TextBlock Text="【底层原理】Windows 随月度安全更新下发的恶意代码清除程序，查杀完成后自动退出，无后台驻留进程。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】系统疑似感染恶意程序，或外接移动存储设备后进行专项安全扫描。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="启动 MRT" Style="{DynamicResource SecondaryButton}" Click="BtnMrt_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
@@ -194,9 +194,9 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="🕹️ DirectX 显卡驱动与硬件深度体检 (dxdiag.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】直接同 WDDM 显卡驱动内核通信，读取最真实的显存大小、Direct3D 特性级别与声卡 WHQL 签名。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】防止买到假显卡/刷过 BIOS 的矿卡，核验显示器真实高刷新率与 HDR 是否开启。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="🕹️ DirectX 显卡驱动与硬件诊断工具 (dxdiag.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                        <TextBlock Text="【底层原理】通过 WDDM 显示驱动模型接口读取显示芯片、显存规格、Direct3D 功能级别与驱动签名状态。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】核验显示适配器规格参数，查看高刷新率与 HDR 支持状态。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="启动 DXDiag" Style="{DynamicResource SecondaryButton}" Click="BtnDxDiag_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>

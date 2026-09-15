@@ -61,8 +61,8 @@ public class EdgeDebloatService
     }
 
     /// <summary>
-    /// 彻底卸载 Edge 浏览器主体，并设置注册表防止 Windows Update 偷偷重装
-    /// 【安全策略】：只卸载 Edge 浏览器，严格保留 WebView2 运行时，确保微信、钉钉等三方桌面应用正常运行
+    /// 卸载 Edge 浏览器主体外壳，并设置注册表策略防止 Windows Update 自动重新安装
+    /// 【安全策略】：只卸载 Edge 浏览器，严格保留 WebView2 运行时，确保依赖该组件的三方桌面应用正常运行
     /// </summary>
     public async Task<(bool Success, string Message)> UninstallEdgeAsync()
     {
@@ -70,7 +70,7 @@ public class EdgeDebloatService
         {
             try
             {
-                // 1. 杀死正在运行的 Edge 进程
+                // 1. 终止正在运行的 Edge 进程
                 foreach (var proc in Process.GetProcessesByName("msedge"))
                 {
                     try { proc.Kill(); } catch { }
@@ -83,7 +83,7 @@ public class EdgeDebloatService
                     return (false, "未找到 Edge 的官方卸载程序 (setup.exe)。Edge 可能已经被卸载，或路径非标准。");
                 }
 
-                // 3. 执行官方静默强力卸载
+                // 3. 执行官方静默卸载
                 var psi = new ProcessStartInfo
                 {
                     FileName = setupExe,
@@ -95,7 +95,7 @@ public class EdgeDebloatService
                 using var process = Process.Start(psi);
                 process?.WaitForExit(30000);
 
-                // 4. 写入阻止策略：防止 Windows Update 后续偷偷重新推送安装 Edge
+                // 4. 写入阻止策略：防止 Windows Update 后续自动重新推送安装 Edge
                 try
                 {
                     using var edgeUpdateKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\EdgeUpdate");
@@ -109,11 +109,11 @@ public class EdgeDebloatService
                 bool stillExists = IsEdgeInstalled();
                 if (stillExists)
                 {
-                    return (true, "卸载指令已执行完毕！若桌面仍有残留图标，重启电脑后将彻底消失。同时已配置注册表阻止 Windows Update 偷偷重装。");
+                    return (true, "卸载指令已执行完毕。若桌面仍有残留快捷方式，重启电脑或资源管理器后将完全移除；同时已配置策略防止更新自动重新部署。");
                 }
                 else
                 {
-                    return (true, "已成功彻底卸载 Microsoft Edge 浏览器主体！并已写入注册表阻止 Windows Update 自动重装。");
+                    return (true, "已成功卸载 Microsoft Edge 浏览器主体，并已配置策略防止 Windows Update 自动重新部署。");
                 }
             }
             catch (Exception ex)

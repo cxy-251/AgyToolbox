@@ -49,7 +49,7 @@ public class WindowsUpdateService
                     auKey.SetValue("AUOptions", 2, RegistryValueKind.DWord); // 仅通知，绝不自动下载
                 }
 
-                // 2. 禁止 Windows Update 自动覆盖显卡驱动 (防无数人游戏黑屏崩溃的元凶)
+                // 2. 禁止 Windows Update 在质量更新中包含驱动程序
                 using (var driverKey = Registry.LocalMachine.CreateSubKey(DriverPolicyKey))
                 {
                     driverKey.SetValue("ExcludeWPDriversInQualityUpdate", 1, RegistryValueKind.DWord);
@@ -59,11 +59,11 @@ public class WindowsUpdateService
                 RunCommand("sc.exe", "stop wuauserv");
                 RunCommand("sc.exe", "config wuauserv start= disabled");
 
-                // 4. 禁用微软“更新医生”服务 (WaaSMedicSvc，防止它半夜偷偷重新激活更新)
+                // 4. 停止并禁用更新维护服务 (WaaSMedicSvc)
                 RunCommand("sc.exe", "stop WaaSMedicSvc");
                 RunCommand("sc.exe", "config WaaSMedicSvc start= disabled");
 
-                return (true, "已彻底关闭 Windows 自动更新！\n1. 组策略已锁定禁止自动下载\n2. 已禁止系统更新静默覆盖显卡驱动\n3. 更新服务与 WaaSMedic 唤醒医生已完全禁用");
+                return (true, "已关闭 Windows 自动更新：\n1. 组策略已配置禁止自动下载\n2. 已配置质量更新排除第三方驱动\n3. 系统更新服务 (wuauserv) 与维护服务 (WaaSMedicSvc) 已停用");
             }
             catch (Exception ex)
             {
