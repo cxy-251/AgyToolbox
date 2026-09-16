@@ -691,7 +691,7 @@
                                                     <TextBlock Text="🚀 极客开发白名单一键注入 (兼顾日常安全与极速编译)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertGreenText}"/>
                                                     <TextBlock Text="自动将常用开发目录 (C:\02Programmer, C:\Dev, D:\Dev 等) 及 cl.exe, csc.exe, dotnet.exe, rustc.exe, cargo.exe, go.exe, gcc.exe, ninja.exe, msbuild.exe 等 12 种主流编译器进程一键加入 Defender 豁免清单。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                                                 </StackPanel>
-                                                <Button Content="⚡ 一键注入白名单" Background="#10B981" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnInjectDevExclusions_Click"/>
+                                                <Button Grid.Column="1" Content="⚡ 一键注入白名单" Background="#10B981" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnInjectDevExclusions_Click"/>
                                             </Grid>
                                         </Border>
                                     </StackPanel>
