@@ -18,6 +18,40 @@ public partial class BuiltInGuideView : UserControl
     private void BtnGodMode_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenGodMode();
     private void BtnDxDiag_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenDxDiag();
     private void BtnEditHosts_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenHostsFile();
+    private void BtnMemoryDiag_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenMemoryDiagnostic();
+    private void BtnDriverVerifier_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenDriverVerifier();
+    private void BtnMsInfo32_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenMsInfo32();
+    private void BtnClearType_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenClearTypeTuner();
+    private void BtnColorCalib_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenColorCalibration();
+    private void BtnDiskDefrag_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenDiskDefrag();
+    private void BtnMrt_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenMrt();
+    private void BtnSecPol_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenLocalSecurityPolicy();
+    private void BtnLusrMgr_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenLocalUsersAndGroups();
+    private void BtnCertMgr_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenCertificateManager();
+    private void BtnDcomCnfg_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenComponentServices();
+    private void BtnStepsRecorder_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenStepsRecorder();
+    private void BtnRemoteAssist_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenRemoteAssistance();
+    private void BtnSysDm_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenSystemProperties();
+    private void BtnPerfMon_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenPerformanceMonitor();
+    private void BtnEventVwr_Click(object sender, RoutedEventArgs e) => _winTricksService.OpenEventViewer();
+
+    private void BtnSleepStudy_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg, _) = _winTricksService.GenerateSleepStudyReport();
+        MessageBox.Show(msg, ok ? "Modern Standby 诊断报告" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnLastWake_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, info) = _winTricksService.GetWakeAndRequestsInfo();
+        MessageBox.Show(info, "唤醒源与休眠阻止项查询", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnChkdskScan_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winTricksService.RunChkdskScanInConsole("C:");
+        MessageBox.Show(msg, "chkdsk 联机预检", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
 
     private void BtnRunSfc_Click(object sender, RoutedEventArgs e)
     {
@@ -98,4 +132,14 @@ public partial class BuiltInGuideView : UserControl
             MessageBox.Show($"已复制搜索语法到剪贴板：\n\n{snippet}\n\n可以直接在文件资源管理器右上角搜索框中粘贴使用！", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
+
+    private void BtnCopyCmd_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string cmd)
+        {
+            Clipboard.SetText(cmd);
+            MessageBox.Show($"已复制命令到剪贴板：\n\n{cmd}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
 }
+

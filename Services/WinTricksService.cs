@@ -10,7 +10,7 @@ public record DnsPingResult(string Provider, string Ip, bool? Success, long Late
 public class WinTricksService
 {
     /// <summary>
-    /// 获取本机曾连接并保存的所有 WiFi 及明文密码 (揭秘短视频“黑客破解WiFi”)
+    /// 获取当前系统已连接并保存的 WLAN 无线配置文件及安全密钥 (netsh wlan show profile key=clear)
     /// </summary>
     public List<WifiRecord> GetSavedWifiPasswords()
     {
@@ -49,7 +49,7 @@ public class WinTricksService
     }
 
     /// <summary>
-    /// 生成官方底层电池寿命与损耗健康报告 (揭秘短视频“一键查二手笔记本损耗”)
+    /// 生成系统电池容量与历史充放电统计 HTML 诊断报告 (powercfg /batteryreport)
     /// </summary>
     public (bool Success, string Message, string? Path) GenerateBatteryReport()
     {
@@ -61,11 +61,11 @@ public class WinTricksService
             if (File.Exists(outPath))
             {
                 Process.Start(new ProcessStartInfo(outPath) { UseShellExecute = true });
-                return (true, "电池诊断报告已生成，已在浏览器中自动弹出！", outPath);
+                return (true, "电池诊断报告已生成，已在浏览器中打开。\n文件路径: " + outPath, outPath);
             }
             else
             {
-                return (false, $"生成未完成 (如果是台式机则无内置电池)：{output}", null);
+                return (false, $"生成未完成 (台式机等非电池供电设备无此数据)：{output}", null);
             }
         }
         catch (Exception ex)
@@ -75,7 +75,128 @@ public class WinTricksService
     }
 
     /// <summary>
-    /// 呼出系统可靠性监视器 (揭秘短视频“电脑闪退卡顿查凶手神器”)
+    /// 生成系统 Modern Standby 待机与睡眠耗电 HTML 诊断报告 (powercfg /sleepstudy)
+    /// </summary>
+    public (bool Success, string Message, string? Path) GenerateSleepStudyReport()
+    {
+        try
+        {
+            string outPath = Path.Combine(Path.GetTempPath(), "agy_sleepstudy_report.html");
+            var output = RunProcessAndGetOutput("powercfg", $"/sleepstudy /output \"{outPath}\"");
+
+            if (File.Exists(outPath))
+            {
+                Process.Start(new ProcessStartInfo(outPath) { UseShellExecute = true });
+                return (true, "Modern Standby 待机能耗报告已生成，已在浏览器中打开。\n文件路径: " + outPath, outPath);
+            }
+            else
+            {
+                return (false, $"生成未完成：{output}", null);
+            }
+        }
+        catch (Exception ex)
+        {
+            return (false, $"生成失败: {ex.Message}", null);
+        }
+    }
+
+    /// <summary>
+    /// 获取当前系统阻止睡眠的请求源与上一次唤醒源 (powercfg -lastwake & powercfg /requests)
+    /// </summary>
+    public (bool Success, string Info) GetWakeAndRequestsInfo()
+    {
+        try
+        {
+            string lastWake = RunProcessAndGetOutput("powercfg", "-lastwake");
+            string requests = RunProcessAndGetOutput("powercfg", "/requests");
+
+            string result = "【最近一次系统唤醒源 (-lastwake)】\n" +
+                            (string.IsNullOrWhiteSpace(lastWake) ? "无记录" : lastWake.Trim()) +
+                            "\n\n────────────────────────────────────\n" +
+                            "【当前阻止系统进入休眠的活动请求 (/requests)】\n" +
+                            (string.IsNullOrWhiteSpace(requests) ? "无活动阻止请求" : requests.Trim());
+
+            return (true, result);
+        }
+        catch (Exception ex)
+        {
+            return (false, $"查询失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 启动 Windows 内存诊断工具 (mdsched.exe)
+    /// </summary>
+    public void OpenMemoryDiagnostic()
+    {
+        Process.Start("mdsched.exe");
+    }
+
+    /// <summary>
+    /// 启动驱动程序验证程序管理器 (verifier.exe)
+    /// </summary>
+    public void OpenDriverVerifier()
+    {
+        Process.Start("verifier.exe");
+    }
+
+    /// <summary>
+    /// 启动系统信息工具 (msinfo32.exe)
+    /// </summary>
+    public void OpenMsInfo32()
+    {
+        Process.Start("msinfo32.exe");
+    }
+
+    /// <summary>
+    /// 启动 ClearType 文本调谐器 (cttune.exe)
+    /// </summary>
+    public void OpenClearTypeTuner()
+    {
+        Process.Start("cttune.exe");
+    }
+
+    /// <summary>
+    /// 启动显示颜色校准工具 (dccw.exe)
+    /// </summary>
+    public void OpenColorCalibration()
+    {
+        Process.Start("dccw.exe");
+    }
+
+    /// <summary>
+    /// 启动驱动器优化与碎片整理工具 (dfrgui.exe)
+    /// </summary>
+    public void OpenDiskDefrag()
+    {
+        Process.Start("dfrgui.exe");
+    }
+
+    /// <summary>
+    /// 在管理员控制台中启动 chkdsk 联机只读只检预扫描 (chkdsk C: /scan)
+    /// </summary>
+    public (bool Success, string Message) RunChkdskScanInConsole(string drive = "C:")
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/k echo [正在执行 NTFS 文件系统只读联机预检: chkdsk {drive} /scan] && chkdsk {drive} /scan",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, $"已在管理员控制台启动 chkdsk {drive} /scan 联机预检！\n该预检不锁定卷，系统可正常使用。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"启动失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 启动系统可靠性监视器 (perfmon.exe /rel)
     /// </summary>
     public void OpenReliabilityMonitor()
     {
@@ -83,7 +204,23 @@ public class WinTricksService
     }
 
     /// <summary>
-    /// 呼出全能上帝模式控制面板 (揭秘短视频“解锁Win隐藏200项特权GodMode”)
+    /// 启动性能监视器 (perfmon.msc)
+    /// </summary>
+    public void OpenPerformanceMonitor()
+    {
+        Process.Start("perfmon.msc");
+    }
+
+    /// <summary>
+    /// 启动事件查看器 (eventvwr.msc)
+    /// </summary>
+    public void OpenEventViewer()
+    {
+        Process.Start("eventvwr.msc");
+    }
+
+    /// <summary>
+    /// 启动 Windows 全局设置集合面板 (GodMode)
     /// </summary>
     public void OpenGodMode()
     {
@@ -91,7 +228,7 @@ public class WinTricksService
     }
 
     /// <summary>
-    /// 呼出微软自带恶意软件深度查杀工具 (Win+R mrt)
+    /// 启动恶意软件删除工具 (mrt.exe)
     /// </summary>
     public void OpenMrt()
     {
@@ -99,7 +236,7 @@ public class WinTricksService
     }
 
     /// <summary>
-    /// 呼出 DirectX 硬件与显卡声卡体检工具 (Win+R dxdiag)
+    /// 启动 DirectX 诊断工具 (dxdiag.exe)
     /// </summary>
     public void OpenDxDiag()
     {
@@ -107,11 +244,59 @@ public class WinTricksService
     }
 
     /// <summary>
-    /// 呼出 Windows 高级资源监视器 (Win+R resmon)
+    /// 启动资源监视器 (resmon.exe)
     /// </summary>
     public void OpenResMon()
     {
         Process.Start("resmon.exe");
+    }
+
+    /// <summary>
+    /// 启动本地安全策略编辑器 (secpol.msc)
+    /// </summary>
+    public void OpenLocalSecurityPolicy()
+    {
+        Process.Start("secpol.msc");
+    }
+
+    /// <summary>
+    /// 启动本地用户和组管理器 (lusrmgr.msc)
+    /// </summary>
+    public void OpenLocalUsersAndGroups()
+    {
+        Process.Start("lusrmgr.msc");
+    }
+
+    /// <summary>
+    /// 启动当前用户证书管理器 (certmgr.msc)
+    /// </summary>
+    public void OpenCertificateManager()
+    {
+        Process.Start("certmgr.msc");
+    }
+
+    /// <summary>
+    /// 启动组件服务管理器 (dcomcnfg.exe)
+    /// </summary>
+    public void OpenComponentServices()
+    {
+        Process.Start("dcomcnfg.exe");
+    }
+
+    /// <summary>
+    /// 启动远程协助客户端 (msra.exe)
+    /// </summary>
+    public void OpenRemoteAssistance()
+    {
+        Process.Start("msra.exe");
+    }
+
+    /// <summary>
+    /// 启动系统属性窗口 (sysdm.cpl)
+    /// </summary>
+    public void OpenSystemProperties()
+    {
+        Process.Start("sysdm.cpl");
     }
 
     /// <summary>
@@ -151,7 +336,7 @@ public class WinTricksService
     }
 
     /// <summary>
-    /// 呼出问题步骤记录器 (Win+R psr，自动点击截图配字)
+    /// 启动步骤记录器 (psr.exe - Problem Steps Recorder)
     /// </summary>
     public void OpenStepsRecorder()
     {
