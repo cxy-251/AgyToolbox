@@ -411,6 +411,24 @@
                                             </Grid>
                                         </Border>
 
+                                        <!-- 桌面必备核心图标展示 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="🖥️ 桌面必备核心图标一键展示 (此电脑 / 控制面板 / 用户文件 / 网络)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtDesktopIconsStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="新机开荒必备：在桌面直接显示【此电脑】、【控制面板】、【用户文件】与【网络】，无需繁琐的主题设置。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleDesktopIcons" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleDesktopIcons_Click"/>
+                                            </Grid>
+                                        </Border>
+
                                         <!-- 关闭必英网络搜索 -->
                                         <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>

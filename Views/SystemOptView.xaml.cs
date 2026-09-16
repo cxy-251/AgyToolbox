@@ -321,6 +321,10 @@ public partial class SystemOptView : UserControl
         TxtClassicMenuStatus.Text = classic ? "[已开启 Win10 经典菜单]" : "[当前为 Win11 折叠菜单]";
         TxtClassicMenuStatus.Foreground = classic ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
+        bool deskIcons = _winOptimizerService.IsDesktopIconsVisible();
+        TxtDesktopIconsStatus.Text = deskIcons ? "[已在桌面显示核心图标]" : "[桌面图标隐藏/默认]";
+        TxtDesktopIconsStatus.Foreground = deskIcons ? ThemeBrushes.Success : ThemeBrushes.Warning;
+
         bool noBing = _winOptimizerService.IsBingSearchDisabled();
         TxtBingStatus.Text = noBing ? "[已关闭必应搜索广告]" : "[当前保留必应搜索与热搜]";
         TxtBingStatus.Foreground = noBing ? ThemeBrushes.Success : ThemeBrushes.Warning;
@@ -363,6 +367,14 @@ public partial class SystemOptView : UserControl
         var (ok, msg) = _winOptimizerService.SetClassicContextMenu(!current);
         RefreshOptimizerStatus();
         MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnToggleDesktopIcons_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsDesktopIconsVisible();
+        var (ok, msg) = _winOptimizerService.SetDesktopIconsVisible(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, "桌面图标设置", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
     }
 
     private void BtnToggleBing_Click(object sender, RoutedEventArgs e)

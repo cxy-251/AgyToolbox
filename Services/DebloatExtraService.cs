@@ -842,4 +842,121 @@ Enable-ScheduledTask -TaskPath '\Microsoft\Windows\Feedback\Siuf\' -TaskName 'Dm
     }
 
     #endregion
+
+    #region 5. Windows 11 Copilot、小组件 (Widgets) 与 Recall AI 治理
+
+    /// <summary>
+    /// 检测 Windows Copilot 是否已禁用
+    /// </summary>
+    public bool IsCopilotDisabled()
+    {
+        try
+        {
+            using var hkcu = Registry.CurrentUser.OpenSubKey(@"Software\Policies\Microsoft\Windows\WindowsCopilot");
+            if (hkcu?.GetValue("TurnOffWindowsCopilot") is int val && val == 1) return true;
+
+            using var hklm = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot");
+            if (hklm?.GetValue("TurnOffWindowsCopilot") is int mVal && mVal == 1) return true;
+
+            using var exp = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            return exp?.GetValue("ShowCopilotButton") is int btn && btn == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 禁用或启用 Windows Copilot 与任务栏按钮
+    /// </summary>
+    public (bool Success, string Message) SetCopilotDisabled(bool disable)
+    {
+        try
+        {
+            int policyVal = disable ? 1 : 0;
+            using (var hkcu = Registry.CurrentUser.CreateSubKey(@"Software\Policies\Microsoft\Windows\WindowsCopilot"))
+            {
+                hkcu.SetValue("TurnOffWindowsCopilot", policyVal, RegistryValueKind.DWord);
+            }
+            using (var hklm = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot"))
+            {
+                hklm.SetValue("TurnOffWindowsCopilot", policyVal, RegistryValueKind.DWord);
+            }
+            using (var exp = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"))
+            {
+                exp.SetValue("ShowCopilotButton", disable ? 0 : 1, RegistryValueKind.DWord);
+            }
+            return (true, disable
+                ? "已成功关闭 Windows Copilot 与任务栏按钮！重启资源管理器生效。"
+                : "已恢复 Windows Copilot 默认状态。");
+        }
+        catch (Exception ex) { return (false, $"设置 Copilot 失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测任务栏小组件 (Widgets / 资讯与兴趣) 是否已关闭
+    /// </summary>
+    public bool IsWidgetsDisabled()
+    {
+        try
+        {
+            using var hklm = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Dsh");
+            if (hklm?.GetValue("AllowNewsAndInterests") is int val && val == 0) return true;
+
+            using var hkcu = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            return hkcu?.GetValue("TaskbarDa") is int da && da == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 禁用或启用任务栏小组件 (Widgets)
+    /// </summary>
+    public (bool Success, string Message) SetWidgetsDisabled(bool disable)
+    {
+        try
+        {
+            using (var hklm = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Dsh"))
+            {
+                hklm.SetValue("AllowNewsAndInterests", disable ? 0 : 1, RegistryValueKind.DWord);
+            }
+            using (var hkcu = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"))
+            {
+                hkcu.SetValue("TaskbarDa", disable ? 0 : 1, RegistryValueKind.DWord);
+            }
+            return (true, disable
+                ? "已成功关闭任务栏小组件与后台资讯服务！"
+                : "已恢复任务栏小组件展示。");
+        }
+        catch (Exception ex) { return (false, $"设置小组件失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 Windows 11 24H2 Recall AI 屏幕快照与分析是否已禁用
+    /// </summary>
+    public bool IsRecallDisabled()
+    {
+        try
+        {
+            using var hklm = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsAI");
+            return hklm?.GetValue("DisableAIDataAnalysis") is int val && val == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 禁用或启用 Windows 11 24H2 Recall AI 屏幕分析与快照
+    /// </summary>
+    public (bool Success, string Message) SetRecallDisabled(bool disable)
+    {
+        try
+        {
+            using var hklm = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsAI");
+            hklm.SetValue("DisableAIDataAnalysis", disable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, disable
+                ? "已禁用 Windows 11 24H2 Recall (AI 屏幕快照与分析)！保护个人隐私与数据安全。"
+                : "已恢复 Recall 默认策略。");
+        }
+        catch (Exception ex) { return (false, $"设置 Recall 失败: {ex.Message}"); }
+    }
+
+    #endregion
 }

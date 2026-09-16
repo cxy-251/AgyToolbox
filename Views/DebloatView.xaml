@@ -428,7 +428,64 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 板块 2: 遥测与后台唤醒服务精简 -->
+                        <!-- 板块 2: Windows 11 Copilot 与 24H2 Recall AI 隐私管控 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🤖 2. Windows 11 Copilot 与 Recall AI 隐私管控" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (关闭系统内置 AI 侧边栏常驻实例、任务栏按钮及 24H2 屏幕快照分析)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshAiStatus_Click"/>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- Copilot 禁用 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="Windows Copilot 与任务栏快捷按钮 (TurnOffWindowsCopilot)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtCopilotStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="通过组策略彻底禁用系统级 Windows Copilot，同时移除任务栏 Copilot 唤出按钮，释放后台常驻的 WebView2 渲染实例。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleCopilot" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleCopilot_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Windows 11 24H2 Recall AI 快照 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="Windows 11 24H2 Recall AI 屏幕快照与分析 (DisableAIDataAnalysis)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtRecallStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="禁用微软在 Win11 24H2 引入的 Recall 定期屏幕快照抓取与语义向量分析，保护本地开发隐私与代码不被 AI 模型分析缓存。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleRecall" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleRecall_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: 遥测与后台唤醒服务精简 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">

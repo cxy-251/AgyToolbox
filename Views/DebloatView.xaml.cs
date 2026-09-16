@@ -97,6 +97,7 @@ public partial class DebloatView : UserControl
         RefreshRedundantServicesStatus();
         RefreshBrowserStatus();
         RefreshOneDriveStatus();
+        RefreshAiStatus();
     }
 
     #region 1. UWP 预装应用精简
@@ -353,6 +354,41 @@ public partial class DebloatView : UserControl
         var (ok, msg) = _debloatExtraService.SetCeipTasksDisabled(!current);
         RefreshTelemetryStatus();
         MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void RefreshAiStatus()
+    {
+        bool copilotDisabled = _debloatExtraService.IsCopilotDisabled();
+        TxtCopilotStatus.Text = copilotDisabled ? "● 已彻底禁用 Copilot (释放常驻内存)" : "○ 默认开启/任务栏快捷按钮驻留";
+        TxtCopilotStatus.Foreground = copilotDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleCopilot.Content = copilotDisabled ? "开启 Copilot" : "禁用 Copilot";
+
+        bool recallDisabled = _debloatExtraService.IsRecallDisabled();
+        TxtRecallStatus.Text = recallDisabled ? "● 已禁用 Recall 快照分析 (隐私安全)" : "○ 默认系统分析/未配置";
+        TxtRecallStatus.Foreground = recallDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleRecall.Content = recallDisabled ? "恢复 Recall" : "禁用 Recall";
+    }
+
+    private void BtnRefreshAiStatus_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshAiStatus();
+        MessageBox.Show("Windows 11 Copilot 与 Recall 状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnToggleCopilot_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _debloatExtraService.IsCopilotDisabled();
+        var res = _debloatExtraService.SetCopilotDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "Copilot 策略变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshAiStatus();
+    }
+
+    private void BtnToggleRecall_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _debloatExtraService.IsRecallDisabled();
+        var res = _debloatExtraService.SetRecallDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "Recall 策略变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshAiStatus();
     }
 
     #endregion

@@ -214,6 +214,50 @@ public class WinOptimizerService
     }
 
     /// <summary>
+    /// 检测桌面“此电脑”与“控制面板”等核心系统图标是否已显示
+    /// </summary>
+    public bool IsDesktopIconsVisible()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel");
+            var val = key?.GetValue("{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+            return val is int intVal && intVal == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 在桌面一键显示或隐藏【此电脑】、【控制面板】、【用户文件】、【网络】图标
+    /// </summary>
+    public (bool Success, string Message) SetDesktopIconsVisible(bool show)
+    {
+        try
+        {
+            int val = show ? 0 : 1; // 0 = 显示, 1 = 隐藏
+            string[] paths = new[]
+            {
+                @"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel",
+                @"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu"
+            };
+
+            foreach (var p in paths)
+            {
+                using var key = Registry.CurrentUser.CreateSubKey(p);
+                key.SetValue("{20D04FE0-3AEA-1069-A2D8-08002B30309D}", val, RegistryValueKind.DWord); // 此电脑
+                key.SetValue("{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}", val, RegistryValueKind.DWord); // 控制面板
+                key.SetValue("{59031a47-3f72-44a7-89c5-5595fe6b30ee}", val, RegistryValueKind.DWord); // 用户文件
+                key.SetValue("{F02C1A0D-BE21-4350-88B0-753720A61B06}", val, RegistryValueKind.DWord); // 网络
+            }
+
+            return (true, show
+                ? "已在桌面显示【此电脑】、【控制面板】、【用户文件】与【网络】！重启资源管理器或刷新桌面生效。"
+                : "已恢复默认隐藏桌面系统图标。");
+        }
+        catch (Exception ex) { return (false, $"设置桌面图标失败: {ex.Message}"); }
+    }
+
+    /// <summary>
     /// 一键解锁 Windows 原生隐藏的“卓越性能模式” (Ultimate Performance)
     /// </summary>
     public (bool Success, string Message) EnableUltimatePerformance()
