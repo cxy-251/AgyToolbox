@@ -73,7 +73,64 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 板块 2: BitLocker 状态检测与恢复密钥备份 -->
+                        <!-- 板块 2: Windows 更新行为精细控制 (防工作中断 & 禁用 P2P 偷跑) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🛡️ 2. 更新行为微调：防工作中断自动重启 &amp; P2P 上传阻断" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (本地组策略配置，彻底解决夜间挂机被擅自重启与后台跑流量问题)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="🔄 刷新微调状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshUpdateTuning_Click"/>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 防工作中断自动重启 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="有用户登录时禁止自动重启 (NoAutoRebootWithLoggedOnUsers)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtNoAutoRebootStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="补丁安装完成后，只要当前仍有用户登录，绝不擅自重启系统，保障编译任务、大型下载及未保存工作台安全。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleNoAutoReboot" Grid.Column="1" Content="切换策略" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleNoAutoReboot_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 传递优化 P2P 上传禁用 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="彻底禁用传递优化 P2P 上传分享 (DODownloadMode = 0)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtDeliveryOptStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="组策略锁定仅从 HTTP 服务器下载，彻底禁止系统在后台向局域网或互联网其他 PC 上传补丁，节省上行带宽并防止网络延迟抖动。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleDeliveryOpt" Grid.Column="1" Content="切换策略" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleDeliveryOpt_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: BitLocker 状态检测与恢复密钥备份 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
@@ -82,7 +139,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🔐 2. BitLocker 设备加密状态检测与恢复密钥备份" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text="🔐 3. BitLocker 设备加密状态检测与恢复密钥备份" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
                                         <TextBlock Text=" (重要安全提示：主板固件更新或 TPM 重置时需验证 48 位数字恢复密钥)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
@@ -115,53 +172,126 @@
                 </ScrollViewer>
             </TabItem>
 
-            <!-- Tab 2: 电源与网络 (休眠 hiberfil.sys + 专用网络 + 卓越性能) -->
-            <TabItem Header="⚡ 电源与网络">
+            <!-- Tab 2: 电源与存储 (休眠三档 + 保留存储 + 专用网络 + 卓越性能) -->
+            <TabItem Header="⚡ 电源与存储">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
-                        <!-- 休眠管理与专用网络 -->
-                        <Grid Margin="0,0,0,14">
+                        <!-- 板块 1: 休眠三档精细化控制 & 快速启动 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="💾 1. 管理休眠文件 (C:\hiberfil.sys) 与快速启动" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        <TextBlock x:Name="TxtHiberStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="🔄 刷新" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshHiber_Click"/>
+                                </Grid>
+
+                                <TextBlock Text="休眠文件默认在 C 盘根目录占用与物理内存相当的空间 (16GB~64GB+)。提供三档可逆模式自由选择：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Margin="0,0,0,12">
+                                    <StackPanel>
+                                        <!-- 三档模式选择器 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="休眠档位选择 (按需释放 16GB~64GB+ SSD 空间)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                    <TextBlock Text="彻底关闭释放 100% 空间；Reduced 极简档仅保留快速启动支持并缩减 50%~80% 体积；Full 为官方默认全量休眠。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Button Content="🔴 彻底关闭 (省100%空间)" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Padding="8,4" FontSize="11" Click="BtnHiberOff_Click"/>
+                                                    <Button Content="🟡 Reduced 极简模式" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Padding="8,4" FontSize="11" Click="BtnHiberReduced_Click"/>
+                                                    <Button Content="🟢 Full 全量模式" Style="{DynamicResource SecondaryButton}" Padding="8,4" FontSize="11" Click="BtnHiberFull_Click"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 快速启动单独控制 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="快速启动 (Fast Startup / HiberbootEnabled)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtFastStartupStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="关闭快速启动可使系统在关机时彻底切断电源，解决 Windows+Linux 双系统磁盘冲突及部分主板风扇常转问题。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleFastStartup" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleFastStartup_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: 系统保留的存储 (Reserved Storage ~7GB) 查询与释放 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="📦 2. 系统“保留的存储 (Reserved Storage)”状态与空间释放 (~7GB)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        <TextBlock x:Name="TxtReservedStorageStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="🔄 查询状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshReservedStorage_Click"/>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0">
+                                            <TextBlock Text="释放约 7GB 系统预留缓冲空间 (fsutil storagereserve)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="Windows 10/11 默认会永久占位保留约 7GB 磁盘供更新使用。通过原生 fsutil 禁用保留存储，系统在完成下一次日常维护或更新后即可释放这部分 C 盘空间。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnToggleReservedStorage" Grid.Column="1" Content="切换保留存储" Style="{DynamicResource SecondaryButton}" Padding="10,4" VerticalAlignment="Center" Click="BtnToggleReservedStorage_Click"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: 网络与卓越性能 -->
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <!-- 左侧：休眠管理 -->
+                            <!-- 左侧：专用网络切换 -->
                             <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,7,0">
                                 <StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                        <TextBlock Text="💾 1. 管理休眠文件 (C:\hiberfil.sys)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                        <TextBlock x:Name="TxtHiberStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <TextBlock Text="系统休眠功能会在系统分区根目录创建与内存容量相近的 hiberfil.sys 文件。对于不需要休眠特性的台式机或空间紧张的工作站，关闭休眠可释放相应磁盘空间。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,12"/>
-                                    <Button x:Name="BtnToggleHiber" Content="切换休眠状态" Style="{DynamicResource SecondaryButton}" HorizontalAlignment="Left" Click="BtnToggleHiber_Click"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- 右侧：专用网络切换 -->
-                            <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="7,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="🌐 2. 切换当前网络为【专用网络】" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
-                                    <TextBlock Text="新连接的网络默认常被分配为“公用网络”，防火墙会对入站连接、局域网设备互通和 ICMP Ping 采取更严格的策略。设为“专用网络”可允许局域网调试与设备互访。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                                    <TextBlock Text="🌐 3. 切换当前网络为【专用网络】" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
+                                    <TextBlock Text="新网络默认常被识别为公用网络导致端口与 Ping 阻断。设为“专用网络”可放行局域网调试与设备互访。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,12"/>
                                     <Button Content="📶 设为专用网络" Background="#10B981" HorizontalAlignment="Left" Click="BtnSetPrivateNetwork_Click"/>
                                 </StackPanel>
                             </Border>
-                        </Grid>
 
-                        <!-- 卓越性能模式 -->
-                        <Border Background="{DynamicResource BrushAlertPurpleBg}" BorderBrush="{DynamicResource BrushAlertPurpleBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="⚡ 3. 导入并激活【卓越性能】电源方案 (Ultimate Performance)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushAlertPurpleText}"/>
-                                    <TextBlock Text="解锁 Windows 隐藏的卓越性能电源策略，减少硬件层面的节能状态切换延迟，让 CPU 调度保持满负荷响应，适合高负荷编译与计算任务。" FontSize="11" Foreground="{DynamicResource BrushAlertPurpleText}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                            <!-- 右侧：卓越性能模式 -->
+                            <Border Grid.Column="1" Background="{DynamicResource BrushAlertPurpleBg}" BorderBrush="{DynamicResource BrushAlertPurpleBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="7,0,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="⚡ 4. 导入并激活【卓越性能】方案" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushAlertPurpleText}" Margin="0,0,0,6"/>
+                                    <TextBlock Text="解锁隐藏的卓越性能电源策略，减少硬件能耗调度延迟，保持满负荷响应。" FontSize="11" Foreground="{DynamicResource BrushAlertPurpleText}" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                    <Button Content="⚡ 激活卓越性能" Background="#4F46E5" HorizontalAlignment="Left" Click="BtnEnableUltimatePerf_Click"/>
                                 </StackPanel>
-                                <Button Grid.Column="1" Content="⚡ 激活卓越性能" Background="#4F46E5" VerticalAlignment="Center" Margin="12,0,0,0" Click="BtnEnableUltimatePerf_Click"/>
-                            </Grid>
-                        </Border>
+                            </Border>
+                        </Grid>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -180,7 +310,7 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="📁 1. 资源管理器文件查看与导航偏好" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
-                                        <TextBlock Text=" (开发必备：显式后缀名、显示隐藏目录、Win+E 默认打开此电脑)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                        <TextBlock Text=" (开发必备：显式后缀名、显示隐藏目录、显示系统保护文件、Win+E 默认打开此电脑)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <Button Grid.Column="1" Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshExplorerSettings_Click"/>
                                 </Grid>
@@ -190,26 +320,34 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
                                         <StackPanel>
-                                            <CheckBox x:Name="ChkShowFileExt" Content="始终显示文件扩展名" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkShowFileExt_Click"/>
-                                            <TextBlock Text="显示完整后缀名，便于识别源码、脚本与配置文件，避免双后缀文件欺骗。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                            <CheckBox x:Name="ChkShowFileExt" Content="始终显示文件扩展名" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkShowFileExt_Click"/>
+                                            <TextBlock Text="显示完整后缀名，识别脚本与配置，避免双后缀文件欺骗。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
                                         </StackPanel>
                                     </Border>
 
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="3,0,3,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="2,0,2,0">
                                         <StackPanel>
-                                            <CheckBox x:Name="ChkShowHiddenFiles" Content="显示隐藏文件与驱动器" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkShowHiddenFiles_Click"/>
-                                            <TextBlock Text="方便查看与编辑 .git, .env, .vscode, AppData 等开发配置文件与隐藏目录。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                            <CheckBox x:Name="ChkShowHiddenFiles" Content="显示隐藏文件与驱动器" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkShowHiddenFiles_Click"/>
+                                            <TextBlock Text="查看编辑 .git, .env, .vscode, AppData 等开发配置与目录。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
                                         </StackPanel>
                                     </Border>
 
-                                    <Border Grid.Column="2" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                    <Border Grid.Column="2" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="2,0,2,0">
                                         <StackPanel>
-                                            <CheckBox x:Name="ChkOpenThisPc" Content="Win+E 默认打开【此电脑】" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkOpenThisPc_Click"/>
-                                            <TextBlock Text="设置资源管理器启动时直接展示驱动器分区列表，而非快速访问或主页推荐。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                            <CheckBox x:Name="ChkShowSuperHidden" Content="显示受保护系统文件" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkShowSuperHidden_Click"/>
+                                            <TextBlock Text="显示 desktop.ini、bootmgr 等系统核心受保护隐藏文件。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="3" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                                        <StackPanel>
+                                            <CheckBox x:Name="ChkOpenThisPc" Content="Win+E 打开【此电脑】" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkOpenThisPc_Click"/>
+                                            <TextBlock Text="启动资源管理器时直接展示驱动器分区，而非快速访问推荐。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
                                         </StackPanel>
                                     </Border>
                                 </Grid>

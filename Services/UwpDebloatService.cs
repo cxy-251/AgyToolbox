@@ -10,11 +10,22 @@ public record UwpAppInfo(
     string Description,
     string DebloatAdvice,
     string OpenSourceAlternative,
-    bool IsInstalled
+    bool IsInstalled,
+    bool IsWhitelisted = false
 );
 
 public class UwpDebloatService
 {
+    public static readonly HashSet<string> AbsoluteWhitelist = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Microsoft.WindowsStore",
+        "Microsoft.WindowsTerminal",
+        "Microsoft.WindowsCalculator",
+        "Microsoft.ScreenSketch",
+        "Microsoft.MSPaint",
+        "Microsoft.Paint"
+    };
+
     private static readonly (string Key, string DisplayName, string PackagePrefix, string Category, string Description, string DebloatAdvice, string OpenSourceAlternative)[] KnownApps =
     [
         (
@@ -173,11 +184,11 @@ public class UwpDebloatService
         (
             "Paint3D",
             "画图 3D (Paint 3D)",
-            "Microsoft.MSPaint",
+            "Microsoft.MSPaint3D",
             "图形创作",
             "微软早年宣传 3D 创作的实验产品，现官方已彻底停止维护与更新。",
-            "已被微软官方放弃，占用磁盘无任何实用价值，强烈建议卸载。",
-            "🎨 Paint.NET (轻量全功能) / GIMP (全能开源)"
+            "已被微软官方放弃，占用磁盘无任何实用价值，建议按需卸载。",
+            "🎨 经典画图 (MSPaint) / Paint.NET / GIMP"
         ),
         (
             "Teams",
@@ -264,10 +275,46 @@ public class UwpDebloatService
             "Store",
             "微软应用商店 (Microsoft Store)",
             "Microsoft.WindowsStore",
-            "官方商城",
-            "UWP 软件与游戏下载平台。但部分极简极客只用 winget 安装纯净软件，不需要应用商店。",
-            "⚠️ 注意：卸载后将无法从商店图形界面下载应用。但极客可通过 winget 命令行完全替代！确认需要再卸载。",
-            "⚡ winget (官方原生命令行包管理器，全自动化干净安装)"
+            "系统基础设施",
+            "Windows 核心软件分发平台与包管理器 winget 的核心运行时依赖。",
+            "【🛡️ 绝对白名单保护】严禁卸载！属于系统核心基石，移除将导致多项系统基础依赖崩溃。",
+            "已强制锁定保护 (不可卸载)"
+        ),
+        (
+            "Terminal",
+            "Windows 终端 (Windows Terminal)",
+            "Microsoft.WindowsTerminal",
+            "系统基础设施",
+            "现代化 GPU 硬件加速多标签终端宿主，开发者与命令行工程师必备基础设施。",
+            "【🛡️ 绝对白名单保护】严禁卸载！现代命令行基建标杆。",
+            "已强制锁定保护 (不可卸载)"
+        ),
+        (
+            "Calculator",
+            "Windows 计算器 (Calculator)",
+            "Microsoft.WindowsCalculator",
+            "系统基础设施",
+            "系统原生科学与程序员计算器，单次轻量调用，无后台无广告。",
+            "【🛡️ 绝对白名单保护】原生基础高频工具，保留使用。",
+            "已强制锁定保护 (不可卸载)"
+        ),
+        (
+            "ScreenSketch",
+            "截图和草图 (Snipping Tool)",
+            "Microsoft.ScreenSketch",
+            "系统基础设施",
+            "Windows 快捷截屏 (Win+Shift+S) 核心宿主组件。",
+            "【🛡️ 绝对白名单保护】原生高频工具，保留使用。",
+            "已强制锁定保护 (不可卸载)"
+        ),
+        (
+            "Paint",
+            "Windows 画图 (MSPaint)",
+            "Microsoft.Paint",
+            "系统基础设施",
+            "经典轻量级位图查看、旋转与快速标注工具。",
+            "【🛡️ 绝对白名单保护】原生极简绘图工具，保留使用。",
+            "已强制锁定保护 (不可卸载)"
         )
     ];
 
@@ -284,6 +331,7 @@ public class UwpDebloatService
             foreach (var item in KnownApps)
             {
                 bool isInstalled = installedPackages.Any(pkg => pkg.Contains(item.PackagePrefix, StringComparison.OrdinalIgnoreCase));
+                bool isWhitelisted = AbsoluteWhitelist.Any(w => item.PackagePrefix.Contains(w, StringComparison.OrdinalIgnoreCase));
                 result.Add(new UwpAppInfo(
                     item.Key,
                     item.DisplayName,
@@ -292,7 +340,8 @@ public class UwpDebloatService
                     item.Description,
                     item.DebloatAdvice,
                     item.OpenSourceAlternative,
-                    isInstalled
+                    isInstalled,
+                    isWhitelisted
                 ));
             }
 
@@ -309,7 +358,14 @@ public class UwpDebloatService
         {
             try
             {
+                // 绝对白名单防御性检测
+                if (AbsoluteWhitelist.Any(w => packagePrefix.Contains(w, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return (false, $"【安全拦截】[{packagePrefix}] 属于系统核心白名单保护组件，禁止卸载以确保系统基础设施稳定！");
+                }
+
                 // 1. 卸载当前用户
+                // 2. 移除系统级置备包 (切断源头，防止新建用户再次自动安装)
                 var script = $@"
 $ErrorActionPreference = 'SilentlyContinue'
 Get-AppxPackage -Name '*{packagePrefix}*' | Remove-AppxPackage

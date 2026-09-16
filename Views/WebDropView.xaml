@@ -43,7 +43,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0" Background="White" Padding="6" CornerRadius="6" BorderBrush="#CBD5E1" BorderThickness="1">
+                    <Border Grid.Column="0" Background="White" Padding="6" CornerRadius="6" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1">
                         <Image x:Name="ImgQrCode" Width="130" Height="130" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                     </Border>
                     <StackPanel Grid.Column="1" Margin="16,4,0,0" VerticalAlignment="Center">
@@ -61,8 +61,8 @@
 
         <!-- 动态接收日志 -->
         <TextBlock Grid.Row="1" Text="实时收发动态记录：" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,8"/>
-        <Border Grid.Row="2" Background="#0F172A" CornerRadius="8" Padding="12">
-            <ListBox x:Name="ListDropLogs" Background="Transparent" BorderThickness="0" Foreground="#38BDF8" FontFamily="Consolas, Courier New" FontSize="12"/>
+        <Border Grid.Row="2" Background="{DynamicResource BrushCodeBg}" BorderBrush="{DynamicResource BrushCodeBorder}" BorderThickness="1" CornerRadius="8" Padding="12">
+            <ListBox x:Name="ListDropLogs" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource BrushPrimary}" FontFamily="Consolas, Courier New" FontSize="12"/>
         </Border>
     </Grid>
 </UserControl>

@@ -125,4 +125,119 @@
         </Setter>
     </Style>
 
+    <!-- ── 全局默认控件暗黑/浅色自适应隐式样式 (彻底消灭白底黑字) ── -->
+    <!-- 1. TextBlock: 默认主文本颜色 -->
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+    </Style>
+
+    <!-- 2. TextBox: 默认输入框背景、文字与边框 -->
+    <Style TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource BrushInputBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushInputBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="6,4"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Style.Triggers>
+            <Trigger Property="IsReadOnly" Value="True">
+                <Setter Property="Background" Value="{DynamicResource BrushCodeBg}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource BrushCodeBorder}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- 3. CheckBox: 默认文字颜色 -->
+    <Style TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- 4. RadioButton: 默认文字颜色 -->
+    <Style TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- 5. DataGrid 全套深浅色响应样式 -->
+    <Style TargetType="DataGrid">
+        <Setter Property="Background" Value="{DynamicResource BrushCardBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="RowBackground" Value="{DynamicResource BrushCardBg}"/>
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource BrushCardBgAlt}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushCardBorder}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource BrushCardBorder}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource BrushCardBorder}"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="CanUserAddRows" Value="False"/>
+        <Setter Property="CanUserDeleteRows" Value="False"/>
+    </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource BrushTableHeaderBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushCardBorder}"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="Padding" Value="8,6"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style TargetType="DataGridRow">
+        <Setter Property="Background" Value="{DynamicResource BrushCardBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource BrushSubTabHoverBg}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource BrushSidebarItemSelected}"/>
+                <Setter Property="Foreground" Value="{DynamicResource BrushSidebarItemSelectedText}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="DataGridCell">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="6,4"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource BrushSidebarItemSelected}"/>
+                <Setter Property="Foreground" Value="{DynamicResource BrushSidebarItemSelectedText}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- 6. ListBox 与 ListBoxItem -->
+    <Style TargetType="ListBox">
+        <Setter Property="Background" Value="{DynamicResource BrushCardBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushCardBorder}"/>
+    </Style>
+
+    <Style TargetType="ListBoxItem">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="Padding" Value="6,4"/>
+    </Style>
+
+    <!-- 7. ComboBox -->
+    <Style TargetType="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource BrushInputBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushInputBorder}"/>
+    </Style>
+
 </ResourceDictionary>

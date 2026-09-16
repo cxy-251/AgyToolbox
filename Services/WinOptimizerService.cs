@@ -533,4 +533,247 @@ public class WinOptimizerService
             }
         });
     }
+
+    #region 步骤二强化：休眠三档/快速启动/保留存储/传递优化/工程师视图
+
+    /// <summary>
+    /// 休眠文件三挡控制: 0 = 彻底关闭(释放100%空间), 1 = Reduced 极简模式(仅快速启动), 2 = Full 全量模式
+    /// </summary>
+    public (bool Success, string Message) SetHibernationTier(int tier)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powercfg",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true
+            };
+
+            switch (tier)
+            {
+                case 0:
+                    psi.Arguments = "-h off";
+                    Process.Start(psi)?.WaitForExit(3000);
+                    return (true, "已彻底关闭休眠文件 (C:\\hiberfil.sys)，完全回收 100% 物理内存大小磁盘空间！");
+                case 1:
+                    psi.Arguments = "-h on";
+                    Process.Start(psi)?.WaitForExit(3000);
+                    psi.Arguments = "-h -type reduced";
+                    Process.Start(psi)?.WaitForExit(3000);
+                    return (true, "已开启 Reduced 极简模式！仅保留快速启动支持，文件体积大幅缩减约 50%~80%。");
+                case 2:
+                default:
+                    psi.Arguments = "-h on";
+                    Process.Start(psi)?.WaitForExit(3000);
+                    psi.Arguments = "-h -type full";
+                    Process.Start(psi)?.WaitForExit(3000);
+                    return (true, "已开启 Full 全量休眠模式！完整支持休眠与混合睡眠。");
+            }
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置休眠模式失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测快速启动 (Fast Startup) 状态
+    /// </summary>
+    public bool IsFastStartupEnabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Power");
+            var val = key?.GetValue("HiberbootEnabled");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置快速启动 (Fast Startup) 开关 (关闭可解决多系统引导冲突及关机后硬件断电不彻底问题)
+    /// </summary>
+    public (bool Success, string Message) SetFastStartup(bool enable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Power");
+            key.SetValue("HiberbootEnabled", enable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, enable
+                ? "已开启【快速启动】。"
+                : "已关闭【快速启动】！解决多系统引导冲突与部分主板断电残留问题。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置快速启动失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 查询系统“保留的存储 (Reserved Storage)”状态与大小
+    /// </summary>
+    public (bool IsEnabled, string Details) GetReservedStorageStatus()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "fsutil",
+                Arguments = "storagereserve query C:",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd() ?? "";
+            proc?.WaitForExit(3000);
+
+            bool isEnabled = output.Contains("已启用", StringComparison.OrdinalIgnoreCase) ||
+                             output.Contains("Enabled", StringComparison.OrdinalIgnoreCase);
+
+            return (isEnabled, output.Trim());
+        }
+        catch (Exception ex)
+        {
+            return (false, $"查询保留存储失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 释放或恢复系统保留的存储 (约释放 7GB C 盘空间)
+    /// </summary>
+    public (bool Success, string Message) SetReservedStorage(bool enable)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "fsutil",
+                Arguments = enable ? "storagereserve set reserved 1" : "storagereserve set reserved 0",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string outStr = proc?.StandardOutput.ReadToEnd() ?? "";
+            proc?.WaitForExit(5000);
+
+            return (true, enable
+                ? "已重新启用保留的存储。"
+                : "已成功提交关闭【保留的存储】指令！在系统完成下一次维护或更新后将释放约 7GB 磁盘空间。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置保留存储失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测传递优化 (Delivery Optimization) P2P 局域网/公网上传是否已被彻底禁用
+    /// </summary>
+    public bool IsDeliveryOptimizationP2PDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization");
+            var val = key?.GetValue("DODownloadMode");
+            return val is int intVal && (intVal == 0 || intVal == 99);
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 彻底禁用或恢复传递优化 P2P 上传分享 (防止后台偷跑上传带宽)
+    /// </summary>
+    public (bool Success, string Message) SetDeliveryOptimizationP2PDisabled(bool disable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization");
+            if (disable)
+            {
+                // 0 = 仅从 HTTP 源下载，彻底禁止向其他设备或互联网上传
+                key.SetValue("DODownloadMode", 0, RegistryValueKind.DWord);
+                return (true, "已彻底关闭【传递优化】P2P 上传！禁止向局域网及公网其他 PC 上传更新数据包。");
+            }
+            else
+            {
+                key.DeleteValue("DODownloadMode", false);
+                return (true, "已恢复传递优化默认设置。");
+            }
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置传递优化失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测受保护的操作系统隐藏文件是否显示
+    /// </summary>
+    public bool IsSuperHiddenFilesVisible()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            var val = key?.GetValue("ShowSuperHidden");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置是否显示受保护的操作系统文件 (desktop.ini / boot.ini 等底层系统文件)
+    /// </summary>
+    public (bool Success, string Message) SetSuperHiddenFilesVisible(bool show)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced");
+            key.SetValue("ShowSuperHidden", show ? 1 : 0, RegistryValueKind.DWord);
+            return (true, show ? "已设置为【显示受保护的操作系统文件】。" : "已恢复默认隐藏受保护系统文件。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置系统文件隐藏失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测是否已配置 Active Hours (活动时间) 与防工作中断自动重启
+    /// </summary>
+    public bool IsNoAutoRebootConfigured()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU");
+            var val = key?.GetValue("NoAutoRebootWithLoggedOnUsers");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 配置用户登录时不自动重启 (防工作期间因 Windows Update 突发重启导致未保存代码丢失)
+    /// </summary>
+    public (bool Success, string Message) SetNoAutoReboot(bool enable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU");
+            key.SetValue("NoAutoRebootWithLoggedOnUsers", enable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, enable
+                ? "已开启【用户登录时禁止自动重启】策略！即使更新完成，也不会在您离开工位时擅自重启丢失进度。"
+                : "已恢复默认重启策略。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置自动重启策略失败: {ex.Message}");
+        }
+    }
+
+    #endregion
 }

@@ -29,8 +29,11 @@ public partial class SystemOptView : UserControl
         LoadPathEntries(false);
         RefreshOptimizerStatus();
         RefreshUpdateStatus();
+        RefreshUpdateTuningStatus();
         RefreshBitLockerStatus();
         RefreshHiberStatus();
+        RefreshFastStartupStatus();
+        RefreshReservedStorageStatus();
         RefreshExplorerSettings();
     }
 
@@ -78,6 +81,43 @@ public partial class SystemOptView : UserControl
 
     #endregion
 
+    #region 1.1 更新行为微调 (防自动重启 & 禁用 P2P 上传)
+
+    private void RefreshUpdateTuningStatus()
+    {
+        bool noAutoReboot = _winOptimizerService.IsNoAutoRebootConfigured();
+        TxtNoAutoRebootStatus.Text = noAutoReboot ? "[已配置：用户登录时绝不擅自重启]" : "[系统默认：可能自动重启]";
+        TxtNoAutoRebootStatus.Foreground = noAutoReboot ? Brushes.DarkGreen : Brushes.DarkOrange;
+
+        bool p2pDisabled = _winOptimizerService.IsDeliveryOptimizationP2PDisabled();
+        TxtDeliveryOptStatus.Text = p2pDisabled ? "[已彻底阻断 P2P 上传偷跑]" : "[系统默认：允许局域网/互联网上传]";
+        TxtDeliveryOptStatus.Foreground = p2pDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+    }
+
+    private void BtnRefreshUpdateTuning_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshUpdateTuningStatus();
+        MessageBox.Show("更新微调策略状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnToggleNoAutoReboot_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsNoAutoRebootConfigured();
+        var (ok, msg) = _winOptimizerService.SetNoAutoReboot(!current);
+        RefreshUpdateTuningStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleDeliveryOpt_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsDeliveryOptimizationP2PDisabled();
+        var (ok, msg) = _winOptimizerService.SetDeliveryOptimizationP2PDisabled(!current);
+        RefreshUpdateTuningStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    #endregion
+
     #region 2. BitLocker 状态透视与恢复密钥
 
     private void RefreshBitLockerStatus()
@@ -113,22 +153,81 @@ public partial class SystemOptView : UserControl
 
     #endregion
 
-    #region 3. 关停休眠 (hiberfil.sys) & 专用网络切换
+    #region 3. 电源与存储 (休眠三档 / 快速启动 / 保留存储 / 专用网络 / 卓越性能)
 
     private void RefreshHiberStatus()
     {
         bool exists = _winOptimizerService.IsHibernationEnabled();
-        TxtHiberStatus.Text = exists ? "[休眠占用中，吃 C 盘内存同等空间]" : "[已关停休眠，已释放空间]";
+        TxtHiberStatus.Text = exists ? "[休眠开启中 (hiberfil.sys 占用中)]" : "[已彻底关停休眠 (已释放 100% 空间)]";
         TxtHiberStatus.Foreground = exists ? Brushes.DarkOrange : Brushes.DarkGreen;
-        BtnToggleHiber.Content = exists ? "关停休眠 (立省 32G)" : "开启休眠";
     }
 
-    private void BtnToggleHiber_Click(object sender, RoutedEventArgs e)
+    private void RefreshFastStartupStatus()
     {
-        bool exists = _winOptimizerService.IsHibernationEnabled();
-        var (ok, msg) = _winOptimizerService.SetHibernation(!exists);
+        bool fast = _winOptimizerService.IsFastStartupEnabled();
+        TxtFastStartupStatus.Text = fast ? "[已开启快速启动]" : "[已关闭快速启动 (彻底切断硬件电源)]";
+        TxtFastStartupStatus.Foreground = fast ? Brushes.DarkOrange : Brushes.DarkGreen;
+    }
+
+    private void RefreshReservedStorageStatus()
+    {
+        var (enabled, details) = _winOptimizerService.GetReservedStorageStatus();
+        TxtReservedStorageStatus.Text = enabled ? "[已启用 (约预留 7GB 磁盘缓冲)]" : "[已停用/已释放]";
+        TxtReservedStorageStatus.Foreground = enabled ? Brushes.DarkOrange : Brushes.DarkGreen;
+    }
+
+    private void BtnRefreshHiber_Click(object sender, RoutedEventArgs e)
+    {
         RefreshHiberStatus();
+        RefreshFastStartupStatus();
+        MessageBox.Show("休眠与快速启动状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnHiberOff_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.SetHibernationTier(0);
+        RefreshHiberStatus();
+        RefreshFastStartupStatus();
         MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnHiberReduced_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.SetHibernationTier(1);
+        RefreshHiberStatus();
+        RefreshFastStartupStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnHiberFull_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.SetHibernationTier(2);
+        RefreshHiberStatus();
+        RefreshFastStartupStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleFastStartup_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsFastStartupEnabled();
+        var (ok, msg) = _winOptimizerService.SetFastStartup(!current);
+        RefreshFastStartupStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnRefreshReservedStorage_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshReservedStorageStatus();
+        var (_, details) = _winOptimizerService.GetReservedStorageStatus();
+        MessageBox.Show($"保留存储查询结果：\n\n{details}", "查询结果", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnToggleReservedStorage_Click(object sender, RoutedEventArgs e)
+    {
+        var (enabled, _) = _winOptimizerService.GetReservedStorageStatus();
+        var (ok, msg) = _winOptimizerService.SetReservedStorage(!enabled);
+        RefreshReservedStorageStatus();
+        MessageBox.Show(msg, ok ? "操作已下发" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
     private void BtnSetPrivateNetwork_Click(object sender, RoutedEventArgs e)
@@ -137,14 +236,21 @@ public partial class SystemOptView : UserControl
         MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
+    private void BtnEnableUltimatePerf_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.EnableUltimatePerformance();
+        MessageBox.Show(msg, ok ? "激活成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
     #endregion
 
-    #region 4. 资源管理器开荒与卓越性能
+    #region 4. 资源管理器开荒与系统交互
 
     private void RefreshExplorerSettings()
     {
         ChkShowFileExt.IsChecked = _winOptimizerService.IsFileExtVisible();
         ChkShowHiddenFiles.IsChecked = _winOptimizerService.IsHiddenFilesVisible();
+        ChkShowSuperHidden.IsChecked = _winOptimizerService.IsSuperHiddenFilesVisible();
         ChkOpenThisPc.IsChecked = _winOptimizerService.IsOpenThisPcDefault();
     }
 
@@ -168,17 +274,18 @@ public partial class SystemOptView : UserControl
         if (!ok) MessageBox.Show(msg, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
+    private void ChkShowSuperHidden_Click(object sender, RoutedEventArgs e)
+    {
+        bool show = ChkShowSuperHidden.IsChecked == true;
+        var (ok, msg) = _winOptimizerService.SetSuperHiddenFilesVisible(show);
+        if (!ok) MessageBox.Show(msg, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
     private void ChkOpenThisPc_Click(object sender, RoutedEventArgs e)
     {
         bool thisPc = ChkOpenThisPc.IsChecked == true;
         var (ok, msg) = _winOptimizerService.SetOpenThisPcDefault(thisPc);
         if (!ok) MessageBox.Show(msg, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
-    }
-
-    private void BtnEnableUltimatePerf_Click(object sender, RoutedEventArgs e)
-    {
-        var (ok, msg) = _winOptimizerService.EnableUltimatePerformance();
-        MessageBox.Show(msg, ok ? "激活成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
     #endregion

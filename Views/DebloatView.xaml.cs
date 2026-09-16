@@ -17,8 +17,12 @@ public class UwpAppDisplayItem
     public string DebloatAdvice { get; set; } = "";
     public string OpenSourceAlternative { get; set; } = "";
     public bool IsInstalled { get; set; }
-    public string StatusText => IsInstalled ? "● 已安装" : "○ 未安装/已卸载";
-    public Brush StatusBrush => IsInstalled ? Brushes.Red : Brushes.DarkGreen;
+    public bool IsWhitelisted { get; set; }
+
+    public bool CanUninstall => IsInstalled && !IsWhitelisted;
+    public string ActionButtonText => IsWhitelisted ? "🛡️ 核心白名单" : (IsInstalled ? "🗑️ 卸载" : "已卸载");
+    public string StatusText => IsWhitelisted ? "🛡️ 白名单保护" : (IsInstalled ? "● 已安装" : "○ 未安装/已卸载");
+    public Brush StatusBrush => IsWhitelisted ? Brushes.DeepSkyBlue : (IsInstalled ? Brushes.Red : Brushes.DarkGreen);
 }
 
 public class OemAppDisplayItem
@@ -55,7 +59,8 @@ public partial class DebloatView : UserControl
         _ = LoadUwpAppsAsync();
         LoadOemApps();
         LoadStartupItems();
-        RefreshSilentAppStatus();
+        RefreshAdPoliciesStatus();
+        RefreshTelemetryStatus();
         RefreshBrowserStatus();
         RefreshOneDriveStatus();
     }
@@ -77,7 +82,8 @@ public partial class DebloatView : UserControl
                 Description = app.Description,
                 DebloatAdvice = app.DebloatAdvice,
                 OpenSourceAlternative = app.OpenSourceAlternative,
-                IsInstalled = app.IsInstalled
+                IsInstalled = app.IsInstalled,
+                IsWhitelisted = app.IsWhitelisted
             });
         }
     }
@@ -146,20 +152,103 @@ public partial class DebloatView : UserControl
 
     #endregion
 
-    #region 3. 禁用 Win11 后台静默安装推广
+    #region 3. 商业推广、遥测精简与后台策略控制
 
-    private void RefreshSilentAppStatus()
+    private void RefreshAdPoliciesStatus()
     {
-        bool disabled = _winOptimizerService.IsSilentAppInstallDisabled();
-        TxtSilentAppStatus.Text = disabled ? "[已禁用后台静默安装]" : "[未禁用后台静默安装]";
-        TxtSilentAppStatus.Foreground = disabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        bool silentDisabled = _debloatExtraService.IsSilentAppInstallDisabled();
+        TxtSilentAppStatus.Text = silentDisabled ? "[已阻断静默安装]" : "[默认静默推广已开启]";
+        TxtSilentAppStatus.Foreground = silentDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+
+        bool startAdsDisabled = _debloatExtraService.IsStartMenuAdsDisabled();
+        TxtStartAdsStatus.Text = startAdsDisabled ? "[已关闭推荐广告]" : "[默认显示推荐建议]";
+        TxtStartAdsStatus.Foreground = startAdsDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+
+        bool lockAdsDisabled = _debloatExtraService.IsLockScreenAdsDisabled();
+        TxtLockAdsStatus.Text = lockAdsDisabled ? "[已关闭锁屏小贴士]" : "[默认展示提示与广告]";
+        TxtLockAdsStatus.Foreground = lockAdsDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+
+        bool widgetsDisabled = _debloatExtraService.IsWidgetsNewsDisabled();
+        TxtWidgetsStatus.Text = widgetsDisabled ? "[已禁用小组件资讯流]" : "[默认资讯流已开启]";
+        TxtWidgetsStatus.Foreground = widgetsDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+    }
+
+    private void RefreshTelemetryStatus()
+    {
+        bool diagDisabled = _debloatExtraService.IsDiagTrackDisabled();
+        TxtDiagTrackStatus.Text = diagDisabled ? "[已停用并禁用服务]" : "[默认自动运行与上报]";
+        TxtDiagTrackStatus.Foreground = diagDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+
+        bool ceipDisabled = _debloatExtraService.IsCeipTasksDisabled();
+        TxtCeipStatus.Text = ceipDisabled ? "[已禁用周期性计划任务]" : "[默认按计划上报体验]";
+        TxtCeipStatus.Foreground = ceipDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
     }
 
     private void BtnToggleSilentApps_Click(object sender, RoutedEventArgs e)
     {
-        bool current = _winOptimizerService.IsSilentAppInstallDisabled();
-        var (ok, msg) = _winOptimizerService.SetSilentAppInstallDisabled(!current);
-        RefreshSilentAppStatus();
+        bool current = _debloatExtraService.IsSilentAppInstallDisabled();
+        var (ok, msg) = _debloatExtraService.SetSilentAppInstallDisabled(!current);
+        RefreshAdPoliciesStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleStartAds_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _debloatExtraService.IsStartMenuAdsDisabled();
+        var (ok, msg) = _debloatExtraService.SetStartMenuAdsDisabled(!current);
+        RefreshAdPoliciesStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleLockAds_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _debloatExtraService.IsLockScreenAdsDisabled();
+        var (ok, msg) = _debloatExtraService.SetLockScreenAdsDisabled(!current);
+        RefreshAdPoliciesStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleWidgets_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _debloatExtraService.IsWidgetsNewsDisabled();
+        var (ok, msg) = _debloatExtraService.SetWidgetsNewsDisabled(!current);
+        RefreshAdPoliciesStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnDisableAllAds_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _debloatExtraService.SetAllAdsDisabled(true);
+        RefreshAdPoliciesStatus();
+        MessageBox.Show(msg, "批量阻断结果", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnRestoreAllAds_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _debloatExtraService.SetAllAdsDisabled(false);
+        RefreshAdPoliciesStatus();
+        MessageBox.Show(msg, "恢复默认结果", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnRefreshTelemetryStatus_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshTelemetryStatus();
+        MessageBox.Show("遥测服务与计划任务状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnToggleDiagTrack_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _debloatExtraService.IsDiagTrackDisabled();
+        var (ok, msg) = _debloatExtraService.SetDiagTrackDisabled(!current);
+        RefreshTelemetryStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleCeip_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _debloatExtraService.IsCeipTasksDisabled();
+        var (ok, msg) = _debloatExtraService.SetCeipTasksDisabled(!current);
+        RefreshTelemetryStatus();
         MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
