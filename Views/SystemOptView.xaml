@@ -619,6 +619,204 @@
                 </Grid>
             </TabItem>
 
+            <!-- Tab 5: 原生开发 CPU 与磁盘 I/O 调优 -->
+            <TabItem Header="⚡ 原生开发 CPU/IO 调优">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- 板块 1: Windows Defender 编译降噪与白名单注入 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🛡️ 1. Windows Defender 实时监控降噪与极客开发白名单" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (解决高频读写编译中间文件被 MsMpEng.exe 锁定卡顿问题)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshDevIoStatus_Click"/>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <TextBlock Text="💡 技术解析：编译大型项目（C++、Rust、.NET、Go、Node 等）会短时间内生成数以万计的 .obj、.pdb、.tmp、.dll 文件。Defender 的筛选器驱动会拦截每一次 CreateFile/WriteFile 进行特征分析，是编译缓慢的头号元凶。您可选择直接关闭实时防护，或一键将开发目录与编译器进程注入排除白名单。" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 1.1 Defender 实时监控 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Defender 实时文件扫描防护 (Real-time Monitoring)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtDefenderRealtimeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="关闭实时监控可彻底消除 MsMpEng.exe 对文件 I/O 的阻塞拦截，编译速度翻倍。（注：Windows 篡改防护若开启可能会在重启后提示还原）" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleDefenderRealtime" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleDefenderRealtime_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 1.2 SmartScreen 筛选器 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="SmartScreen 筛选器 (SmartScreen Filter)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtSmartScreenStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="关闭后避免运行自编译命令行可执行文件或从 GitHub / winget 下载工具链时频繁弹出未知发布者拦截弹窗。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleSmartScreen" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleSmartScreen_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 1.3 极客白名单一键注入 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <TextBlock Text="🚀 极客开发白名单一键注入 (兼顾日常安全与极速编译)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertGreenText}"/>
+                                                    <TextBlock Text="自动将常用开发目录 (C:\02Programmer, C:\Dev, D:\Dev 等) 及 cl.exe, csc.exe, dotnet.exe, rustc.exe, cargo.exe, go.exe, gcc.exe, ninja.exe, msbuild.exe 等 12 种主流编译器进程一键加入 Defender 豁免清单。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button Content="⚡ 一键注入白名单" Background="#10B981" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnInjectDevExclusions_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: Windows Search 索引服务与 Windows.edb 释放 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🔍 2. Windows Search (WSearch) 索引服务停用与数据库清理" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (切断后台持续遍历代码树，释放占用庞大的 Windows.edb)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="🗑️ 清理 Windows.edb" Background="#EF4444" Click="BtnCleanWindowsEdb_Click"/>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Windows Search 系统级索引服务 (WSearch)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                <TextBlock x:Name="TxtWSearchStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock Text="程序员通常使用 Everything、ripgrep (rg) 或 IDE 自身索引。系统自带的 WSearch 会盲目遍历庞大的源码与 node_modules，常年占满后台 CPU 和 SSD 读写。禁用后配合右侧清理可释放数 GB 到几十 GB 空间。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnToggleWSearch" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,4" VerticalAlignment="Center" Click="BtnToggleWSearch_Click"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: SysMain 内存预载与空闲自动维护 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ 3. SysMain (Superfetch) 内存预载与空闲自动维护任务" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="关闭高速 NVMe SSD 上无谓的内存页面预载换入换出，并防止无人操作挂机编译时 CPU 被突然抢占：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- SysMain -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="SysMain 内存预加载服务 (原 Superfetch)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtSysMainStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="针对机械硬盘时代设计的预载机制。在现代高速 NVMe SSD 开发机上已无提速价值，反而频繁压缩内存占用 CPU。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleSysMain" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleSysMain_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 空闲自动维护 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="系统空闲自动维护 (Idle Maintenance)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtIdleMaintenanceStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="当键鼠无操作时，系统会自动唤起磁盘碎片整理、系统评估与预编译任务。关闭可保障离开工位时编译/下载挂机不受干扰。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleIdleMaintenance" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleIdleMaintenance_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 4: HVCI 内存完整性 (基于虚拟化的安全性) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🛡️ 4. HVCI 内存完整性与基于虚拟化的安全隔离 (Hypervisor Code Integrity)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (消除底层内核安全隔离对高性能原生开发的 5%~15% 性能损耗)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="HVCI 内核代码完整性虚拟化隔离" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                <TextBlock x:Name="TxtHvciStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock Text="开启时 Windows 会将内核隔离在底层微型虚拟机中运行。关闭可消除对 CPU 分支预测和高频系统调用的性能折损，使原生 C/C++、游戏和高并发程序跑满裸机潜能。(切换后需重启电脑生效)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnToggleHvci" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,4" VerticalAlignment="Center" Click="BtnToggleHvci_Click"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
         </TabControl>
     </Grid>
 </UserControl>

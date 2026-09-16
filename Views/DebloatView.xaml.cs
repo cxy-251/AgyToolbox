@@ -48,6 +48,18 @@ public class FodFeatureDisplayItem
     public Brush StatusBrush => IsInstalled ? ThemeBrushes.Danger : ThemeBrushes.Success;
 }
 
+public class VirtFeatureDisplayItem
+{
+    public string Key { get; set; } = "";
+    public string DisplayName { get; set; } = "";
+    public string FeatureName { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DebloatAdvice { get; set; } = "";
+    public bool IsEnabled { get; set; }
+    public string StatusText => IsEnabled ? "● 已启用" : "○ 已关闭/未安装";
+    public Brush StatusBrush => IsEnabled ? ThemeBrushes.Danger : ThemeBrushes.Success;
+}
+
 public partial class DebloatView : UserControl
 {
     private readonly UwpDebloatService _uwpDebloatService = new();
@@ -59,6 +71,7 @@ public partial class DebloatView : UserControl
     private readonly ObservableCollection<UwpAppDisplayItem> _uwpItems = new();
     private readonly ObservableCollection<OemAppDisplayItem> _oemItems = new();
     private readonly ObservableCollection<FodFeatureDisplayItem> _fodItems = new();
+    private readonly ObservableCollection<VirtFeatureDisplayItem> _virtItems = new();
     private readonly ObservableCollection<StartupItemInfo> _startupItems = new();
 
     public DebloatView()
@@ -68,14 +81,17 @@ public partial class DebloatView : UserControl
         GridUwpApps.ItemsSource = _uwpItems;
         GridOemApps.ItemsSource = _oemItems;
         GridFodFeatures.ItemsSource = _fodItems;
+        GridVirtFeatures.ItemsSource = _virtItems;
         GridStartupItems.ItemsSource = _startupItems;
 
         _ = LoadUwpAppsAsync();
         LoadOemApps();
         _ = LoadFodFeaturesAsync();
+        LoadVirtFeatures();
         LoadStartupItems();
         RefreshAdPoliciesStatus();
         RefreshTelemetryStatus();
+        RefreshRedundantServicesStatus();
         RefreshBrowserStatus();
         RefreshOneDriveStatus();
     }
@@ -528,6 +544,113 @@ public partial class DebloatView : UserControl
             Clipboard.SetText(snippet);
             MessageBox.Show($"已复制命令到剪贴板：\n{snippet}", "已复制", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+    }
+
+    #endregion
+
+    #region 8. 虚拟化平台剥离与开发机冗余服务精简
+
+    private void LoadVirtFeatures()
+    {
+        _virtItems.Clear();
+        var list = _debloatExtraService.GetVirtualizationFeatures();
+        foreach (var item in list)
+        {
+            _virtItems.Add(new VirtFeatureDisplayItem
+            {
+                Key = item.Key,
+                DisplayName = item.DisplayName,
+                FeatureName = item.FeatureName,
+                Description = item.Description,
+                DebloatAdvice = item.DebloatAdvice,
+                IsEnabled = item.IsEnabled
+            });
+        }
+    }
+
+    private void BtnScanVirt_Click(object sender, RoutedEventArgs e)
+    {
+        LoadVirtFeatures();
+    }
+
+    private void BtnDisableSingleVirt_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string featureName)
+        {
+            var res = _debloatExtraService.DisableVirtFeatureInConsole(featureName);
+            if (!res.Success)
+            {
+                MessageBox.Show(res.Message, "执行失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+    }
+
+    private void BtnDisableAllVirt_Click(object sender, RoutedEventArgs e)
+    {
+        var confirm = MessageBox.Show(
+            "确定要一键关闭所有 4 项虚拟化与虚拟机底层组件吗？\n\n包括 WSL 2、虚拟机平台、Hyper-V 与 Windows 沙盒。\n这将完全释放 CPU 与内存开销，但会使 Docker Desktop (WSL后端) 及沙盒无法使用。\n执行完毕后可能需要重启电脑生效。",
+            "确认批量关闭虚拟化组件",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (confirm == MessageBoxResult.Yes)
+        {
+            _debloatExtraService.DisableAllVirtFeaturesInConsole();
+        }
+    }
+
+    private void RefreshRedundantServicesStatus()
+    {
+        bool spoolerDisabled = _debloatExtraService.IsSpoolerDisabled();
+        TxtSpoolerStatus.Text = spoolerDisabled ? "● 已停用并禁用" : "○ 正在运行/自动";
+        TxtSpoolerStatus.Foreground = spoolerDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleSpooler.Content = spoolerDisabled ? "恢复服务" : "禁用服务";
+
+        bool xboxDisabled = _debloatExtraService.IsXboxServicesDisabled();
+        TxtXboxStatus.Text = xboxDisabled ? "● 已停用并禁用" : "○ 正在运行/手动";
+        TxtXboxStatus.Foreground = xboxDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleXbox.Content = xboxDisabled ? "恢复服务" : "禁用服务";
+
+        bool werDisabled = _debloatExtraService.IsWerSvcDisabled();
+        TxtWerSvcStatus.Text = werDisabled ? "● 已停用并禁用" : "○ 正在运行/手动";
+        TxtWerSvcStatus.Foreground = werDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleWerSvc.Content = werDisabled ? "恢复服务" : "禁用服务";
+    }
+
+    private void BtnRefreshRedundantServices_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshRedundantServicesStatus();
+    }
+
+    private void BtnToggleSpooler_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _debloatExtraService.IsSpoolerDisabled();
+        var res = _debloatExtraService.SetSpoolerDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "操作结果", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshRedundantServicesStatus();
+    }
+
+    private void BtnToggleXbox_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _debloatExtraService.IsXboxServicesDisabled();
+        var res = _debloatExtraService.SetXboxServicesDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "操作结果", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshRedundantServicesStatus();
+    }
+
+    private void BtnToggleWerSvc_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _debloatExtraService.IsWerSvcDisabled();
+        var res = _debloatExtraService.SetWerSvcDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "操作结果", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshRedundantServicesStatus();
+    }
+
+    private void BtnDisableAllRedundantServices_Click(object sender, RoutedEventArgs e)
+    {
+        var res = _debloatExtraService.SetAllDevRedundantServicesDisabled(true);
+        MessageBox.Show(res.Message, "一键精简结果", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshRedundantServicesStatus();
     }
 
     #endregion

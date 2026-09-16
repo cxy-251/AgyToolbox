@@ -6,6 +6,7 @@ namespace AgyToolbox.Services;
 public record StartupItemInfo(string Name, string Command, string Scope);
 public record OemAppInfo(string Name, string Vendor, string Description, string DebloatAdvice, bool IsDetected);
 public record FodFeatureInfo(string Key, string DisplayName, string CapabilityName, string Description, string DebloatAdvice, bool IsInstalled);
+public record VirtFeatureInfo(string Key, string DisplayName, string FeatureName, string Description, string DebloatAdvice, bool IsEnabled);
 
 public class DebloatExtraService
 {
@@ -548,6 +549,296 @@ Enable-ScheduledTask -TaskPath '\Microsoft\Windows\Feedback\Siuf\' -TaskName 'Dm
                 return (false, $"卸载可选功能异常: {ex.Message}");
             }
         });
+    }
+
+    #endregion
+
+    #region 原生开发虚拟化与底层组件剥离 (WSL / 虚拟机平台 / Hyper-V / 沙盒)
+
+    private static readonly (string Key, string DisplayName, string FeatureName, string Description, string DebloatAdvice)[] KnownVirtFeatures =
+    [
+        (
+            "WSL",
+            "WSL 2 (适用于 Linux 的 Windows 子系统)",
+            "Microsoft-Windows-Subsystem-Linux",
+            "在 Windows 上运行 Linux ELF64 二进制文件与轻量虚拟机的框架。纯 Windows 原生开发机无需此环境。",
+            "关闭后移除 WSL 内核与守护进程，避免虚拟磁盘驱动与网络桥接服务在后台常驻。"
+        ),
+        (
+            "VMP",
+            "虚拟机平台 (Virtual Machine Platform)",
+            "VirtualMachinePlatform",
+            "WSL2 与安卓子系统 (WSA) 依赖的底层虚拟化平台。纯原生开发无需此虚拟化层支持。",
+            "关闭可减少宿主机底层设备虚拟化拦截与内存映射开销。"
+        ),
+        (
+            "HyperV",
+            "Hyper-V 全套虚拟化组件",
+            "Microsoft-Hyper-V-All",
+            "微软企业级 Type-1 虚拟机监控程序与配套管理工具。开启时 Windows 运行在 Hypervisor 根分区之上。",
+            "对于裸机本地原生开发，关闭 Hyper-V 可避免宿主 CPU 调度与时间片虚拟化损耗。"
+        ),
+        (
+            "Sandbox",
+            "Windows 沙盒 (Windows Sandbox)",
+            "Containers-DisposableClientVM",
+            "基于容器的轻量级纯净隔离运行沙盒环境，运行依赖于专用容器运行时与底层 Hyper-V 支撑。",
+            "若不需要动态临时测试不受信软件，可关闭以释放容器运行时依赖。"
+        )
+    ];
+
+    /// <summary>
+    /// 获取虚拟化组件状态列表
+    /// </summary>
+    public List<VirtFeatureInfo> GetVirtualizationFeatures()
+    {
+        var result = new List<VirtFeatureInfo>();
+        try
+        {
+            // WSL 检测: LxssManager / WslService 存在或 wsl.exe 存在
+            bool wslEnabled = false;
+            using (var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\LxssManager"))
+            {
+                if (key != null) wslEnabled = true;
+            }
+            if (!wslEnabled)
+            {
+                using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\WslService");
+                if (key != null) wslEnabled = true;
+            }
+
+            // VMP 检测: vmcompute 容器计算服务
+            bool vmpEnabled = false;
+            using (var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\vmcompute"))
+            {
+                if (key != null) vmpEnabled = true;
+            }
+
+            // Hyper-V 检测: vmms 虚拟机管理服务
+            bool hypervEnabled = false;
+            using (var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\vmms"))
+            {
+                if (key != null) hypervEnabled = true;
+            }
+
+            // Sandbox 检测: WindowsSandbox.exe 是否存在
+            bool sandboxEnabled = File.Exists(@"C:\Windows\System32\WindowsSandbox.exe");
+
+            foreach (var item in KnownVirtFeatures)
+            {
+                bool isEnabled = item.Key switch
+                {
+                    "WSL" => wslEnabled,
+                    "VMP" => vmpEnabled,
+                    "HyperV" => hypervEnabled,
+                    "Sandbox" => sandboxEnabled,
+                    _ => false
+                };
+                result.Add(new VirtFeatureInfo(item.Key, item.DisplayName, item.FeatureName, item.Description, item.DebloatAdvice, isEnabled));
+            }
+        }
+        catch
+        {
+            foreach (var item in KnownVirtFeatures)
+            {
+                result.Add(new VirtFeatureInfo(item.Key, item.DisplayName, item.FeatureName, item.Description, item.DebloatAdvice, false));
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 在管理员控制台通过 DISM 禁用单个虚拟化特性
+    /// </summary>
+    public (bool Success, string Message) DisableVirtFeatureInConsole(string featureName)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/k echo [正在执行 Windows 原生可选功能关闭: {featureName}] && dism.exe /online /norestart /disable-feature /featurename:{featureName}",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, $"已呼出管理员终端执行关闭 [{featureName}] 指令！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"执行异常: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 一键在管理员控制台批量关闭所有 4 项虚拟化与虚拟机底层特性
+    /// </summary>
+    public (bool Success, string Message) DisableAllVirtFeaturesInConsole()
+    {
+        try
+        {
+            string batchCmd = "echo [正在一键关闭纯原生开发不需要的所有虚拟化与虚拟机底层组件...] " +
+                "&& dism.exe /online /norestart /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux " +
+                "&& dism.exe /online /norestart /disable-feature /featurename:VirtualMachinePlatform " +
+                "&& dism.exe /online /norestart /disable-feature /featurename:Microsoft-Hyper-V-All " +
+                "&& dism.exe /online /norestart /disable-feature /featurename:Containers-DisposableClientVM " +
+                "&& echo. && echo [全部虚拟化组件关闭指令执行完毕！如提示需要重启系统生效，请按需重启。]";
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/k {batchCmd}",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, "已呼出管理员控制台一键执行全套虚拟化组件关闭指令！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"执行失败: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    #region 开发机冗余后台服务精简 (Spooler / Xbox / WerSvc)
+
+    /// <summary>
+    /// 检测打印机后台服务 (Spooler) 是否已被禁用
+    /// </summary>
+    public bool IsSpoolerDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Spooler");
+            var val = key?.GetValue("Start");
+            return val is int intVal && intVal == 4; // 4 = Disabled
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 停用或恢复打印机后台服务 (Spooler)
+    /// </summary>
+    public (bool Success, string Message) SetSpoolerDisabled(bool disable)
+    {
+        try
+        {
+            var script = disable
+                ? "Stop-Service -Name 'Spooler' -Force -ErrorAction SilentlyContinue; Set-Service -Name 'Spooler' -StartupType Disabled -ErrorAction SilentlyContinue"
+                : "Set-Service -Name 'Spooler' -StartupType Automatic -ErrorAction SilentlyContinue; Start-Service -Name 'Spooler' -ErrorAction SilentlyContinue";
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(5000);
+
+            return (true, disable ? "已成功停止并禁用打印机后台服务 (Spooler)！" : "已恢复打印机后台服务自动启动。");
+        }
+        catch (Exception ex) { return (false, $"设置打印机服务失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 Xbox 游戏生态服务是否已禁用
+    /// </summary>
+    public bool IsXboxServicesDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\XblAuthManager");
+            var val = key?.GetValue("Start");
+            return val is int intVal && intVal == 4;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 停用或恢复 Xbox 游戏生态全套后台服务
+    /// </summary>
+    public (bool Success, string Message) SetXboxServicesDisabled(bool disable)
+    {
+        try
+        {
+            var services = "'XblAuthManager', 'XblGameSave', 'XboxNetApiSvc', 'XboxGipSvc'";
+            var script = disable
+                ? $"@({services}) | ForEach-Object {{ Stop-Service -Name $_ -Force -ErrorAction SilentlyContinue; Set-Service -Name $_ -StartupType Disabled -ErrorAction SilentlyContinue }}"
+                : $"@({services}) | ForEach-Object {{ Set-Service -Name $_ -StartupType Manual -ErrorAction SilentlyContinue }}";
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(5000);
+
+            return (true, disable ? "已成功禁用 Xbox 全套游戏后台服务！" : "已恢复 Xbox 服务默认设置。");
+        }
+        catch (Exception ex) { return (false, $"设置 Xbox 服务失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 Windows 错误报告服务 (WerSvc) 是否已禁用
+    /// </summary>
+    public bool IsWerSvcDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\WerSvc");
+            var val = key?.GetValue("Start");
+            return val is int intVal && intVal == 4;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 停用或恢复 Windows 错误报告服务 (WerSvc)
+    /// </summary>
+    public (bool Success, string Message) SetWerSvcDisabled(bool disable)
+    {
+        try
+        {
+            var script = disable
+                ? "Stop-Service -Name 'WerSvc' -Force -ErrorAction SilentlyContinue; Set-Service -Name 'WerSvc' -StartupType Disabled -ErrorAction SilentlyContinue"
+                : "Set-Service -Name 'WerSvc' -StartupType Manual -ErrorAction SilentlyContinue";
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(5000);
+
+            return (true, disable ? "已成功禁用 Windows 错误报告后台服务 (WerSvc)！" : "已恢复错误报告服务默认设置。");
+        }
+        catch (Exception ex) { return (false, $"设置错误报告服务失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 一键精简开发机所有低频冗余后台服务
+    /// </summary>
+    public (bool Success, string Message) SetAllDevRedundantServicesDisabled(bool disable)
+    {
+        SetSpoolerDisabled(disable);
+        SetXboxServicesDisabled(disable);
+        SetWerSvcDisabled(disable);
+        return (true, disable
+            ? "已一键禁用打印机 (Spooler)、Xbox 全套服务及错误报告 (WerSvc)！"
+            : "已一键恢复上述开发机服务默认配置。");
     }
 
     #endregion

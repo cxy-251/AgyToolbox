@@ -36,6 +36,7 @@ public partial class SystemOptView : UserControl
         RefreshReservedStorageStatus();
         RefreshStorageSenseStatus();
         RefreshExplorerSettings();
+        RefreshDevIoStatus();
     }
 
     #region 1. Windows 自动更新彻底控制
@@ -550,6 +551,125 @@ public partial class SystemOptView : UserControl
         var paths = _pathItems.Select(p => p.Path).ToList();
         var (ok, msg) = _envManagerService.SavePathEntries(isSystem, paths);
         MessageBox.Show(msg, ok ? "保存成功" : "保存失败", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    #endregion
+
+    #region 10. 原生开发 CPU 与磁盘 I/O 调优
+
+    private void RefreshDevIoStatus()
+    {
+        // 1. Defender 实时防护
+        bool defenderDisabled = _winOptimizerService.IsDefenderRealtimeDisabled();
+        TxtDefenderRealtimeStatus.Text = defenderDisabled ? "● 实时监控已关闭 (编译免扫描)" : "○ 实时监控已开启";
+        TxtDefenderRealtimeStatus.Foreground = defenderDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleDefenderRealtime.Content = defenderDisabled ? "开启实时防护" : "关闭实时防护";
+
+        // 2. SmartScreen
+        bool smartScreenDisabled = _winOptimizerService.IsSmartScreenDisabled();
+        TxtSmartScreenStatus.Text = smartScreenDisabled ? "● 筛选器已禁用 (免弹窗拦截)" : "○ 筛选器已开启";
+        TxtSmartScreenStatus.Foreground = smartScreenDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleSmartScreen.Content = smartScreenDisabled ? "开启 SmartScreen" : "关闭 SmartScreen";
+
+        // 3. WSearch
+        bool wsearchDisabled = _winOptimizerService.IsWSearchDisabled();
+        TxtWSearchStatus.Text = wsearchDisabled ? "● 索引服务已禁用 (零磁盘后台占用)" : "○ 正在运行/自动";
+        TxtWSearchStatus.Foreground = wsearchDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleWSearch.Content = wsearchDisabled ? "开启索引服务" : "禁用索引服务";
+
+        // 4. SysMain
+        bool sysmainDisabled = _winOptimizerService.IsSysMainDisabled();
+        TxtSysMainStatus.Text = sysmainDisabled ? "● 内存预载已禁用 (释放 CPU/内存)" : "○ 正在运行/自动";
+        TxtSysMainStatus.Foreground = sysmainDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleSysMain.Content = sysmainDisabled ? "开启预载服务" : "禁用预载服务";
+
+        // 5. 空闲维护
+        bool idleMaintenanceDisabled = _winOptimizerService.IsIdleMaintenanceDisabled();
+        TxtIdleMaintenanceStatus.Text = idleMaintenanceDisabled ? "● 空闲维护已关闭 (防挂机被抢占)" : "○ 默认自动维护";
+        TxtIdleMaintenanceStatus.Foreground = idleMaintenanceDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleIdleMaintenance.Content = idleMaintenanceDisabled ? "恢复自动维护" : "关闭自动维护";
+
+        // 6. HVCI
+        bool hvciDisabled = _winOptimizerService.IsHvciDisabled();
+        TxtHvciStatus.Text = hvciDisabled ? "● 内核隔离已关闭 (满血裸机原生算力)" : "○ 内核隔离已开启/默认";
+        TxtHvciStatus.Foreground = hvciDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleHvci.Content = hvciDisabled ? "开启内核隔离" : "关闭内核隔离";
+    }
+
+    private void BtnRefreshDevIoStatus_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshDevIoStatus();
+        MessageBox.Show("原生开发 CPU 与 I/O 状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnToggleDefenderRealtime_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsDefenderRealtimeDisabled();
+        var res = _winOptimizerService.SetDefenderRealtimeDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "Defender 实时监控策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleSmartScreen_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsSmartScreenDisabled();
+        var res = _winOptimizerService.SetSmartScreenDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "SmartScreen 策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnInjectDevExclusions_Click(object sender, RoutedEventArgs e)
+    {
+        var res = _winOptimizerService.InjectNativeDevExclusions();
+        MessageBox.Show(res.Message, "白名单注入结果", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleWSearch_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsWSearchDisabled();
+        var res = _winOptimizerService.SetWSearchDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "Windows Search 状态变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnCleanWindowsEdb_Click(object sender, RoutedEventArgs e)
+    {
+        var confirm = MessageBox.Show(
+            "确定要清理 Windows Search 的索引数据库缓存 (Windows.edb) 吗？\n\n该操作将停止索引服务并删除缓存索引，直接释放历史积累的磁盘空间，不会影响您的源代码文件。",
+            "确认清理索引数据库",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (confirm == MessageBoxResult.Yes)
+        {
+            var res = _winOptimizerService.CleanWindowsEdb();
+            MessageBox.Show(res.Message, "清理结果", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+            RefreshDevIoStatus();
+        }
+    }
+
+    private void BtnToggleSysMain_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsSysMainDisabled();
+        var res = _winOptimizerService.SetSysMainDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "SysMain 状态变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleIdleMaintenance_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsIdleMaintenanceDisabled();
+        var res = _winOptimizerService.SetIdleMaintenanceDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "自动维护策略变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleHvci_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsHvciDisabled();
+        var res = _winOptimizerService.SetHvciDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "HVCI 策略变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
     }
 
     #endregion

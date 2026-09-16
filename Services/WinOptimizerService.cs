@@ -876,4 +876,329 @@ public class WinOptimizerService
     }
 
     #endregion
+
+    #region 步骤二强化：原生开发机 CPU 与磁盘 I/O 性能释放 (WSearch / Defender / SysMain / 空闲维护 / HVCI)
+
+    /// <summary>
+    /// 检测 Windows Search (WSearch) 索引服务是否已禁用
+    /// </summary>
+    public bool IsWSearchDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\WSearch");
+            var val = key?.GetValue("Start");
+            return val is int intVal && intVal == 4;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 停用或开启 Windows Search 索引服务
+    /// </summary>
+    public (bool Success, string Message) SetWSearchDisabled(bool disable)
+    {
+        try
+        {
+            var script = disable
+                ? "Stop-Service -Name 'WSearch' -Force -ErrorAction SilentlyContinue; Set-Service -Name 'WSearch' -StartupType Disabled -ErrorAction SilentlyContinue"
+                : "Set-Service -Name 'WSearch' -StartupType Automatic -ErrorAction SilentlyContinue; Start-Service -Name 'WSearch' -ErrorAction SilentlyContinue";
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(6000);
+
+            return (true, disable
+                ? "已成功停止并禁用 Windows Search (WSearch) 索引服务！\n避免后台持续扫描源码工程占用 CPU 与磁盘 I/O。"
+                : "已恢复 Windows Search 索引服务自动启动。");
+        }
+        catch (Exception ex) { return (false, $"设置索引服务失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 一键清理并释放 Windows.edb 索引数据库历史占用空间
+    /// </summary>
+    public (bool Success, string Message) CleanWindowsEdb()
+    {
+        try
+        {
+            string script = @"
+Stop-Service -Name 'WSearch' -Force -ErrorAction SilentlyContinue
+$path = 'C:\ProgramData\Microsoft\Search\Data\Applications\Windows'
+$freed = 0
+if (Test-Path $path) {
+    Get-ChildItem -Path $path -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
+        $freed += $_.Length
+        Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
+    }
+}
+[math]::Round($freed / 1MB, 2)
+";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string outStr = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "0";
+            proc?.WaitForExit(8000);
+
+            return (true, $"已成功清理 Windows Search 索引数据库缓存，已释放约 {outStr} MB 磁盘空间！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"清理索引数据库异常: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测 SysMain (原 Superfetch) 内存预载服务是否已禁用
+    /// </summary>
+    public bool IsSysMainDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\SysMain");
+            var val = key?.GetValue("Start");
+            return val is int intVal && intVal == 4;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 停用或恢复 SysMain 服务
+    /// </summary>
+    public (bool Success, string Message) SetSysMainDisabled(bool disable)
+    {
+        try
+        {
+            var script = disable
+                ? "Stop-Service -Name 'SysMain' -Force -ErrorAction SilentlyContinue; Set-Service -Name 'SysMain' -StartupType Disabled -ErrorAction SilentlyContinue"
+                : "Set-Service -Name 'SysMain' -StartupType Automatic -ErrorAction SilentlyContinue; Start-Service -Name 'SysMain' -ErrorAction SilentlyContinue";
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(5000);
+
+            return (true, disable
+                ? "已成功停止并禁用 SysMain 服务！\n在高速 NVMe SSD 开发机上消除了后台无谓的内存页面换进换出与压缩。"
+                : "已恢复 SysMain 默认自动运行。");
+        }
+        catch (Exception ex) { return (false, $"设置 SysMain 异常: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测是否已关闭空闲自动维护任务
+    /// </summary>
+    public bool IsIdleMaintenanceDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance");
+            var val = key?.GetValue("MaintenanceDisabled");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭空闲自动维护任务 (防止编译挂机时突然被抢占 CPU)
+    /// </summary>
+    public (bool Success, string Message) SetIdleMaintenanceDisabled(bool disable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance");
+            key.SetValue("MaintenanceDisabled", disable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, disable
+                ? "已成功关闭【空闲自动维护】！\n防止系统在无人操作或长耗时编译挂机时突然抢占 CPU 和磁盘 I/O。"
+                : "已恢复系统默认自动维护策略。");
+        }
+        catch (Exception ex) { return (false, $"设置自动维护失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 Defender 实时防护监控是否已关闭
+    /// </summary>
+    public bool IsDefenderRealtimeDisabled()
+    {
+        try
+        {
+            // 先读组策略注册表
+            using var polKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection");
+            if (polKey?.GetValue("DisableRealtimeMonitoring") is int intVal && intVal == 1) return true;
+
+            // 调用快速查询
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = "-NoProfile -ExecutionPolicy Bypass -Command \"(Get-MpPreference).DisableRealtimeMonitoring\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string outStr = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(3000);
+            return outStr.Equals("True", StringComparison.OrdinalIgnoreCase);
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 Defender 实时监控
+    /// </summary>
+    public (bool Success, string Message) SetDefenderRealtimeDisabled(bool disable)
+    {
+        try
+        {
+            var script = disable
+                ? "Set-MpPreference -DisableRealtimeMonitoring $true"
+                : "Set-MpPreference -DisableRealtimeMonitoring $false";
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(5000);
+
+            // 同时写入策略键
+            using var polKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection");
+            polKey.SetValue("DisableRealtimeMonitoring", disable ? 1 : 0, RegistryValueKind.DWord);
+
+            return (true, disable
+                ? "已关闭 Defender 实时监控！\n彻底解除 MsMpEng.exe 对编译器与中间小文件的句柄劫持扫描。\n(注：Windows 篡改防护若开启可能会在重启后提示还原)"
+                : "已恢复 Defender 实时监控。");
+        }
+        catch (Exception ex) { return (false, $"设置 Defender 实时防护失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 SmartScreen 筛选器是否已禁用
+    /// </summary>
+    public bool IsSmartScreenDisabled()
+    {
+        try
+        {
+            using var sysKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System");
+            var val = sysKey?.GetValue("EnableSmartScreen");
+            if (val is int intVal && intVal == 0) return true;
+            if (val is string strVal && (strVal.Equals("Off", StringComparison.OrdinalIgnoreCase) || strVal == "0")) return true;
+
+            using var userKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\AppHost");
+            var ev = userKey?.GetValue("EnableWebContentEvaluation");
+            return ev is int evVal && evVal == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 SmartScreen 筛选器
+    /// </summary>
+    public (bool Success, string Message) SetSmartScreenDisabled(bool disable)
+    {
+        try
+        {
+            using var sysKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\System");
+            sysKey.SetValue("EnableSmartScreen", disable ? 0 : 1, RegistryValueKind.DWord);
+
+            using var userKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\AppHost");
+            userKey.SetValue("EnableWebContentEvaluation", disable ? 0 : 1, RegistryValueKind.DWord);
+
+            return (true, disable
+                ? "已关闭 SmartScreen 筛选器！\n运行自编译可执行文件或通过命令行下载工具链时不再触发阻断拦截。"
+                : "已恢复 SmartScreen 筛选器。");
+        }
+        catch (Exception ex) { return (false, $"设置 SmartScreen 失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 一键为 Windows Defender 注入原生开发目录与编译器进程白名单 (安全与性能兼顾方案)
+    /// </summary>
+    public (bool Success, string Message) InjectNativeDevExclusions()
+    {
+        try
+        {
+            string script = @"
+$paths = @('C:\02Programmer', 'C:\Dev', 'D:\Dev', 'D:\Code', 'C:\Users\*\AppData\Local\Temp')
+$procs = @('cl.exe', 'csc.exe', 'dotnet.exe', 'rustc.exe', 'cargo.exe', 'go.exe', 'gcc.exe', 'g++.exe', 'msbuild.exe', 'ninja.exe', 'cmake.exe', 'link.exe')
+foreach ($p in $paths) {
+    if (Test-Path ($p.Replace('*', $env:USERNAME))) {
+        Add-MpPreference -ExclusionPath $p -ErrorAction SilentlyContinue
+    }
+}
+Add-MpPreference -ExclusionProcess $procs -ErrorAction SilentlyContinue
+";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(6000);
+
+            return (true, "已成功将常用开发目录 (C:\\02Programmer, C:\\Dev, D:\\Dev 等) 与 12 种主流编译器进程注入 Defender 豁免白名单！\n编译与构建速度将显著提升。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"注入开发白名单失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测 HVCI 内存完整性 (HypervisorEnforcedCodeIntegrity) 是否已关闭
+    /// </summary>
+    public bool IsHvciDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity");
+            var val = key?.GetValue("Enabled");
+            return val is int intVal && intVal == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 HVCI 内存完整性 (关闭可消除虚拟化内核层带来的 5%~15% 原生性能折损)
+    /// </summary>
+    public (bool Success, string Message) SetHvciDisabled(bool disable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity");
+            key.SetValue("Enabled", disable ? 0 : 1, RegistryValueKind.DWord);
+            return (true, disable
+                ? "已关闭 HVCI 内存完整性策略！(需重启电脑生效)\n消除基于虚拟化的安全内核隔离对高频系统调用的性能折损。"
+                : "已恢复 HVCI 内存完整性开启。(需重启生效)");
+        }
+        catch (Exception ex) { return (false, $"设置 HVCI 失败: {ex.Message}"); }
+    }
+
+    #endregion
 }

@@ -159,6 +159,56 @@
                                 </DataGrid>
                             </StackPanel>
                         </Border>
+
+                        <!-- 板块 4: 原生开发虚拟化与底层虚拟机组件剥离 (WSL / Hyper-V / 虚拟机平台 / 沙盒) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,14,0,0">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="⚡ 4. 原生开发虚拟化与底层组件剥离 (WSL / Hyper-V / 沙盒)" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (面向纯原生开发机，关闭无用虚拟化层以消除 CPU 调度损耗与后台常驻)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Content="⚡ 一键关闭全部虚拟化组件" Background="#EF4444" Margin="0,0,6,0" Click="BtnDisableAllVirt_Click"/>
+                                        <Button Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnScanVirt_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <TextBlock Text="💡 原生开发减负说明：若本机专注于 Windows 本地原生软件开发（C/C++、.NET、Rust、Go 等），无需运行 Linux 虚拟机容器或 Windows 沙盒。通过 DISM 关闭这些底层平台，可避免 Windows 运行在 Hypervisor 根分区之上，彻底移除后台虚拟磁盘与网络桥接驱动常驻。" FontSize="11" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
+                                </Border>
+
+                                <DataGrid x:Name="GridVirtFeatures" AutoGenerateColumns="False" IsReadOnly="True" Height="170"
+                                          Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" RowHeight="34" GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="虚拟化组件名称" Binding="{Binding DisplayName}" Width="230"/>
+                                        <DataGridTextColumn Header="底层功能与影响" Binding="{Binding Description}" Width="2*"/>
+                                        <DataGridTextColumn Header="原生剥离建议" Binding="{Binding DebloatAdvice}" Width="2*"/>
+                                        <DataGridTemplateColumn Header="当前状态" Width="95">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="6,0"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="操作" Width="85">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="关闭" Style="{DynamicResource SecondaryButton}" Height="24" Padding="6,0"
+                                                            IsEnabled="{Binding IsEnabled}" Click="BtnDisableSingleVirt_Click"
+                                                            Tag="{Binding FeatureName}"/>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -427,7 +477,7 @@
                                                     </StackPanel>
                                                     <TextBlock Text="管理系统自带的 Consolidator、UsbCeip、KernelCeipTask 及 DmClient 周期性数据上报触发器。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
                                                 </StackPanel>
-                                                <Button x:Name="BtnToggleCeip" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleCeip_Click"/>
+                                                 <Button x:Name="BtnToggleCeip" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleCeip_Click"/>
                                             </Grid>
                                         </Border>
                                     </StackPanel>
@@ -435,7 +485,85 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 板块 3: 开机自启项管理 -->
+                        <!-- 板块 3: 开发机低频冗余服务精简 (Spooler / Xbox / WerSvc) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🛠️ 3. 开发机低频冗余后台服务精简" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text=" (停用打印机后台、Xbox游戏生态及错误报告服务，释放内存常驻)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Content="🛡️ 一键精简冗余服务" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,0" Click="BtnDisableAllRedundantServices_Click"/>
+                                        <Button Content="🔄 刷新" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshRedundantServices_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 3.1 打印后台服务 Spooler -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="打印后台处理服务 (Print Spooler - Spooler)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtSpoolerStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="管理所有本地与网络打印作业。若为无外接打印机的纯写代码开发机，禁用可阻断历史高危漏洞攻击面并节省内存。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleSpooler" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleSpooler_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 3.2 Xbox 游戏生态服务 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Xbox 游戏全套后台守护服务 (XblAuthManager / XblGameSave / XboxNetApiSvc)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtXboxStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="Windows 默认预装的游戏同步、成就与网络服务。在专注开发的机器上无任何作用，可一键全面禁用。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleXbox" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleXbox_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 3.3 Windows 错误报告服务 WerSvc -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Windows 错误报告与诊断推送服务 (WerSvc)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtWerSvcStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                    <TextBlock Text="当程序崩溃时生成 Dump 并尝试向微软云端上传报告。对于开发者通常使用 IDE 自行调试，可停用该后台服务。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleWerSvc" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleWerSvc_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 4: 开机自启项管理 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
@@ -444,7 +572,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🚀 3. 开机自启动项 (Startup Items) 审查与管理" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text="🚀 4. 开机自启动项 (Startup Items) 审查与管理" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
                                         <TextBlock Text=" (审查注册表 Run 启动项，管理常驻后台进程)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <Button Grid.Column="1" Content="🔄 刷新启动项" Style="{DynamicResource SecondaryButton}" Click="BtnReloadStartup_Click"/>
