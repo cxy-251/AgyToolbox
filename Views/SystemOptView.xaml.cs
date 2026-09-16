@@ -666,6 +666,18 @@ public partial class SystemOptView : UserControl
         TxtPagingExecutiveStatus.Text = pagingExecutiveDisabled ? "● 内核与驱动常驻 RAM (零换出卡顿)" : "○ 允许内核分页换出";
         TxtPagingExecutiveStatus.Foreground = pagingExecutiveDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
         BtnTogglePagingExecutive.Content = pagingExecutiveDisabled ? "恢复默认分页" : "内核常驻内存";
+
+        // 17. Windows Update 登录免强制重启
+        bool autoRebootDisabled = _winOptimizerService.IsAutoRebootDisabled();
+        TxtAutoRebootStatus.Text = autoRebootDisabled ? "● 免重启保护已开启 (登录时不强制重启)" : "○ 系统默认强制自动重启";
+        TxtAutoRebootStatus.Foreground = autoRebootDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleAutoReboot.Content = autoRebootDisabled ? "恢复默认重启" : "开启免重启保护";
+
+        // 18. GameDVR 与后台录屏开销禁用
+        bool gameDvrDisabled = _winOptimizerService.IsGameDvrDisabled();
+        TxtGameDvrStatus.Text = gameDvrDisabled ? "● GameDVR 已彻底禁用 (图形钩子释放)" : "○ 默认后台挂钩与录屏";
+        TxtGameDvrStatus.Foreground = gameDvrDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleGameDvr.Content = gameDvrDisabled ? "开启 GameDVR" : "彻底禁用 GameDVR";
     }
 
     private void BtnRefreshDevIoStatus_Click(object sender, RoutedEventArgs e)
@@ -821,6 +833,22 @@ public partial class SystemOptView : UserControl
         bool isCurrentlyDisabled = _winOptimizerService.IsPagingExecutiveDisabled();
         var res = _winOptimizerService.SetPagingExecutiveDisabled(!isCurrentlyDisabled);
         MessageBox.Show(res.Message, "内核常驻物理内存策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleAutoReboot_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsAutoRebootDisabled();
+        var res = _winOptimizerService.SetAutoRebootDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "Windows Update 重启策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleGameDvr_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsGameDvrDisabled();
+        var res = _winOptimizerService.SetGameDvrDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "GameDVR 策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshDevIoStatus();
     }
 

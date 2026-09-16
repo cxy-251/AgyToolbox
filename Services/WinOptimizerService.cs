@@ -1650,5 +1650,84 @@ Add-MpPreference -ExclusionProcess $procs -ErrorAction SilentlyContinue
         catch (Exception ex) { return (false, $"配置内核常驻内存失败: {ex.Message}"); }
     }
 
+    /// <summary>
+    /// 检测 Windows Update 是否已禁止在有用户登录时强制自动重启
+    /// </summary>
+    public bool IsAutoRebootDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU");
+            var val = key?.GetValue("NoAutoRebootWithLoggedOnUsers");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 Windows Update 登录态免自动重启 (开发构建与长时间运算不被打断)
+    /// </summary>
+    public (bool Success, string Message) SetAutoRebootDisabled(bool disable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU");
+            key.SetValue("NoAutoRebootWithLoggedOnUsers", disable ? 1 : 0, RegistryValueKind.DWord);
+            if (disable)
+            {
+                key.SetValue("AlwaysAutoRebootAtScheduledTime", 0, RegistryValueKind.DWord);
+            }
+            return (true, disable
+                ? "已开启【Windows Update 登录态免重启保护】！\n只要有用户登录系统，Windows Update 绝不会强制重启打断编译或任务。"
+                : "已恢复 Windows Update 默认自动重启策略。");
+        }
+        catch (Exception ex) { return (false, $"配置 Windows Update 重启策略失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 GameDVR / 屏幕录制后台捕获是否已禁用
+    /// </summary>
+    public bool IsGameDvrDisabled()
+    {
+        try
+        {
+            using var cuKey = Registry.CurrentUser.OpenSubKey(@"System\GameConfigStore");
+            var val = cuKey?.GetValue("GameDVR_Enabled");
+            if (val is int intVal && intVal == 0) return true;
+
+            using var lmKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Windows\GameDVR");
+            var allow = lmKey?.GetValue("AllowGameDVR");
+            return allow is int allowVal && allowVal == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 GameDVR 与后台捕获 (消除 DirectX/Vulkan 渲染管道后台钩子开销)
+    /// </summary>
+    public (bool Success, string Message) SetGameDvrDisabled(bool disable)
+    {
+        try
+        {
+            using (var cuKey = Registry.CurrentUser.CreateSubKey(@"System\GameConfigStore"))
+            {
+                cuKey.SetValue("GameDVR_Enabled", disable ? 0 : 1, RegistryValueKind.DWord);
+            }
+            using (var lmKey = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Policies\Microsoft\Windows\GameDVR"))
+            {
+                lmKey.SetValue("AllowGameDVR", disable ? 0 : 1, RegistryValueKind.DWord);
+            }
+            using (var dvrKey = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR"))
+            {
+                dvrKey.SetValue("AppCaptureEnabled", disable ? 0 : 1, RegistryValueKind.DWord);
+            }
+
+            return (true, disable
+                ? "已禁用 GameDVR 与后台录屏捕获！\n剥离图形渲染管道 Direct3D/Vulkan 后台截取钩子，释放 GPU 运算与渲染性能。"
+                : "已恢复 GameDVR 默认配置。");
+        }
+        catch (Exception ex) { return (false, $"配置 GameDVR 失败: {ex.Message}"); }
+    }
+
     #endregion
 }
