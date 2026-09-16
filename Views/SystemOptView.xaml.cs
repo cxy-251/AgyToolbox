@@ -594,6 +594,66 @@ public partial class SystemOptView : UserControl
         TxtHvciStatus.Text = hvciDisabled ? "● 内核隔离已关闭 (满血裸机原生算力)" : "○ 内核隔离已开启/默认";
         TxtHvciStatus.Foreground = hvciDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
         BtnToggleHvci.Content = hvciDisabled ? "开启内核隔离" : "关闭内核隔离";
+
+        // 7. NTFS 8.3 短文件名
+        bool ntfs8dot3Disabled = _winOptimizerService.IsNtfs8dot3Disabled();
+        TxtNtfs8dot3Status.Text = ntfs8dot3Disabled ? "● 8.3 短文件名已禁用 (零哈希碰撞)" : "○ 启用中/系统按卷";
+        TxtNtfs8dot3Status.Foreground = ntfs8dot3Disabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleNtfs8dot3.Content = ntfs8dot3Disabled ? "恢复 8.3 默认" : "禁用 8.3 名称";
+
+        // 8. NTFS 访问时间戳
+        bool lastAccessDisabled = _winOptimizerService.IsNtfsLastAccessDisabled();
+        TxtNtfsLastAccessStatus.Text = lastAccessDisabled ? "● 时间戳已禁用 (读操作零反写)" : "○ 默认系统托管/开启";
+        TxtNtfsLastAccessStatus.Foreground = lastAccessDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleNtfsLastAccess.Content = lastAccessDisabled ? "恢复默认时间戳" : "禁用访问时间戳";
+
+        // 9. NTFS 内存主缓存
+        bool ntfsMemIncreased = _winOptimizerService.IsNtfsMemoryUsageIncreased();
+        TxtNtfsMemoryStatus.Text = ntfsMemIncreased ? "● 主缓存已扩充 (加大 MFT 命中)" : "○ 系统默认缓存 (1)";
+        TxtNtfsMemoryStatus.Foreground = ntfsMemIncreased ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleNtfsMemory.Content = ntfsMemIncreased ? "恢复默认缓存" : "扩充主内存缓存";
+
+        // 10. 内存压缩
+        bool memCompDisabled = _winOptimizerService.IsMemoryCompressionDisabled();
+        TxtMemoryCompressionStatus.Text = memCompDisabled ? "● 内存压缩已禁用 (杜绝核心挤占)" : "○ 默认开启压缩";
+        TxtMemoryCompressionStatus.Foreground = memCompDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleMemoryCompression.Content = memCompDisabled ? "开启内存压缩" : "禁用内存压缩";
+
+        // 11. CPU 编译平权配额
+        bool win32PriorityOpt = _winOptimizerService.IsWin32PriorityOptimizedForDev();
+        TxtWin32PriorityStatus.Text = win32PriorityOpt ? "● 编译平权长配额 (后台失焦不降权)" : "○ 桌面默认前台高加速";
+        TxtWin32PriorityStatus.Foreground = win32PriorityOpt ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleWin32Priority.Content = win32PriorityOpt ? "恢复桌面默认" : "开启编译平权";
+
+        // 12. Localhost TCP 快速回收
+        bool tcpPortOpt = _winOptimizerService.IsTcpPortReuseOptimized();
+        TxtTcpPortReuseStatus.Text = tcpPortOpt ? "● TCP 端口 30s 回收 (池上限 65534)" : "○ 系统默认 120s~240s";
+        TxtTcpPortReuseStatus.Foreground = tcpPortOpt ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleTcpPortReuse.Content = tcpPortOpt ? "恢复默认 TCP" : "开启网络栈调优";
+
+        // 13. WER 错误报告拦截
+        bool werDisabled = _winOptimizerService.IsWerDisabled();
+        TxtWerStatus.Text = werDisabled ? "● 错误报告已拦截 (调试器秒接管)" : "○ 默认 Watson 遥测";
+        TxtWerStatus.Foreground = werDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleWer.Content = werDisabled ? "恢复 WER 报告" : "拦截错误报告";
+
+        // 14. 挂起超时与卡死快速释放
+        bool hungAppOpt = _winOptimizerService.IsHungAppTimeoutOptimized();
+        TxtHungAppStatus.Text = hungAppOpt ? "● 挂起 1s 判定/关机 2s 等待 (防死锁)" : "○ 系统默认 (5s/20s 等待)";
+        TxtHungAppStatus.Foreground = hungAppOpt ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleHungApp.Content = hungAppOpt ? "恢复默认等待" : "优化挂起超时";
+
+        // 15. 菜单零悬停延迟
+        bool menuZero = _winOptimizerService.IsMenuShowDelayZero();
+        TxtMenuShowDelayStatus.Text = menuZero ? "● 菜单延迟 0ms (即点即出极速)" : "○ 系统默认 400ms 迟滞";
+        TxtMenuShowDelayStatus.Foreground = menuZero ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleMenuShowDelay.Content = menuZero ? "恢复 400ms 默认" : "菜单延迟归零";
+
+        // 16. 内核常驻物理内存
+        bool pagingExecutiveDisabled = _winOptimizerService.IsPagingExecutiveDisabled();
+        TxtPagingExecutiveStatus.Text = pagingExecutiveDisabled ? "● 内核与驱动常驻 RAM (零换出卡顿)" : "○ 允许内核分页换出";
+        TxtPagingExecutiveStatus.Foreground = pagingExecutiveDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnTogglePagingExecutive.Content = pagingExecutiveDisabled ? "恢复默认分页" : "内核常驻内存";
     }
 
     private void BtnRefreshDevIoStatus_Click(object sender, RoutedEventArgs e)
@@ -669,6 +729,86 @@ public partial class SystemOptView : UserControl
         bool isCurrentlyDisabled = _winOptimizerService.IsHvciDisabled();
         var res = _winOptimizerService.SetHvciDisabled(!isCurrentlyDisabled);
         MessageBox.Show(res.Message, "HVCI 策略变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleNtfs8dot3_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsNtfs8dot3Disabled();
+        var res = _winOptimizerService.SetNtfs8dot3Disabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "NTFS 8.3 短文件名策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleNtfsLastAccess_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsNtfsLastAccessDisabled();
+        var res = _winOptimizerService.SetNtfsLastAccessDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "NTFS 最后访问时间戳策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleNtfsMemory_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyIncreased = _winOptimizerService.IsNtfsMemoryUsageIncreased();
+        var res = _winOptimizerService.SetNtfsMemoryUsageIncreased(!isCurrentlyIncreased);
+        MessageBox.Show(res.Message, "NTFS 内存缓存策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleMemoryCompression_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsMemoryCompressionDisabled();
+        var res = _winOptimizerService.SetMemoryCompressionDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "内存压缩策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleWin32Priority_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyOptimized = _winOptimizerService.IsWin32PriorityOptimizedForDev();
+        var res = _winOptimizerService.SetWin32PriorityOptimizedForDev(!isCurrentlyOptimized);
+        MessageBox.Show(res.Message, "CPU 线程调度配额", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleTcpPortReuse_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyOptimized = _winOptimizerService.IsTcpPortReuseOptimized();
+        var res = _winOptimizerService.SetTcpPortReuseOptimized(!isCurrentlyOptimized);
+        MessageBox.Show(res.Message, "TCP/IP 协议栈调优", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleWer_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsWerDisabled();
+        var res = _winOptimizerService.SetWerDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "Windows 错误报告策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleHungApp_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyOptimized = _winOptimizerService.IsHungAppTimeoutOptimized();
+        var res = _winOptimizerService.SetHungAppTimeoutOptimized(!isCurrentlyOptimized);
+        MessageBox.Show(res.Message, "进程超时与卡死处理", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleMenuShowDelay_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyZero = _winOptimizerService.IsMenuShowDelayZero();
+        var res = _winOptimizerService.SetMenuShowDelayZero(!isCurrentlyZero);
+        MessageBox.Show(res.Message, "菜单展开悬停延迟", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnTogglePagingExecutive_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyDisabled = _winOptimizerService.IsPagingExecutiveDisabled();
+        var res = _winOptimizerService.SetPagingExecutiveDisabled(!isCurrentlyDisabled);
+        MessageBox.Show(res.Message, "内核常驻物理内存策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshDevIoStatus();
     }
 

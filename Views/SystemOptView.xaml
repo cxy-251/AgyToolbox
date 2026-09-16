@@ -782,7 +782,7 @@
                         </Border>
 
                         <!-- 板块 4: HVCI 内存完整性 (基于虚拟化的安全性) -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -810,6 +810,246 @@
                                         </StackPanel>
                                         <Button x:Name="BtnToggleHvci" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleHvci_Click"/>
                                     </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 5: NTFS 底层文件系统吞吐调优 (8.3 短文件名 / 访问时间戳 / 缓存扩充) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="📁 5. NTFS 底层文件系统吞吐调优 (8.3 短文件名 / 访问时间戳 / 缓存池)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (大幅加速海量工程小文件读写与 node_modules 目录生成)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 5.1 NTFS 8.3 短文件名 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="禁用 NTFS 8.3 短文件名生成 (NtfsDisable8dot3NameCreation)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtNtfs8dot3Status" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="全局关闭 DOS 时代 8.3 短文件名计算。在单目录包含万级小文件（如 node_modules、git objects、C++ 中间产物）时消除碰撞散列开销，解压与创建提速 15%~30%。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleNtfs8dot3" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleNtfs8dot3_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 5.2 最后访问时间戳 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="禁用 NTFS 最后访问时间戳更新 (NtfsDisableLastAccessUpdate)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtNtfsLastAccessStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="关闭后读文件不再向 SSD 反写最后访问时间戳元数据，彻底消除读操作引起的磁盘写入放大，保护 SSD 寿命并提升读吞吐。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleNtfsLastAccess" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleNtfsLastAccess_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 5.3 内存主缓存池 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="扩充 NTFS 元数据主内存缓存池 (NtfsMemoryUsage=2)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtNtfsMemoryStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="指示 NT 缓存管理器为 NTFS 元数据（MFT 记录与目录结构）分配更大的物理内存缓存池，大幅提升高频磁盘 I/O 命中率。(需重启生效)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleNtfsMemory" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleNtfsMemory_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 6: 内存管理、CPU 调度与 Localhost 网络栈 (Memory / CPU / TCP / WER) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🚀 6. 内存管理、CPU 调度与 Localhost 网络栈 (Memory / CPU / TCP / WER)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (大内存机器去压缩、后台编译平权不降权、网络端口 30s 极速回收)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 6.1 内存压缩 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="禁用 Windows 内存压缩 (Disable-MMAgent -MemoryCompression)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtMemoryCompressionStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="适用于 32GB+ 充裕内存开发机。杜绝 CPU 核心实时压缩页面，消除重编译时多核被内核 StoreManager 抢占的微顿挫。(需重启生效)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleMemoryCompression" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleMemoryCompression_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 6.2 CPU 编译平权配额 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="CPU 编译平权长配额调度 (Win32PrioritySeparation=0x28)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtWin32PriorityStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="优化 NT 线程调度器时间片。当切到浏览器看文档时，后台的 MSBuild、Cargo、Ninja 编译工具链不受前台失焦降权克扣，全核满血持续输出。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleWin32Priority" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleWin32Priority_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 6.3 Localhost TCP 端口调优 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="Localhost 高频网络栈调优 (TcpTimedWaitDelay 30s &amp; 端口池 65534)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtTcpPortReuseStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="将 TIME_WAIT 端口回收缩短为 30 秒，动态端口池扩至 65534。彻底消除本地微服务调用、接口压测或 Vite/Webpack HMR 频繁重连导致的 10055 端口耗尽。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleTcpPortReuse" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleTcpPortReuse_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 6.4 WER 错误报告拦截 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="Windows 错误报告与 Watson 遥测拦截 (WER Disabled)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtWerStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="开发调试发生 Access Violation / 段错误时，屏蔽 WerFault.exe 挂起进程写几百兆 Dump 上传微软，秒级直接交由 VS/WinDbg 调试器接管。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleWer" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleWer_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 7: 系统响应与内核不分页注册表极致调优 (Registry Supercharge) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="⚡ 7. 系统响应与内核不分页注册表极致调优 (Registry Supercharge)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (关机卡死秒级终止、菜单展开零延迟 0ms、内核执行体常驻物理内存)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 7.1 挂起超时 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="未响应判定 1s 与关机服务等待 2s (HungAppTimeout &amp; WaitToKill)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtHungAppStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="将未响应超时从 5 秒缩至 1 秒，关机等待从 20 秒缩至 2 秒。彻底告别关机或重启时被未响应进程死锁挂起。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleHungApp" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleHungApp_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 7.2 菜单零延迟 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="菜单悬停弹出零迟滞 (MenuShowDelay = 0ms)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtMenuShowDelayStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="将系统默认的 400 毫秒菜单悬停动画等待直接抹平为 0 毫秒，所有右键菜单与级联子菜单即点即现，极度跟手流畅。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleMenuShowDelay" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleMenuShowDelay_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 7.3 内核常驻内存 -->
+                                        <Border Padding="12,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="内核执行体与驱动常驻物理内存 (DisablePagingExecutive=1)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtPagingExecutiveStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="强制 Windows 内核与驱动程序 100% 驻留高速物理内存，绝不换出至磁盘页面文件，彻底杜绝系统级 DPC 延迟与驱动调度卡顿。(需重启生效)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnTogglePagingExecutive" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnTogglePagingExecutive_Click"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
                                 </Border>
                             </StackPanel>
                         </Border>

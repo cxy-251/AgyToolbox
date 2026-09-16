@@ -1201,4 +1201,410 @@ Add-MpPreference -ExclusionProcess $procs -ErrorAction SilentlyContinue
     }
 
     #endregion
+
+    #region 11. NTFS 底层文件系统吞吐调优 (8.3 短文件名 / 访问时间戳 / 缓存扩充)
+
+    /// <summary>
+    /// 检测 NTFS 是否已全局禁用 8.3 短文件名生成
+    /// </summary>
+    public bool IsNtfs8dot3Disabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem");
+            var val = key?.GetValue("NtfsDisable8dot3NameCreation");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 NTFS 8.3 短文件名生成 (禁用后消除 node_modules 与源码目录海量小文件的目录哈希碰撞)
+    /// </summary>
+    public (bool Success, string Message) SetNtfs8dot3Disabled(bool disable)
+    {
+        try
+        {
+            int val = disable ? 1 : 2; // 1: 禁用所有卷; 2: 系统默认按卷
+            using (var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem"))
+            {
+                key.SetValue("NtfsDisable8dot3NameCreation", val, RegistryValueKind.DWord);
+            }
+
+            // 同步通过原生 fsutil 生效驱动层配置
+            var psi = new ProcessStartInfo
+            {
+                FileName = "fsutil.exe",
+                Arguments = $"8dot3name set {(disable ? "1" : "2")}",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(3000);
+
+            return (true, disable
+                ? "已成功全局禁用 NTFS 8.3 短文件名生成！\n消除海量长文件名文件在创建时的冲突散列计算，提升工程目录构建吞吐。"
+                : "已恢复 NTFS 8.3 短文件名默认配置。");
+        }
+        catch (Exception ex) { return (false, $"配置 8.3 短文件名失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测是否已禁用 NTFS 最后访问时间戳更新 (NtfsDisableLastAccessUpdate)
+    /// </summary>
+    public bool IsNtfsLastAccessDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem");
+            var val = key?.GetValue("NtfsDisableLastAccessUpdate");
+            return val is int intVal && (intVal == 1 || intVal == 3);
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 NTFS 最后访问时间戳更新 (关闭后避免纯读文件触发元数据写盘放大)
+    /// </summary>
+    public (bool Success, string Message) SetNtfsLastAccessDisabled(bool disable)
+    {
+        try
+        {
+            int val = disable ? 1 : 2; // 1: 禁用更新; 2: 恢复系统托管
+            using (var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem"))
+            {
+                key.SetValue("NtfsDisableLastAccessUpdate", val, RegistryValueKind.DWord);
+            }
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "fsutil.exe",
+                Arguments = $"behavior set disablelastaccess {(disable ? "1" : "2")}",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(3000);
+
+            return (true, disable
+                ? "已成功禁用 NTFS 最后访问时间戳记录！\n读取源码或编译时不再向 SSD 反写时间戳元数据，杜绝 I/O 放大。"
+                : "已恢复 NTFS 访问时间戳系统托管模式。");
+        }
+        catch (Exception ex) { return (false, $"配置访问时间戳失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 NTFS 物理内存主缓存池是否已扩充 (NtfsMemoryUsage = 2)
+    /// </summary>
+    public bool IsNtfsMemoryUsageIncreased()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem");
+            var val = key?.GetValue("NtfsMemoryUsage");
+            return val is int intVal && intVal == 2;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 扩充或恢复 NTFS 文件系统元数据内存缓存池
+    /// </summary>
+    public (bool Success, string Message) SetNtfsMemoryUsageIncreased(bool increase)
+    {
+        try
+        {
+            int val = increase ? 2 : 1;
+            using (var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\FileSystem"))
+            {
+                key.SetValue("NtfsMemoryUsage", val, RegistryValueKind.DWord);
+            }
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = "fsutil.exe",
+                Arguments = $"behavior set memoryusage {(increase ? "2" : "1")}",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(3000);
+
+            return (true, increase
+                ? "已成功扩充 NTFS 文件系统元数据内存缓存池！(需重启生效)\n显著提升大量小文件的 MFT 检索与缓存命中率。"
+                : "已恢复 NTFS 默认内存缓存配置。(需重启生效)");
+        }
+        catch (Exception ex) { return (false, $"配置 NTFS 缓存失败: {ex.Message}"); }
+    }
+
+    #endregion
+
+    #region 12. 内存管理、CPU 调度与 Localhost 网络栈 (MemoryCompression / Win32Priority / TCP / WER)
+
+    /// <summary>
+    /// 检测 Windows 内存压缩是否已关闭
+    /// </summary>
+    public bool IsMemoryCompressionDisabled()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = "-NoProfile -ExecutionPolicy Bypass -Command \"(Get-MMAgent).MemoryCompression\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(3000);
+
+            return output.Equals("False", StringComparison.OrdinalIgnoreCase);
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 Windows 内存压缩机制 (适用于 32GB+ 充裕内存开发机，消除 CPU 实时压缩开销)
+    /// </summary>
+    public (bool Success, string Message) SetMemoryCompressionDisabled(bool disable)
+    {
+        try
+        {
+            string cmd = disable ? "Disable-MMAgent -MemoryCompression" : "Enable-MMAgent -MemoryCompression";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{cmd}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(5000);
+
+            return (true, disable
+                ? "已成功禁用 Windows 内存压缩！(需重启生效)\n大内存机器不再耗费 CPU 核心周期压缩页面，杜绝多核满载编译时的微卡顿。"
+                : "已恢复 Windows 默认内存压缩机制。(需重启生效)");
+        }
+        catch (Exception ex) { return (false, $"配置内存压缩失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 CPU 线程调度配额是否已针对原生编译长进程优化 (Win32PrioritySeparation)
+    /// </summary>
+    public bool IsWin32PriorityOptimizedForDev()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\PriorityControl");
+            var val = key?.GetValue("Win32PrioritySeparation");
+            return val is int intVal && (intVal == 0x28 || intVal == 0x24 || intVal == 0x18);
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 配置 CPU 时间片配额 (0x28: 固定平权长配额，窗口失焦切换时后台编译绝不被系统降权)
+    /// </summary>
+    public (bool Success, string Message) SetWin32PriorityOptimizedForDev(bool optimize)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\PriorityControl");
+            key.SetValue("Win32PrioritySeparation", optimize ? 0x28 : 0x2, RegistryValueKind.DWord);
+
+            return (true, optimize
+                ? "已开启 CPU 编译平权长配额调度 (0x28)！\n当您切换到浏览器或文档时，后台的 MSBuild/Cargo/Ninja 等编译工具链不再被系统剥夺 CPU 配额。"
+                : "已恢复桌面默认前台动态高加速调度 (0x2)。");
+        }
+        catch (Exception ex) { return (false, $"配置 CPU 优先级失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 Localhost 网络栈高并发端口复用是否已调优 (TcpTimedWaitDelay & MaxUserPort)
+    /// </summary>
+    public bool IsTcpPortReuseOptimized()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters");
+            var delay = key?.GetValue("TcpTimedWaitDelay");
+            var port = key?.GetValue("MaxUserPort");
+            return (delay is int d && d <= 30) && (port is int p && p >= 65534);
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 优化 Localhost 网络栈 (TcpTimedWaitDelay 缩至 30s，MaxUserPort 提升至 65534，杜绝 TIME_WAIT 端口耗尽)
+    /// </summary>
+    public (bool Success, string Message) SetTcpPortReuseOptimized(bool optimize)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters");
+            if (optimize)
+            {
+                key.SetValue("TcpTimedWaitDelay", 30, RegistryValueKind.DWord);
+                key.SetValue("MaxUserPort", 65534, RegistryValueKind.DWord);
+                key.SetValue("StrictTimeWaitCreation", 1, RegistryValueKind.DWord);
+                return (true, "已成功调优 TCP 网络栈！\nTIME_WAIT 回收缩短至 30 秒，动态端口池扩大至 65534，彻底杜绝本地微服务与热重载端口耗尽 (10055)。");
+            }
+            else
+            {
+                key.DeleteValue("TcpTimedWaitDelay", throwOnMissingValue: false);
+                key.DeleteValue("MaxUserPort", throwOnMissingValue: false);
+                key.DeleteValue("StrictTimeWaitCreation", throwOnMissingValue: false);
+                return (true, "已恢复 Windows 默认 TCP 协议栈超时参数。");
+            }
+        }
+        catch (Exception ex) { return (false, $"配置 TCP 参数失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测 Windows 错误报告 (WER Watson) 是否已拦截禁用
+    /// </summary>
+    public bool IsWerDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\Windows Error Reporting");
+            var dis = key?.GetValue("Disabled");
+            var ui = key?.GetValue("DontShowUI");
+            return (dis is int d && d == 1) && (ui is int u && u == 1);
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 Windows 错误报告与弹窗 (开发调试崩溃秒级由 IDE/WinDbg 接管，不挂起进程写大 dump)
+    /// </summary>
+    public (bool Success, string Message) SetWerDisabled(bool disable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\Windows Error Reporting");
+            key.SetValue("Disabled", disable ? 1 : 0, RegistryValueKind.DWord);
+            key.SetValue("DontShowUI", disable ? 1 : 0, RegistryValueKind.DWord);
+
+            return (true, disable
+                ? "已禁用 Windows 错误报告 (WER) 与 Watson 上报！\n原生调试崩溃时不再挂起进程生成巨型转储，直接秒级返回给调试器。"
+                : "已恢复 Windows 错误报告默认上报。");
+        }
+        catch (Exception ex) { return (false, $"配置 WER 失败: {ex.Message}"); }
+    }
+
+    #endregion
+
+    #region 13. 系统响应与内核不分页注册表极致调优 (HungApp / MenuShowDelay / DisablePagingExecutive)
+
+    /// <summary>
+    /// 检测系统挂起超时与卡死强制结束优化是否已启用
+    /// </summary>
+    public bool IsHungAppTimeoutOptimized()
+    {
+        try
+        {
+            using var userKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop");
+            string? hung = userKey?.GetValue("HungAppTimeout") as string;
+            return hung == "1000";
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 优化系统卡死超时 (HungAppTimeout 1s, WaitToKill 2s，关机或重启时不被卡死进程死锁)
+    /// </summary>
+    public (bool Success, string Message) SetHungAppTimeoutOptimized(bool optimize)
+    {
+        try
+        {
+            using (var userKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Desktop"))
+            {
+                userKey.SetValue("HungAppTimeout", optimize ? "1000" : "5000", RegistryValueKind.String);
+                userKey.SetValue("WaitToKillAppTimeout", optimize ? "2000" : "20000", RegistryValueKind.String);
+                userKey.SetValue("AutoEndTasks", optimize ? "1" : "0", RegistryValueKind.String);
+            }
+
+            using (var machKey = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control"))
+            {
+                machKey.SetValue("WaitToKillServiceTimeout", optimize ? "2000" : "5000", RegistryValueKind.String);
+            }
+
+            return (true, optimize
+                ? "已启用进程挂起超时与秒级释放优化！\n未响应应用判定缩至 1 秒，关机/重启服务终止等待缩至 2 秒，杜绝关机卡死。"
+                : "已恢复系统默认未响应与关机等待时长。");
+        }
+        catch (Exception ex) { return (false, $"配置超时失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测菜单展开悬停延迟是否已归零 (MenuShowDelay = 0)
+    /// </summary>
+    public bool IsMenuShowDelayZero()
+    {
+        try
+        {
+            using var userKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop");
+            string? val = userKey?.GetValue("MenuShowDelay") as string;
+            return val == "0";
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置菜单展开悬停延迟为 0 毫秒 (即点即开零迟滞)
+    /// </summary>
+    public (bool Success, string Message) SetMenuShowDelayZero(bool zero)
+    {
+        try
+        {
+            using var userKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Desktop");
+            userKey.SetValue("MenuShowDelay", zero ? "0" : "400", RegistryValueKind.String);
+
+            return (true, zero
+                ? "已将菜单悬停延迟调至 0 毫秒！\n右键菜单与级联子菜单秒级弹出，彻底消除 400ms 人为等待迟滞。"
+                : "已恢复系统默认 400 毫秒悬停延迟。");
+        }
+        catch (Exception ex) { return (false, $"配置菜单延迟失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测系统核心执行体与驱动是否已强制常驻物理内存 (DisablePagingExecutive)
+    /// </summary>
+    public bool IsPagingExecutiveDisabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management");
+            var val = key?.GetValue("DisablePagingExecutive");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 强制系统内核与驱动常驻物理内存不分页 (消除换入换出 DPC 延迟)
+    /// </summary>
+    public (bool Success, string Message) SetPagingExecutiveDisabled(bool disablePaging)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management");
+            key.SetValue("DisablePagingExecutive", disablePaging ? 1 : 0, RegistryValueKind.DWord);
+            key.SetValue("LargeSystemCache", disablePaging ? 1 : 0, RegistryValueKind.DWord);
+
+            return (true, disablePaging
+                ? "已启用内核驱动常驻物理内存策略 (DisablePagingExecutive=1)！(需重启生效)\n强制系统内核代码与驱动绝不换出至磁盘，消除微卡顿与 DPC 延迟。"
+                : "已恢复内核分页策略系统托管。(需重启生效)");
+        }
+        catch (Exception ex) { return (false, $"配置内核常驻内存失败: {ex.Message}"); }
+    }
+
+    #endregion
 }

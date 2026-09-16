@@ -67,12 +67,14 @@ public partial class DebloatView : UserControl
     private readonly OneDriveDebloatService _oneDriveDebloatService = new();
     private readonly DebloatExtraService _debloatExtraService = new();
     private readonly WinOptimizerService _winOptimizerService = new();
+    private readonly RegistryCleanerService _registryCleanerService = new();
 
     private readonly ObservableCollection<UwpAppDisplayItem> _uwpItems = new();
     private readonly ObservableCollection<OemAppDisplayItem> _oemItems = new();
     private readonly ObservableCollection<FodFeatureDisplayItem> _fodItems = new();
     private readonly ObservableCollection<VirtFeatureDisplayItem> _virtItems = new();
     private readonly ObservableCollection<StartupItemInfo> _startupItems = new();
+    private readonly ObservableCollection<RegistryResidualItem> _residualItems = new();
 
     public DebloatView()
     {
@@ -83,6 +85,7 @@ public partial class DebloatView : UserControl
         GridFodFeatures.ItemsSource = _fodItems;
         GridVirtFeatures.ItemsSource = _virtItems;
         GridStartupItems.ItemsSource = _startupItems;
+        GridResiduals.ItemsSource = _residualItems;
 
         _ = LoadUwpAppsAsync();
         LoadOemApps();
@@ -651,6 +654,102 @@ public partial class DebloatView : UserControl
         var res = _debloatExtraService.SetAllDevRedundantServicesDisabled(true);
         MessageBox.Show(res.Message, "一键精简结果", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshRedundantServicesStatus();
+    }
+
+    #endregion
+
+    #region 6. 软件卸载残留与注册表清理
+
+    private async void BtnScanResiduals_Click(object sender, RoutedEventArgs e)
+    {
+        BtnScanResiduals.IsEnabled = false;
+        TxtResidualsSummary.Text = "⏳ 正在穿透扫描系统注册表（无效卸载项、死链自启动、失效打开方式、MuiCache）...";
+
+        try
+        {
+            var items = await _registryCleanerService.ScanResidualsAsync();
+            _residualItems.Clear();
+            foreach (var item in items)
+            {
+                _residualItems.Add(item);
+            }
+
+            if (_residualItems.Count == 0)
+            {
+                TxtResidualsSummary.Text = "✨ 扫描完成：系统注册表非常纯净，未检出任何已知软件卸载死链与残留项！";
+            }
+            else
+            {
+                int uninstallCount = _residualItems.Count(i => i.Category == "无效卸载项");
+                int startupCount = _residualItems.Count(i => i.Category == "无效自启动项");
+                int muiCount = _residualItems.Count(i => i.Category.Contains("MuiCache"));
+                int otherCount = _residualItems.Count - uninstallCount - startupCount - muiCount;
+
+                TxtResidualsSummary.Text = $"⚠️ 共检出 {_residualItems.Count} 项卸载残留 (无效卸载: {uninstallCount} 项，死链自启: {startupCount} 项，MuiCache: {muiCount} 项，其他: {otherCount} 项)。请按需勾选后点击清理。";
+            }
+        }
+        catch (Exception ex)
+        {
+            TxtResidualsSummary.Text = $"扫描失败: {ex.Message}";
+        }
+        finally
+        {
+            BtnScanResiduals.IsEnabled = true;
+        }
+    }
+
+    private void BtnCleanResiduals_Click(object sender, RoutedEventArgs e)
+    {
+        var selected = _residualItems.Where(i => i.IsSelected).ToList();
+        if (selected.Count == 0)
+        {
+            MessageBox.Show("请先勾选需要清理的注册表残留项！", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        var confirm = MessageBox.Show(
+            $"确定要清理选中的 {selected.Count} 项注册表残留吗？\n\n" +
+            "【安全性保障】：\n" +
+            "• 仅清理已确认对应磁盘文件已删除的死链条目与幽灵安装键；\n" +
+            "• 系统核心受保护根项已受白名单硬性防护，绝不误触。\n\n" +
+            "是否立即执行清理？",
+            "确认清理注册表残留",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        var (success, fail, msg) = _registryCleanerService.CleanResiduals(selected);
+
+        // 移除成功项
+        for (int i = _residualItems.Count - 1; i >= 0; i--)
+        {
+            if (_residualItems[i].IsSelected)
+            {
+                _residualItems.RemoveAt(i);
+            }
+        }
+
+        TxtResidualsSummary.Text = $"✅ 清理完毕：成功清理 {success} 项，剩余 {_residualItems.Count} 项。";
+        MessageBox.Show(msg, "清理结果", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnSelectAllResiduals_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var item in _residualItems)
+        {
+            item.IsSelected = true;
+        }
+        GridResiduals.Items.Refresh();
+    }
+
+    private void BtnInvertSelectResiduals_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var item in _residualItems)
+        {
+            item.IsSelected = !item.IsSelected;
+        }
+        GridResiduals.Items.Refresh();
     }
 
     #endregion
