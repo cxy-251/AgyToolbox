@@ -3,45 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Windows 新机开荒与原生开发工具箱 (GUI / TUI 双模)" Height="760" Width="1140" MinWidth="1000" MinHeight="660"
         WindowStartupLocation="CenterScreen"
-        Background="#F1F5F9" FontFamily="Segoe UI, Microsoft YaHei">
+        Background="{DynamicResource BrushWindowBg}" FontFamily="Segoe UI, Microsoft YaHei">
 
     <Window.Resources>
-        <!-- 现代化扁平主按钮样式 -->
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#0078D4"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="14,8"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#106EBE"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <!-- 次要按钮样式 -->
-        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Background" Value="#E2E8F0"/>
-            <Setter Property="Foreground" Value="#1E293B"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#CBD5E1"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
         <!-- PowerToys 风格侧边栏导航单选框样式 -->
         <Style x:Key="PowerToysNavItemStyle" TargetType="RadioButton">
             <Setter Property="Cursor" Value="Hand"/>
@@ -49,7 +13,7 @@
             <Setter Property="Padding" Value="12,10"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -58,13 +22,41 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#E2E8F0"/>
-                                <Setter Property="Foreground" Value="#1E293B"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource BrushSidebarItemHover}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="ItemBorder" Property="Background" Value="#EFF6FF"/>
-                                <Setter Property="Foreground" Value="#0284C7"/>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource BrushSidebarItemSelected}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource BrushSidebarItemSelectedText}"/>
                                 <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 现代化主题切换胶囊单选按钮样式 -->
+        <Style x:Key="ThemeToggleRadioStyle" TargetType="RadioButton">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="GroupName" Value="ThemeSelectorGroup"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bg" Background="Transparent" CornerRadius="12" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource BrushSecondaryBtnHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#0078D4"/>
+                                <Setter Property="Foreground" Value="White"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -82,7 +74,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- 左侧 Sidebar -->
-        <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="{DynamicResource BrushSidebarBg}" BorderBrush="{DynamicResource BrushSidebarBorder}" BorderThickness="0,0,1,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -91,27 +83,27 @@
                 </Grid.RowDefinitions>
 
                 <!-- 侧边栏顶部品牌 -->
-                <Border Grid.Row="0" Padding="18,16,18,14" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                <Border Grid.Row="0" Padding="18,16,18,14" BorderBrush="{DynamicResource BrushSidebarBorder}" BorderThickness="0,0,0,1">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="🚀" FontSize="18" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="开荒与原生开发" FontSize="15" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                            <TextBlock Text="开荒与原生开发" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock Text="从出厂精简到现代原生工作流" FontSize="11" Foreground="#64748B" Margin="26,3,0,0"/>
+                        <TextBlock Text="从出厂精简到现代原生工作流" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="26,3,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- 导航项列表 (5 个核心阶段) -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="10,12,10,10">
                     <StackPanel>
-                        <TextBlock Text="新手开荒递进流程" FontSize="11" FontWeight="Bold" Foreground="#94A3B8" Margin="8,0,0,8"/>
+                        <TextBlock Text="新手开荒递进流程" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextMuted}" Margin="8,0,0,8"/>
 
                         <!-- 阶段一 -->
                         <RadioButton x:Name="NavDebloat" GroupName="MainFlow" IsChecked="True"
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
-                                <TextBlock Text="🧹 步骤一：开荒与预装精简" FontSize="13"/>
-                                <TextBlock Text="UWP 预装应用 / OEM 附带软件 / 禁用静默推广" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="🧹 步骤一：开荒与预装精简" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="UWP 预装应用 / OEM 附带软件 / 禁用静默推广" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
@@ -119,8 +111,8 @@
                         <RadioButton x:Name="NavOpt" GroupName="MainFlow"
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
-                                <TextBlock Text="⚙️ 步骤二：系统优化与安全" FontSize="13"/>
-                                <TextBlock Text="更新策略 / BitLocker 密钥备份 / 休眠文件管理" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="⚙️ 步骤二：系统优化与安全" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="更新策略 / BitLocker 密钥备份 / 休眠文件管理" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
@@ -128,8 +120,8 @@
                         <RadioButton x:Name="NavBuiltIn" GroupName="MainFlow"
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
-                                <TextBlock Text="📖 步骤三：自带工具排错指南" FontSize="13"/>
-                                <TextBlock Text="系统完整性修复 / 网络重置 / 组件库清理" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="📖 步骤三：自带工具排错指南" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="系统完整性修复 / 网络重置 / 组件库清理" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
@@ -137,44 +129,75 @@
                         <RadioButton x:Name="NavNativeDev" GroupName="MainFlow"
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
-                                <TextBlock Text="💻 步骤四：原生开发与终端基建" FontSize="13"/>
-                                <TextBlock Text="WSL2 / Windows 沙箱 / SSH-Agent / CLI" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="💻 步骤四：原生开发与终端基建" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="WSL2 / Windows 沙箱 / SSH-Agent / CLI" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 
-                        <Separator Margin="6,10,6,10" Background="#E2E8F0"/>
-                        <TextBlock Text="独立便携套件" FontSize="11" FontWeight="Bold" Foreground="#94A3B8" Margin="8,0,0,8"/>
+                        <Separator Margin="6,10,6,10" Background="{DynamicResource BrushSidebarBorder}"/>
+                        <TextBlock Text="独立便携套件" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextMuted}" Margin="8,0,0,8"/>
 
                         <!-- 便携工具箱 -->
                         <RadioButton x:Name="NavToolbox" GroupName="MainFlow"
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
-                                <TextBlock Text="🧰 便携工具箱：内置独立套件" FontSize="13"/>
-                                <TextBlock Text="局域网快传 / 空间分析 / 系统信息 / 开发工具 / 镜像" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                                <TextBlock Text="🧰 便携工具箱：内置独立套件" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="局域网快传 / 空间分析 / 系统信息 / 开发工具 / 镜像" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
                     </StackPanel>
                 </ScrollViewer>
 
                 <!-- 底部元信息 -->
-                <Border Grid.Row="2" Background="#F1F5F9" Padding="14,10" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0">
+                <Border Grid.Row="2" Background="{DynamicResource BrushWindowBg}" Padding="14,10" BorderBrush="{DynamicResource BrushSidebarBorder}" BorderThickness="0,1,0,0">
                     <StackPanel>
-                        <TextBlock Text="AgyToolbox · Windows 极客开荒体系" FontSize="11" FontWeight="SemiBold" Foreground="#475569"/>
-                        <TextBlock Text="纯原生 C# / .NET 8 / 零第三方框架依赖" FontSize="10" Foreground="#94A3B8" Margin="0,2,0,0"/>
+                        <TextBlock Text="AgyToolbox · Windows 极客开荒体系" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="纯原生 C# / .NET 8 / 零第三方框架依赖" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </Border>
 
         <!-- 右侧主体内容容器 -->
-        <Grid Grid.Column="1" Background="White">
+        <Grid Grid.Column="1" Background="{DynamicResource BrushCardBg}">
             <Grid.RowDefinitions>
+                <!-- 顶部全局工具栏 (面包屑与主题切换胶囊) -->
                 <RowDefinition Height="Auto"/>
+                <!-- 非管理员运行提示条 -->
+                <RowDefinition Height="Auto"/>
+                <!-- 主视图宿主 -->
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <!-- 顶部全局工具栏 -->
+            <Border Grid.Row="0" Background="{DynamicResource BrushSidebarBg}" BorderBrush="{DynamicResource BrushSidebarBorder}" BorderThickness="0,0,0,1" Padding="16,8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 左侧当前工作流程指示 -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock x:Name="TxtHeaderBreadcrumb" Text="Windows 开荒工程体系" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextSecondary}" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- 右侧主题模式快速切换胶囊 -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="主题模式:" FontSize="11" Foreground="{DynamicResource BrushTextMuted}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <Border Background="{DynamicResource BrushInputBg}" BorderBrush="{DynamicResource BrushInputBorder}" BorderThickness="1" CornerRadius="14" Padding="2">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="RbThemeLight" Content="☀️ 浅色" Style="{StaticResource ThemeToggleRadioStyle}" Click="ThemeRadio_Click"/>
+                                <RadioButton x:Name="RbThemeDark" Content="🌙 深色" Style="{StaticResource ThemeToggleRadioStyle}" Click="ThemeRadio_Click"/>
+                                <RadioButton x:Name="RbThemeSystem" Content="💻 跟随系统" Style="{StaticResource ThemeToggleRadioStyle}" Click="ThemeRadio_Click" IsChecked="True"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
             <!-- 非管理员运行提示条 (智能感知) -->
-            <Border x:Name="BannerNonAdmin" Grid.Row="0" Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="0,0,0,1" Padding="14,9" Visibility="Collapsed">
+            <Border x:Name="BannerNonAdmin" Grid.Row="1" Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="0,0,0,1" Padding="14,9" Visibility="Collapsed">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -188,7 +211,7 @@
                 </Grid>
             </Border>
 
-            <ContentControl Grid.Row="1" x:Name="MainContentHost" />
+            <ContentControl Grid.Row="2" x:Name="MainContentHost" />
         </Grid>
     </Grid>
 </Window>

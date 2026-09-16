@@ -9,16 +9,16 @@
         <StackPanel Margin="0,0,0,24">
 
             <!-- 模块概述 -->
-            <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="⚙️ 引导恢复、WinRE 恢复环境与内核冷重启机制" FontSize="14" FontWeight="Bold" Foreground="#92400E" Margin="0,0,0,4"/>
+                    <TextBlock Text="⚙️ 引导恢复、WinRE 恢复环境与内核冷重启机制" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,4"/>
                     <TextBlock Text="系统无法进入安全模式？Windows Update 报 0x80070643 错误？掌握 reagentc 恢复环境管理、BCD 引导配置、msconfig 纯净启动以及绕过快速启动内核混合休眠的真正冷重启。"
-                               FontSize="11" Foreground="#78350F" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
             <!-- 工具 1: reagentc 恢复环境实用工具 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -27,22 +27,22 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="1. Windows 恢复环境实用程序 (reagentc.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="WinRE 排障重器" FontSize="10" Foreground="#B45309" FontWeight="Bold"/>
+                                <TextBlock Text="1. Windows 恢复环境实用程序 (reagentc.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="WinRE 排障重器" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="配置 WinRE 映像。当 Windows Update 频繁报 0x80070643 补丁失败，或开机按 F8/Shift 无法进入修复环境时，用此工具审计与重建恢复环境。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="检查 WinRE 状态 (/info)" VerticalAlignment="Center" Click="BtnReagentcInfo_Click"/>
                     </Grid>
 
-                    <Border Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                    <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="📋 核心指令与修复链条：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                            <TextBlock Text="• reagentc /info：查看「Windows RE 状态」是否为 Enabled。若是 Disabled，系统崩溃时将完全丧失自动修复与回滚能力。" FontSize="10" Foreground="#475569" Margin="0,1"/>
-                            <TextBlock Text="• 重新注册与激活：若 WinRE 分区调整后失效，依次执行 reagentc /disable 然后执行 reagentc /enable，系统将重新挂载 WinRE.wim 并更新 BCD 引导标识符。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                            <TextBlock Text="📋 核心指令与修复链条：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="• reagentc /info：查看「Windows RE 状态」是否为 Enabled。若是 Disabled，系统崩溃时将完全丧失自动修复与回滚能力。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
+                            <TextBlock Text="• 重新注册与激活：若 WinRE 分区调整后失效，依次执行 reagentc /disable 然后执行 reagentc /enable，系统将重新挂载 WinRE.wim 并更新 BCD 引导标识符。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
                             <WrapPanel Margin="0,4,0,0">
                                 <Button Content="复制 reagentc /enable 激活命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="8,2" Tag="reagentc /enable" Click="BtnCopyCmd_Click"/>
                             </WrapPanel>
@@ -52,16 +52,16 @@
             </Border>
 
             <!-- 工具 2: bcdedit 引导配置数据编辑器 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Text="2. 引导配置数据编辑器 (bcdedit.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                        <Border Background="#EDE9FE" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="UEFI/BCD 引导核心" FontSize="10" Foreground="#6D28D9" FontWeight="Bold"/>
+                        <TextBlock Text="2. 引导配置数据编辑器 (bcdedit.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="UEFI/BCD 引导核心" FontSize="10" Foreground="{DynamicResource BrushAlertPurpleText}" FontWeight="Bold"/>
                         </Border>
                     </WrapPanel>
                     <TextBlock Text="管理 Windows 引导扇区参数。可一键强制下次开机进入安全模式，或在驱动开发测试阶段临时启用测试签名。"
-                               FontSize="11" Foreground="#64748B" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -70,11 +70,11 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- 卡片 A: 强制安全模式 -->
-                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                             <StackPanel>
-                                <TextBlock Text="🛡️ 强制下次启动进入安全模式" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="无需狂按键盘。配置后重启直接进入最小安全模式；修复完毕后务必执行 deletevalue 恢复正常引导！" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="bcdedit /set {current} safeboot minimal" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🛡️ 强制下次启动进入安全模式" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="无需狂按键盘。配置后重启直接进入最小安全模式；修复完毕后务必执行 deletevalue 恢复正常引导！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="bcdedit /set {current} safeboot minimal" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCardBg}" Margin="0,0,0,6"/>
                                 <WrapPanel>
                                     <Button Content="复制进安全模式" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,0" Tag="bcdedit /set {current} safeboot minimal" Click="BtnCopyCmd_Click"/>
                                     <Button Content="复制撤销命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="bcdedit /deletevalue {current} safeboot" Click="BtnCopyCmd_Click"/>
@@ -83,11 +83,11 @@
                         </Border>
 
                         <!-- 卡片 B: 测试签名 -->
-                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                             <StackPanel>
-                                <TextBlock Text="🧪 测试签名模式 (Testsigning)" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="允许系统加载自签名的测试驱动程序。桌面右下角会出现「测试模式」水印，常用于硬件底层调试。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="bcdedit /set testsigning on" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🧪 测试签名模式 (Testsigning)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="允许系统加载自签名的测试驱动程序。桌面右下角会出现「测试模式」水印，常用于硬件底层调试。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="bcdedit /set testsigning on" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCardBg}" Margin="0,0,0,6"/>
                                 <WrapPanel>
                                     <Button Content="复制开启命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Margin="0,0,4,0" Tag="bcdedit /set testsigning on" Click="BtnCopyCmd_Click"/>
                                     <Button Content="复制关闭命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="bcdedit /set testsigning off" Click="BtnCopyCmd_Click"/>
@@ -99,7 +99,7 @@
             </Border>
 
             <!-- 工具 3: shutdown 绝对冷重启 vs 快速启动机制 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -112,37 +112,37 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="3. 绝对冷重启 (shutdown.exe) vs 快速启动陷阱" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="核心技术机制" FontSize="10" Foreground="#B45309" FontWeight="Bold"/>
+                                <TextBlock Text="3. 绝对冷重启 (shutdown.exe) vs 快速启动陷阱" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="核心技术机制" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="揭秘为什么点“关机”不能解决某些驱动异常与硬件卡死：Windows 10/11 默认的关机其实是混合休眠 (Fast Startup)！"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="触发绝对冷重启" VerticalAlignment="Center" Click="BtnColdRestart_Click"/>
                     </Grid>
-                    <Border Grid.Row="1" Background="#FEFCE8" BorderBrush="#FEF08A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
+                    <Border Grid.Row="1" Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
                         <StackPanel>
-                            <TextBlock Text="⚠️ 工程决策：彻底冷重启 vs 混合关机：" FontWeight="Bold" FontSize="11" Foreground="#854D0E" Margin="0,0,0,2"/>
-                            <TextBlock Text="• 快速启动原理：点击开始菜单的「关机」时，系统会关闭所有用户应用程序，但把 Windows 内核与驱动状态整体打包写入 hiberfil.sys。若驱动已有内部死锁，关机再开机该死锁依然被原样还原！" FontSize="10" Foreground="#713F12" TextWrapping="Wrap"/>
-                            <TextBlock Text="• 真正重置内核的途径：① 菜单选择「重启」；② 按住 Shift 键点击关机；③ 执行命令行：shutdown /r /t 0（彻底冷重启）或 shutdown /s /f /t 0（彻底冷关机）。" FontSize="10" Foreground="#713F12" TextWrapping="Wrap"/>
+                            <TextBlock Text="⚠️ 工程决策：彻底冷重启 vs 混合关机：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,2"/>
+                            <TextBlock Text="• 快速启动原理：点击开始菜单的「关机」时，系统会关闭所有用户应用程序，但把 Windows 内核与驱动状态整体打包写入 hiberfil.sys。若驱动已有内部死锁，关机再开机该死锁依然被原样还原！" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
+                            <TextBlock Text="• 真正重置内核的途径：① 菜单选择「重启」；② 按住 Shift 键点击关机；③ 执行命令行：shutdown /r /t 0（彻底冷重启）或 shutdown /s /f /t 0（彻底冷关机）。" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                         </StackPanel>
                     </Border>
                 </Grid>
             </Border>
 
             <!-- 工具 4: msconfig 系统配置 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="4. 系统配置实用程序 (msconfig.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="4. 系统配置实用程序 (msconfig.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                         <TextBlock Text="纯净启动排错 (Clean Boot) 的标准工具。在「服务」标签页勾选「隐藏所有 Microsoft 服务」，即可一键排查第三方软件冲突。"
-                                   FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                                   FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="打开系统配置 (msconfig)" VerticalAlignment="Center" Click="BtnMsConfig_Click"/>
                 </Grid>

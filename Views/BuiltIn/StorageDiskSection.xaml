@@ -9,16 +9,16 @@
         <StackPanel Margin="0,0,0,24">
 
             <!-- 模块概述 -->
-            <Border Background="#F0FDF4" BorderBrush="#BBF7D0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushAlertGreenBg}" BorderBrush="{DynamicResource BrushAlertGreenBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="💾 存储子系统、文件系统自愈与分区引擎" FontSize="14" FontWeight="Bold" Foreground="#166534" Margin="0,0,0,4"/>
+                    <TextBlock Text="💾 存储子系统、文件系统自愈与分区引擎" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}" Margin="0,0,0,4"/>
                     <TextBlock Text="涵盖 NTFS/ReFS 元数据修复、坏扇区识别、TRIM 垃圾回收、底层 DiskPart 分区表清洗、多线程鲁棒同步 (Robocopy) 与透明无损压缩 (Compact)。"
-                               FontSize="11" Foreground="#14532D" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushAlertGreenText}" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
             <!-- 工具 1: chkdsk -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -27,20 +27,20 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="1. 磁盘文件系统体检与坏道扫描 (chkdsk.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#E0F2FE" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="NTFS 自愈引擎" FontSize="10" Foreground="#0284C7" FontWeight="Bold"/>
+                                <TextBlock Text="1. 磁盘文件系统体检与坏道扫描 (chkdsk.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="NTFS 自愈引擎" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="扫描并修复卷上的文件系统元数据不一致或物理坏扇区。拒绝盲目执行耗时数小时的 /r，依据现代 NTFS 机制分级执行。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="启动 C 盘联机预检 (/scan)" VerticalAlignment="Center" Click="BtnChkdskScan_Click"/>
                     </Grid>
 
                     <!-- 参数矩阵与执行代价对照表 -->
-                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Margin="0,0,0,8">
-                        <Grid Background="White">
+                    <Border BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,8">
+                        <Grid Background="{DynamicResource BrushCardBg}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -55,7 +55,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="8,6">
+                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="{DynamicResource BrushTableHeaderBg}" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" Padding="8,6">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
@@ -63,57 +63,57 @@
                                         <ColumnDefinition Width="160"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="命令与参数" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="1" Text="技术机制与适用场景" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="2" Text="执行代价与风险" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="#475569" Margin="0,0,12,0"/>
+                                    <TextBlock Grid.Column="0" Text="命令与参数" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="1" Text="技术机制与适用场景" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="2" Text="执行代价与风险" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,12,0"/>
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="chkdsk C: /scan" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="联机扫描。现代 Windows 首选排查方式，后台检查文件系统错误并记录到事件日志。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="联机扫描。现代 Windows 首选排查方式，后台检查文件系统错误并记录到事件日志。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="完全零停机，不独占卷，系统可照常运行。" FontSize="10" Foreground="#16A34A" TextWrapping="Wrap"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="chkdsk C: /scan" Click="BtnCopyCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="chkdsk C: /spotfix" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="仅修补 /scan 发现的错误。重启引导阶段秒级处理完毕，无需整盘重构。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="仅修补 /scan 发现的错误。重启引导阶段秒级处理完毕，无需整盘重构。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="仅需离线数秒至十几秒。" FontSize="10" Foreground="#16A34A" TextWrapping="Wrap"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="chkdsk C: /spotfix" Click="BtnCopyCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="chkdsk C: /f" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#D97706"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="经典强制修复文件系统错误，修复目录项与安全描述符索引。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="经典强制修复文件系统错误，修复目录项与安全描述符索引。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="需要锁定卷或重启进入引导阶段独占执行（耗时数分钟）。" FontSize="10" Foreground="#D97706" TextWrapping="Wrap"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="3" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="chkdsk C: /f" Click="BtnCopyCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
+                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
                                 <TextBlock Text="chkdsk D: /r" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#DC2626"/>
                             </Border>
-                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
-                                <TextBlock Text="在 /f 基础上深入扫描全盘所有物理扇区并尝试恢复可读数据，标记坏道。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                <TextBlock Text="在 /f 基础上深入扫描全盘所有物理扇区并尝试恢复可读数据，标记坏道。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
                             <Border Grid.Row="4" Grid.Column="2" Padding="8,6">
                                 <TextBlock Text="极度耗时！机械硬盘常需几小时，不可无故运行。" FontSize="10" Foreground="#DC2626" TextWrapping="Wrap"/>
@@ -127,16 +127,16 @@
             </Border>
 
             <!-- 工具 2: fsutil -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Text="2. 底层文件系统行为控制 (fsutil.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                        <Border Background="#EDE9FE" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="内核级文件系统调优" FontSize="10" Foreground="#6D28D9" FontWeight="Bold"/>
+                        <TextBlock Text="2. 底层文件系统行为控制 (fsutil.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="内核级文件系统调优" FontSize="10" Foreground="{DynamicResource BrushAlertPurpleText}" FontWeight="Bold"/>
                         </Border>
                     </WrapPanel>
                     <TextBlock Text="Windows 核心文件系统控制台。用于查询 SSD TRIM 状态、探测脏位标记以及禁用 8.3 格式短文件名以释放目录性能。"
-                               FontSize="11" Foreground="#64748B" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -146,31 +146,31 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- 卡片 A: TRIM 垃圾回收查询 -->
-                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                             <StackPanel>
-                                <TextBlock Text="⚡ SSD TRIM 状态查询与开启" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="返回 0 表示系统已正常向 SSD 下发 TRIM 指令；若为 1 则表示已禁用，长期写入会导致固态掉速。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="fsutil behavior query DisableDeleteNotify" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="⚡ SSD TRIM 状态查询与开启" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="返回 0 表示系统已正常向 SSD 下发 TRIM 指令；若为 1 则表示已禁用，长期写入会导致固态掉速。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="fsutil behavior query DisableDeleteNotify" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制开启命令 (置0)" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil behavior set DisableDeleteNotify 0" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
 
                         <!-- 卡片 B: 脏位探测 -->
-                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
                             <StackPanel>
-                                <TextBlock Text="🏷️ 卷脏位 (Dirty Bit) 查询" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="异常断电后卷被标记为 Dirty 会在开机时强制触发 chkdsk。执行本命令可确认指定盘符是否处于脏位状态。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="fsutil dirty query C:" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🏷️ 卷脏位 (Dirty Bit) 查询" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="异常断电后卷被标记为 Dirty 会在开机时强制触发 chkdsk。执行本命令可确认指定盘符是否处于脏位状态。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="fsutil dirty query C:" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制查询命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil dirty query C:" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
 
                         <!-- 卡片 C: 短文件名禁用 -->
-                        <Border Grid.Column="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                        <Border Grid.Column="2" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                             <StackPanel>
-                                <TextBlock Text="🚀 禁用 8.3 短文件名 (提速)" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="兼容 MS-DOS 的短文件名 (如 PROGRA~1) 会在单目录包含超 30 万个文件时严重拖慢文件创建性能。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="fsutil 8dot3name query C:" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🚀 禁用 8.3 短文件名 (提速)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="兼容 MS-DOS 的短文件名 (如 PROGRA~1) 会在单目录包含超 30 万个文件时严重拖慢文件创建性能。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="fsutil 8dot3name query C:" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制禁用命令 (置1)" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil behavior set disable8dot3 1" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
@@ -179,7 +179,7 @@
             </Border>
 
             <!-- 工具 3: diskpart 磁盘分区引擎 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -188,28 +188,28 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="3. 交互式磁盘分区与属性引擎 (diskpart.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="破坏性/底层控制" FontSize="10" Foreground="#B45309" FontWeight="Bold"/>
+                                <TextBlock Text="3. 交互式磁盘分区与属性引擎 (diskpart.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="底层破坏性控制" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="比图形化「磁盘管理」更彻底的底层工具。解决 U 盘写保护解除、彻底抹除隐藏分区表、GPT/MBR 互转以及 VHDX 虚拟磁盘挂载。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="启动 DiskPart 控制台" VerticalAlignment="Center" Click="BtnDiskPart_Click"/>
                     </Grid>
 
                     <!-- DiskPart 实用命令速查卡片 -->
-                    <Border Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                    <Border Background="{DynamicResource BrushWindowBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="🛠️ DiskPart 核心工程命令手册：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,6"/>
+                            <TextBlock Text="🛠️ DiskPart 核心工程命令手册：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
                             <Grid Margin="0,0,0,4">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="280"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="list disk  ➔  select disk 1" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
-                                <TextBlock Grid.Column="1" Text="列出全部物理硬盘并选中目标（极为重要：务必核对容量，防止误格系统盘）。" FontSize="10" Foreground="#475569"/>
+                                <TextBlock Grid.Column="1" Text="列出全部物理硬盘并选中目标（极为重要：务必核对容量，防止误格系统盘）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Grid>
                             <Grid Margin="0,0,0,4">
                                 <Grid.ColumnDefinitions>
@@ -217,7 +217,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="attributes disk clear readonly" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
-                                <TextBlock Grid.Column="1" Text="一键解除移动硬盘或只读存储设备的物理写保护锁定属性。" FontSize="10" Foreground="#475569"/>
+                                <TextBlock Grid.Column="1" Text="一键解除移动硬盘或只读存储设备的物理写保护锁定属性。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Grid>
                             <Grid Margin="0,0,0,4">
                                 <Grid.ColumnDefinitions>
@@ -225,7 +225,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="clean (快速清空) / clean all (填零)" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#DC2626"/>
-                                <TextBlock Grid.Column="1" Text="clean 瞬间抹去 MBR/GPT 分区表；clean all 将每个扇区填零覆写（耗时长，数据彻底不可恢复）。" FontSize="10" Foreground="#475569"/>
+                                <TextBlock Grid.Column="1" Text="clean 瞬间抹去 MBR/GPT 分区表；clean all 将每个扇区填零覆写（耗时长，数据彻底不可恢复）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Grid>
                             <Grid Margin="0,0,0,4">
                                 <Grid.ColumnDefinitions>
@@ -233,7 +233,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="convert gpt" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
-                                <TextBlock Grid.Column="1" Text="将选中的空白磁盘转换为现代 UEFI 启动所需的 GUID 分区表格式 (GPT)。" FontSize="10" Foreground="#475569"/>
+                                <TextBlock Grid.Column="1" Text="将选中的空白磁盘转换为现代 UEFI 启动所需的 GUID 分区表格式 (GPT)。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Grid>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -241,7 +241,7 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="create vdisk file=... maximum=50000" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
-                                <TextBlock Grid.Column="1" Text="免第三方工具创建 50GB 动态扩容 VHDX 虚拟硬盘文件，搭配 attach vdisk 瞬间挂载为独立物理盘。" FontSize="10" Foreground="#475569"/>
+                                <TextBlock Grid.Column="1" Text="免第三方工具创建 50GB 动态扩容 VHDX 虚拟硬盘文件，搭配 attach vdisk 瞬间挂载为独立物理盘。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Grid>
                         </StackPanel>
                     </Border>
@@ -249,16 +249,16 @@
             </Border>
 
             <!-- 工具 4: Robocopy & Compact & Cipher (高级存储工具三剑客) -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Text="4. 原生存储增强三剑客 (Robocopy / Compact / Cipher)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                        <Border Background="#E0E7FF" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="专业文件工程" FontSize="10" Foreground="#4338CA" FontWeight="Bold"/>
+                        <TextBlock Text="4. 原生存储增强三剑客 (Robocopy / Compact / Cipher)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="专业文件工程" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
                         </Border>
                     </WrapPanel>
                     <TextBlock Text="Windows 自身内置了企业级镜像同步、高压缩比透明解压与物理级未分配空间擦写，完全无需额外安装第三方软件。"
-                               FontSize="11" Foreground="#64748B" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -268,31 +268,31 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- 卡片 1: Robocopy -->
-                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                             <StackPanel>
-                                <TextBlock Text="📁 多线程同步 (robocopy)" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="比普通 copy 快 5 倍。支持 16 线程并发 (/MT:16)、断点续传、遇权限不足以备份特权读取 (/ZB)、重试 2 次跳过锁死文件。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="robocopy C:\Src D:\Bak /MIR /MT:16 /ZB /R:2 /W:3" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="📁 多线程同步 (robocopy)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="比普通 copy 快 5 倍。支持 16 线程并发 (/MT:16)、断点续传、遇权限不足以备份特权读取 (/ZB)、重试 2 次跳过锁死文件。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="robocopy C:\Src D:\Bak /MIR /MT:16 /ZB /R:2 /W:3" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制推荐镜像同步命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="robocopy C:\Source D:\Backup /MIR /MT:16 /ZB /R:2 /W:3 /NP" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
 
                         <!-- 卡片 2: Compact -->
-                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
                             <StackPanel>
-                                <TextBlock Text="🗜️ 透明无损压缩 (compact)" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="现代 CPU 算力过剩，利用 LZX 现代算法对只读文件夹进行透明压缩（运行中直接透明读取，无需解压，省 30%~50% 空间）。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="compact /c /s /exe:lzx &quot;D:\Games\*&quot;" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🗜️ 透明无损压缩 (compact)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="现代 CPU 算力过剩，利用 LZX 现代算法对只读文件夹进行透明压缩（运行中直接透明读取，无需解压，省 30%~50% 空间）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="compact /c /s /exe:lzx &quot;D:\Games\*&quot;" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制 LZX 压缩命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="compact /c /s /exe:lzx &quot;D:\TargetFolder\*&quot;" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
 
                         <!-- 卡片 3: Cipher -->
-                        <Border Grid.Column="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                        <Border Grid.Column="2" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                             <StackPanel>
-                                <TextBlock Text="🛡️ 物理覆写防恢复 (cipher)" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="删除文件后数据仍能被恢复。运行 cipher /w 仅针对「未分配空闲空间」三次填零与随机数物理擦写，绝不破坏现有文件！" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="cipher /w:C:\Users" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🛡️ 物理覆写防恢复 (cipher)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="删除文件后数据仍能被恢复。运行 cipher /w 仅针对「未分配空闲空间」三次填零与随机数物理擦写，绝不破坏现有文件！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="cipher /w:C:\Users" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制空闲空间擦除命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="cipher /w:C:" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
@@ -301,7 +301,7 @@
             </Border>
 
             <!-- 工具 5: 磁盘管理与碎片整理 + WinSxS 瘦身 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -309,9 +309,9 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="5. 图形化控制台与 WinSxS 终极瘦身" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                            <TextBlock Text="5. 图形化控制台与 WinSxS 终极瘦身" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                             <TextBlock Text="直观查看分区表拓扑 (diskmgmt.msc)、触发 SSD TRIM (dfrgui.exe) 以及释放历史更新残留 (WinSxS /ResetBase)。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <Button Content="磁盘管理 (diskmgmt)" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnDiskMgmt_Click"/>

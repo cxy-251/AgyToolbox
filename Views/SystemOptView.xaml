@@ -12,16 +12,16 @@
         </Grid.RowDefinitions>
 
         <!-- 模块说明看板 (保留在 TabControl 外层，始终可见) -->
-        <Border Grid.Row="0" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+        <Border Grid.Row="0" Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
             <StackPanel>
-                <TextBlock Text="⚙️ 步骤二：系统优化与必要设置 (Optimization &amp; Settings)" FontSize="15" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,4"/>
+                <TextBlock Text="⚙️ 步骤二：系统优化与必要设置 (Optimization &amp; Settings)" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
                 <TextBlock Text="系统性能调优与环境准备：提供 Windows Update 更新策略控制、BitLocker 恢复密钥检测与备份、系统休眠文件管理、局域网专用网络配置，以及文件扩展名显示和 PATH 环境变量可视化管理。"
-                           FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap"/>
+                           FontSize="12" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
 
         <!-- 4 个功能横向子标签 -->
-        <TabControl Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1"
+        <TabControl Grid.Row="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1"
                     ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
             <!-- Tab 1: 更新与安全 (Windows 更新策略 + BitLocker 备份) -->
@@ -29,7 +29,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
                         <!-- 板块 1: Windows 自动更新策略控制 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -37,8 +37,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🛑 1. Windows 自动更新策略与服务控制" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (配置组策略禁止自动下载、排除驱动更新、管理更新核心服务)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text="🛑 1. Windows 自动更新策略与服务控制" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (配置组策略禁止自动下载、排除驱动更新、管理更新核心服务)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                                         <TextBlock x:Name="TxtUpdateStatus" Text="[检测更新状态...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
@@ -46,8 +46,8 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <TextBlock Text="💡 技术说明：配置 ExcludeWPDriversInQualityUpdate 策略避免硬件驱动在质量更新中被自动替换，并管理更新服务 (wuauserv) 与系统维护任务 (WaaSMedicSvc)。" FontSize="11" Foreground="#78350F" TextWrapping="Wrap"/>
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <TextBlock Text="💡 技术说明：配置 ExcludeWPDriversInQualityUpdate 策略避免硬件驱动在质量更新中被自动替换，并管理更新服务 (wuauserv) 与系统维护任务 (WaaSMedicSvc)。" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                                 </Border>
 
                                 <Grid>
@@ -55,17 +55,17 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
                                         <StackPanel>
                                             <TextBlock Text="🛑 关闭 Windows 自动更新" FontWeight="Bold" FontSize="13" Foreground="#EF4444" Margin="0,0,0,4"/>
-                                            <TextBlock Text="通过组策略禁用自动下载，排除驱动更新，并停用更新核心服务。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                            <TextBlock Text="通过组策略禁用自动下载，排除驱动更新，并停用更新核心服务。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
                                             <Button x:Name="BtnDisableUpdate" Content="关闭自动更新" Background="#EF4444" Click="BtnDisableUpdate_Click"/>
                                         </StackPanel>
                                     </Border>
-                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="🟢 恢复官方默认更新机制" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,4"/>
-                                            <TextBlock Text="清除组策略更新限制规则，重新激活系统更新服务，恢复正常接收安全补丁。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                            <TextBlock Text="清除组策略更新限制规则，重新激活系统更新服务，恢复正常接收安全补丁。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
                                             <Button x:Name="BtnEnableUpdate" Content="恢复官方自动更新" Style="{DynamicResource SecondaryButton}" Click="BtnEnableUpdate_Click"/>
                                         </StackPanel>
                                     </Border>
@@ -74,7 +74,7 @@
                         </Border>
 
                         <!-- 板块 2: BitLocker 状态检测与恢复密钥备份 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -82,8 +82,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🔐 2. BitLocker 设备加密状态检测与恢复密钥备份" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (重要安全提示：主板固件更新或 TPM 重置时需验证 48 位数字恢复密钥)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text="🔐 2. BitLocker 设备加密状态检测与恢复密钥备份" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (重要安全提示：主板固件更新或 TPM 重置时需验证 48 位数字恢复密钥)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                                         <TextBlock x:Name="TxtBitLockerStatus" Text="[检测中...]" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
@@ -91,10 +91,10 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Border Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
                                     <StackPanel>
-                                        <TextBlock Text="💡 为什么建议提前备份 BitLocker 恢复密钥？" FontWeight="Bold" FontSize="12" Foreground="#334155" Margin="0,0,0,4"/>
-                                        <TextBlock Text="许多预装 Windows 11 的笔记本在初始激活后会自动开启设备加密。在后续主板 BIOS 固件更新、清除 TPM 或硬件变更后，系统启动时可能需要输入 48 位恢复密钥以解锁驱动器。提前备份密钥可避免身份验证凭据丢失导致系统分区无法读取。" FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
+                                        <TextBlock Text="💡 为什么建议提前备份 BitLocker 恢复密钥？" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                        <TextBlock Text="许多预装 Windows 11 的笔记本在初始激活后会自动开启设备加密。在后续主板 BIOS 固件更新、清除 TPM 或硬件变更后，系统启动时可能需要输入 48 位恢复密钥以解锁驱动器。提前备份密钥可避免身份验证凭据丢失导致系统分区无法读取。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                     </StackPanel>
                                 </Border>
 
@@ -104,8 +104,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="导出当前 C 盘 BitLocker 48 位数字恢复密钥" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                        <TextBlock Text="调用系统 manage-bde 命令查询本机驱动器保护密钥，建议妥善保存至离线安全介质。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                                        <TextBlock Text="导出当前 C 盘 BitLocker 48 位数字恢复密钥" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        <TextBlock Text="调用系统 manage-bde 命令查询本机驱动器保护密钥，建议妥善保存至离线安全介质。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
                                     </StackPanel>
                                     <Button Grid.Column="1" Content="🔑 查询并备份恢复密钥" Background="#0284C7" VerticalAlignment="Center" Click="BtnGetBitLockerKey_Click"/>
                                 </Grid>
@@ -127,37 +127,37 @@
                             </Grid.ColumnDefinitions>
 
                             <!-- 左侧：休眠管理 -->
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,7,0">
+                            <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,7,0">
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                        <TextBlock Text="💾 1. 管理休眠文件 (C:\hiberfil.sys)" FontWeight="Bold" FontSize="14" Foreground="#1E293B"/>
+                                        <TextBlock Text="💾 1. 管理休眠文件 (C:\hiberfil.sys)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}"/>
                                         <TextBlock x:Name="TxtHiberStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <TextBlock Text="系统休眠功能会在系统分区根目录创建与内存容量相近的 hiberfil.sys 文件。对于不需要休眠特性的台式机或空间紧张的工作站，关闭休眠可释放相应磁盘空间。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                                    <TextBlock Text="系统休眠功能会在系统分区根目录创建与内存容量相近的 hiberfil.sys 文件。对于不需要休眠特性的台式机或空间紧张的工作站，关闭休眠可释放相应磁盘空间。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,12"/>
                                     <Button x:Name="BtnToggleHiber" Content="切换休眠状态" Style="{DynamicResource SecondaryButton}" HorizontalAlignment="Left" Click="BtnToggleHiber_Click"/>
                                 </StackPanel>
                             </Border>
 
                             <!-- 右侧：专用网络切换 -->
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="7,0,0,0">
+                            <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="7,0,0,0">
                                 <StackPanel>
-                                    <TextBlock Text="🌐 2. 切换当前网络为【专用网络】" FontWeight="Bold" FontSize="14" Foreground="#1E293B" Margin="0,0,0,6"/>
-                                    <TextBlock Text="新连接的网络默认常被分配为“公用网络”，防火墙会对入站连接、局域网设备互通和 ICMP Ping 采取更严格的策略。设为“专用网络”可允许局域网调试与设备互访。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,12"/>
+                                    <TextBlock Text="🌐 2. 切换当前网络为【专用网络】" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
+                                    <TextBlock Text="新连接的网络默认常被分配为“公用网络”，防火墙会对入站连接、局域网设备互通和 ICMP Ping 采取更严格的策略。设为“专用网络”可允许局域网调试与设备互访。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,12"/>
                                     <Button Content="📶 设为专用网络" Background="#10B981" HorizontalAlignment="Left" Click="BtnSetPrivateNetwork_Click"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
 
                         <!-- 卓越性能模式 -->
-                        <Border Background="#EEF2FF" BorderBrush="#C7D2FE" BorderThickness="1" CornerRadius="8" Padding="14">
+                        <Border Background="{DynamicResource BrushAlertPurpleBg}" BorderBrush="{DynamicResource BrushAlertPurpleBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0">
-                                    <TextBlock Text="⚡ 3. 导入并激活【卓越性能】电源方案 (Ultimate Performance)" FontWeight="Bold" FontSize="14" Foreground="#4338CA"/>
-                                    <TextBlock Text="解锁 Windows 隐藏的卓越性能电源策略，减少硬件层面的节能状态切换延迟，让 CPU 调度保持满负荷响应，适合高负荷编译与计算任务。" FontSize="11" Foreground="#6366F1" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    <TextBlock Text="⚡ 3. 导入并激活【卓越性能】电源方案 (Ultimate Performance)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushAlertPurpleText}"/>
+                                    <TextBlock Text="解锁 Windows 隐藏的卓越性能电源策略，减少硬件层面的节能状态切换延迟，让 CPU 调度保持满负荷响应，适合高负荷编译与计算任务。" FontSize="11" Foreground="{DynamicResource BrushAlertPurpleText}" Margin="0,4,0,0" TextWrapping="Wrap"/>
                                 </StackPanel>
                                 <Button Grid.Column="1" Content="⚡ 激活卓越性能" Background="#4F46E5" VerticalAlignment="Center" Margin="12,0,0,0" Click="BtnEnableUltimatePerf_Click"/>
                             </Grid>
@@ -171,7 +171,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
                         <!-- 资源管理器基础设置 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -179,8 +179,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="📁 1. 资源管理器文件查看与导航偏好" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (开发必备：显式后缀名、显示隐藏目录、Win+E 默认打开此电脑)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text="📁 1. 资源管理器文件查看与导航偏好" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (开发必备：显式后缀名、显示隐藏目录、Win+E 默认打开此电脑)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <Button Grid.Column="1" Content="🔄 刷新状态" Style="{DynamicResource SecondaryButton}" Click="BtnRefreshExplorerSettings_Click"/>
                                 </Grid>
@@ -192,24 +192,24 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <CheckBox x:Name="ChkShowFileExt" Content="始终显示文件扩展名" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Click="ChkShowFileExt_Click"/>
-                                            <TextBlock Text="显示完整后缀名，便于识别源码、脚本与配置文件，避免双后缀文件欺骗。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                            <CheckBox x:Name="ChkShowFileExt" Content="始终显示文件扩展名" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkShowFileExt_Click"/>
+                                            <TextBlock Text="显示完整后缀名，便于识别源码、脚本与配置文件，避免双后缀文件欺骗。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
                                         </StackPanel>
                                     </Border>
 
-                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="3,0,3,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="3,0,3,0">
                                         <StackPanel>
-                                            <CheckBox x:Name="ChkShowHiddenFiles" Content="显示隐藏文件与驱动器" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Click="ChkShowHiddenFiles_Click"/>
-                                            <TextBlock Text="方便查看与编辑 .git, .env, .vscode, AppData 等开发配置文件与隐藏目录。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                            <CheckBox x:Name="ChkShowHiddenFiles" Content="显示隐藏文件与驱动器" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkShowHiddenFiles_Click"/>
+                                            <TextBlock Text="方便查看与编辑 .git, .env, .vscode, AppData 等开发配置文件与隐藏目录。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
                                         </StackPanel>
                                     </Border>
 
-                                    <Border Grid.Column="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                    <Border Grid.Column="2" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <CheckBox x:Name="ChkOpenThisPc" Content="Win+E 默认打开【此电脑】" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Click="ChkOpenThisPc_Click"/>
-                                            <TextBlock Text="设置资源管理器启动时直接展示驱动器分区列表，而非快速访问或主页推荐。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                            <CheckBox x:Name="ChkOpenThisPc" Content="Win+E 默认打开【此电脑】" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Click="ChkOpenThisPc_Click"/>
+                                            <TextBlock Text="设置资源管理器启动时直接展示驱动器分区列表，而非快速访问或主页推荐。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,6,0,0"/>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
@@ -217,15 +217,15 @@
                         </Border>
 
                         <!-- 系统交互体验与功能开关 (紧凑设置列表) -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="🎛️ 2. 系统交互体验与功能开关 (纯注册表调优，随时可逆)" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
-                                <TextBlock Text="纯注册表标准策略项调优，透明且随时可逆，点击右侧按钮即可快速切换状态：" FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
+                                <TextBlock Text="🎛️ 2. 系统交互体验与功能开关 (纯注册表调优，随时可逆)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="纯注册表标准策略项调优，透明且随时可逆，点击右侧按钮即可快速切换状态：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
 
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
                                     <StackPanel>
                                         <!-- Win10 经典右键菜单 -->
-                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -233,17 +233,17 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="📄 Win10 经典完整右键菜单" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock Text="📄 Win10 经典完整右键菜单" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
                                                         <TextBlock x:Name="TxtClassicMenuStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                                     </StackPanel>
-                                                    <TextBlock Text="恢复传统右键菜单展示全部选项，避免 Win11 默认'显示更多选项'二级折叠。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                    <TextBlock Text="恢复传统右键菜单展示全部选项，避免 Win11 默认'显示更多选项'二级折叠。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
                                                 </StackPanel>
                                                 <Button x:Name="BtnToggleClassicMenu" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleClassicMenu_Click"/>
                                             </Grid>
                                         </Border>
 
-                                        <!-- 关闭必应网络搜索 -->
-                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                        <!-- 关闭必英网络搜索 -->
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -251,17 +251,17 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="🔍 关闭开始菜单必应联机 Web 搜索" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock Text="🔍 关闭开始菜单必应联机 Web 搜索" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
                                                         <TextBlock x:Name="TxtBingStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                                     </StackPanel>
-                                                    <TextBlock Text="禁用任务栏搜索向远程联网检索，专注于本地应用与文档的高速索引。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                    <TextBlock Text="禁用任务栏搜索向远程联网检索，专注于本地应用与文档的高速索引。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
                                                 </StackPanel>
                                                 <Button x:Name="BtnToggleBing" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleBing_Click"/>
                                             </Grid>
                                         </Border>
 
                                         <!-- 禁用遥测 -->
-                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -269,17 +269,17 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="🛡️ 限制系统可选诊断数据与个性化推荐" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock Text="🛡️ 限制系统可选诊断数据与个性化推荐" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
                                                         <TextBlock x:Name="TxtTelemetryStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                                     </StackPanel>
-                                                    <TextBlock Text="关闭可选遥测数据上报与基于使用习惯的系统界面推广建议。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                    <TextBlock Text="关闭可选遥测数据上报与基于使用习惯的系统界面推广建议。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
                                                 </StackPanel>
                                                 <Button x:Name="BtnToggleTelemetry" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleTelemetry_Click"/>
                                             </Grid>
                                         </Border>
 
                                         <!-- 禁用按 5 次 Shift 粘滞键弹窗 -->
-                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -287,17 +287,17 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="⌨️ 禁用连续按 5 次 Shift 弹出粘滞键提示" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock Text="⌨️ 禁用连续按 5 次 Shift 弹出粘滞键提示" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
                                                         <TextBlock x:Name="TxtStickyStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                                     </StackPanel>
-                                                    <TextBlock Text="关闭连续多次按 Shift 键时触发辅助功能粘滞键确认窗口的快捷方式。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                    <TextBlock Text="关闭连续多次按 Shift 键时触发辅助功能粘滞键确认窗口的快捷方式。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
                                                 </StackPanel>
                                                 <Button x:Name="BtnToggleSticky" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleSticky_Click"/>
                                             </Grid>
                                         </Border>
 
                                         <!-- 开启 Win+V 剪贴板历史记录 -->
-                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -305,17 +305,17 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="📋 开启 Win+V 系统原生剪贴板历史记录" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock Text="📋 开启 Win+V 系统原生剪贴板历史记录" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
                                                         <TextBlock x:Name="TxtClipboardStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                                     </StackPanel>
-                                                    <TextBlock Text="支持暂存多条复制文本与图片，按下 Win+V 可随时查看历史并直接粘贴。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                    <TextBlock Text="支持暂存多条复制文本与图片，按下 Win+V 可随时查看历史并直接粘贴。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
                                                 </StackPanel>
                                                 <Button x:Name="BtnToggleClipboard" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleClipboard_Click"/>
                                             </Grid>
                                         </Border>
 
                                         <!-- 开启开发者模式与长路径 -->
-                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="#F1F5F9">
+                                        <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -323,25 +323,25 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="💻 开启开发者模式 &amp; 解除 260 字符长路径限制" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
+                                                        <TextBlock Text="💻 开启开发者模式 &amp; 解除 260 字符长路径限制" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
                                                         <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                                     </StackPanel>
-                                                    <TextBlock Text="支持免提权创建符号链接，并开启 LongPathsEnabled 解决项目路径超长报错。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                    <TextBlock Text="支持免提权创建符号链接，并开启 LongPathsEnabled 解决项目路径超长报错。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
                                                 </StackPanel>
                                                 <Button x:Name="BtnToggleDevMode" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnToggleDevMode_Click"/>
                                             </Grid>
                                         </Border>
 
                                         <!-- 重启资源管理器 -->
-                                        <Border Padding="12,8" Background="#F8FAFC" CornerRadius="0,0,8,8">
+                                        <Border Padding="12,8" Background="{DynamicResource BrushCardBgAlt}" CornerRadius="0,0,8,8">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                                    <TextBlock Text="🔄 平滑重启 Windows 资源管理器 (explorer.exe)" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
-                                                    <TextBlock Text="修改上述右键菜单或任务栏策略后，点击立即刷新桌面与任务栏，使新配置即刻生效。" FontSize="11" Foreground="#64748B" Margin="0,1,0,0"/>
+                                                    <TextBlock Text="🔄 平滑重启 Windows 资源管理器 (explorer.exe)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                    <TextBlock Text="修改上述右键菜单或任务栏策略后，点击立即刷新桌面与任务栏，使新配置即刻生效。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
                                                 </StackPanel>
                                                 <Button Grid.Column="1" Content="重启 Explorer" Background="#0284C7" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnRestartExplorer_Click"/>
                                             </Grid>
@@ -364,15 +364,15 @@
                     </Grid.RowDefinitions>
 
                     <!-- 顶部标题与作用域选择 -->
-                    <Border Grid.Row="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,10">
+                    <Border Grid.Row="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,10">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                <TextBlock Text="🛠️ PATH 环境变量列表与失效路径检测" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                <TextBlock Text=" (支持调整前后优先级、高亮幽灵死路径、快速清理无效条目)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                <TextBlock Text="🛠️ PATH 环境变量列表与失效路径检测" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                <TextBlock Text=" (支持调整前后优先级、高亮幽灵死路径、快速清理无效条目)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                             </WrapPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                                 <RadioButton x:Name="RbUserPath" Content="当前用户 (User)" IsChecked="True" VerticalAlignment="Center" Margin="0,0,10,0" Checked="RbPathScope_Checked"/>
@@ -394,8 +394,8 @@
 
                     <!-- DataGrid 表格 -->
                     <DataGrid Grid.Row="2" x:Name="GridPathEntries" AutoGenerateColumns="False" IsReadOnly="True" MinHeight="260"
-                              Background="White" BorderBrush="#E2E8F0" RowHeight="32" GridLinesVisibility="Horizontal"
-                              HorizontalGridLinesBrush="#F1F5F9">
+                              Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushTableBorder}" RowHeight="32" GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="物理路径 (Path)" Binding="{Binding Path}" Width="*"/>
                             <DataGridTemplateColumn Header="状态检测" Width="180">

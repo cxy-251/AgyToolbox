@@ -7,45 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="950" d:DesignWidth="1100">
 
-    <UserControl.Resources>
-        <!-- 子标签页平铺现代化样式 -->
-        <Style x:Key="SubTabItemStyle" TargetType="TabItem">
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="12,7"/>
-            <Setter Property="Margin" Value="0,0,3,0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Foreground" Value="#64748B"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="SubTabBorder" Background="#F1F5F9" CornerRadius="6,6,0,0" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
-                            <ContentPresenter x:Name="SubContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
-                                <Setter Property="Foreground" Value="#0284C7"/>
-                                <Setter Property="FontWeight" Value="Bold"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="SubTabBorder" Property="Background" Value="#E2E8F0"/>
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsSelected" Value="True"/>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
-
-    <Grid Background="#F8FAFC">
+    <Grid Background="{DynamicResource BrushWindowBg}">
         <Grid.RowDefinitions>
             <!-- 顶部标题与故障检索栏 -->
             <RowDefinition Height="Auto"/>
@@ -54,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- 顶部功能头与搜索过滤栏 -->
-        <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="16,12">
+        <Border Grid.Row="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="0,0,0,1" Padding="16,12">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -68,12 +30,12 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="📖 步骤三：Windows 内置工具工程排错手册与系统管理体系" FontSize="15" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="📖 步骤三：Windows 内置工具工程排错手册与系统管理体系" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                         <TextBlock Text="收录 30+ 核心原生诊断工具与控制台。各工具模块独立封装，提供参数代价分析、GUI 巡检指南、现代替代方案与 AQS 检索实战。"
-                                   FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                                   FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
                     </StackPanel>
-                    <Border Grid.Column="1" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
-                        <TextBlock Text="8 大工程维度 · 零第三方依赖" FontSize="10" Foreground="#475569" FontWeight="SemiBold"/>
+                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
+                        <TextBlock Text="8 大工程维度 · 零第三方依赖" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" FontWeight="SemiBold"/>
                     </Border>
                 </Grid>
 
@@ -83,21 +45,21 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="8,4">
+                    <Border Grid.Column="0" Background="{DynamicResource BrushInputBg}" BorderBrush="{DynamicResource BrushInputBorder}" BorderThickness="1" CornerRadius="6" Padding="8,4">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="🔍" FontSize="12" Foreground="#94A3B8" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                            <TextBox x:Name="TbSearch" Grid.Column="1" BorderThickness="0" Background="Transparent" FontSize="12"
+                            <TextBlock Grid.Column="0" Text="🔍" FontSize="12" Foreground="{DynamicResource BrushTextMuted}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TbSearch" Grid.Column="1" BorderThickness="0" Background="Transparent" Foreground="{DynamicResource BrushTextPrimary}" FontSize="12"
                                      VerticalAlignment="Center" TextChanged="TbSearch_TextChanged"
                                      ToolTip="输入故障症状或工具名，如：文件被占、蓝屏、端口探测、睡眠发热、恢复环境、WinRE、哈希、双网卡分流、冷重启、TRIM、坏道..."/>
                             <TextBlock Grid.Column="1" x:Name="TbSearchPlaceholder" Text="输入故障症状、指令或工具名 (如: 端口探测, 蓝屏, 句柄占用, 睡眠发热, 恢复环境, 哈希, 双网卡分流, 清零...)"
-                                       FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" IsHitTestVisible="False" Margin="2,0,0,0"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextMuted}" VerticalAlignment="Center" IsHitTestVisible="False" Margin="2,0,0,0"/>
                             <Button x:Name="BtnClearSearch" Grid.Column="2" Content="✕" Visibility="Collapsed"
-                                    Background="Transparent" Foreground="#94A3B8" BorderThickness="0" Padding="4,0" Cursor="Hand" Click="BtnClearSearch_Click"/>
+                                    Background="Transparent" Foreground="{DynamicResource BrushTextMuted}" BorderThickness="0" Padding="4,0" Cursor="Hand" Click="BtnClearSearch_Click"/>
                         </Grid>
                     </Border>
                 </Grid>
@@ -108,8 +70,8 @@
         <Grid Grid.Row="1">
 
             <!-- 1. 常规模式：8 大模块横向标签页 -->
-            <TabControl x:Name="MainTabControl" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0"
-                        ItemContainerStyle="{StaticResource SubTabItemStyle}">
+            <TabControl x:Name="MainTabControl" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="0,1,0,0"
+                        ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
                 <!-- Tab 1: 崩溃与内核急救 -->
                 <TabItem Header="💥 崩溃与内核急救">
@@ -154,19 +116,19 @@
             </TabControl>
 
             <!-- 2. 搜索过滤模式：动态匹配卡片列表 -->
-            <Border x:Name="PanelSearchResults" Background="#F8FAFC" Visibility="Collapsed" Padding="14">
+            <Border x:Name="PanelSearchResults" Background="{DynamicResource BrushWindowBg}" Visibility="Collapsed" Padding="14">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <WrapPanel Margin="0,0,0,10" VerticalAlignment="Center">
-                            <TextBlock Text="🎯 匹配到的故障场景与诊断方案：" FontSize="13" FontWeight="Bold" Foreground="#0F172A"/>
-                            <TextBlock x:Name="TxtResultCount" Text="(0 项)" FontSize="12" Foreground="#64748B" Margin="6,0,0,0"/>
+                            <TextBlock Text="🎯 匹配到的故障场景与诊断方案：" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <TextBlock x:Name="TxtResultCount" Text="(0 项)" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,0,0,0"/>
                         </WrapPanel>
 
                         <!-- 动态渲染的匹配项列表 -->
                         <ItemsControl x:Name="ListSearchResults">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
+                                    <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -174,13 +136,13 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
                                                 <WrapPanel Margin="0,0,0,4">
-                                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="13" Foreground="#0F172A"/>
-                                                    <Border Background="#EFF6FF" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
-                                                        <TextBlock Text="{Binding Category}" FontSize="10" Foreground="#0284C7" FontWeight="SemiBold"/>
+                                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                    <Border Background="{DynamicResource BrushSidebarItemSelected}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                                        <TextBlock Text="{Binding Category}" FontSize="10" Foreground="{DynamicResource BrushSidebarItemSelectedText}" FontWeight="SemiBold"/>
                                                     </Border>
                                                 </WrapPanel>
-                                                <TextBlock Text="{Binding Symptom}" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                                <Border Background="#F1F5F9" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left">
+                                                <TextBlock Text="{Binding Symptom}" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                                <Border Background="{DynamicResource BrushCodeBg}" BorderBrush="{DynamicResource BrushCodeBorder}" BorderThickness="1" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left">
                                                     <TextBlock Text="{Binding CommandOrAction}" FontFamily="Consolas" FontSize="10" Foreground="#0284C7"/>
                                                 </Border>
                                             </StackPanel>

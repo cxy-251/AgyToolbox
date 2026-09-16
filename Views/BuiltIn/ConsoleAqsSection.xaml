@@ -9,29 +9,29 @@
         <StackPanel Margin="0,0,0,24">
 
             <!-- 模块概述 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="🧰 管理控制台矩阵与资源管理器高级检索语法 (AQS)" FontSize="14" FontWeight="Bold" Foreground="#334155" Margin="0,0,0,4"/>
+                    <TextBlock Text="🧰 管理控制台矩阵与资源管理器高级检索语法 (AQS)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                     <TextBlock Text="从 5 个工程维度彻底掌握无需第三方搜索工具的原生 AQS 查询语法，结合系统级 MMC 管理单元与远程协同工具，实现高效开荒与维护。"
-                               FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
             <!-- 工具 1: AQS 高级查询语法全套手册 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Text="1. 资源管理器高级查询语法 (AQS - Advanced Query Syntax)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                        <Border Background="#E0F2FE" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="5 大维度全套实战" FontSize="10" Foreground="#0284C7" FontWeight="Bold"/>
+                        <TextBlock Text="1. 资源管理器高级查询语法 (AQS - Advanced Query Syntax)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="5 大维度全套实战" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
                         </Border>
                     </WrapPanel>
                     <TextBlock Text="无需安装第三方检索软件，Windows 资源管理器搜索框原生支持极其强大的 AQS 结构化查询语法。可按类型、大小阶梯、时间区间、内容索引与布尔逻辑精确过滤。"
-                               FontSize="11" Foreground="#64748B" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                     <!-- AQS 5 维表格 -->
-                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4">
-                        <Grid Background="White">
+                    <Border BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="1" CornerRadius="4">
+                        <Grid Background="{DynamicResource BrushCardBg}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -47,7 +47,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="8,6">
+                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="{DynamicResource BrushTableHeaderBg}" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" Padding="8,6">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="130"/>
@@ -55,90 +55,90 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="检索维度" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="1" Text="标准 AQS 语法范例" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="2" Text="检索行为与适用场景" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="#475569" Margin="0,0,12,0"/>
+                                    <TextBlock Grid.Column="0" Text="检索维度" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="1" Text="标准 AQS 语法范例" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="2" Text="检索行为与适用场景" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,12,0"/>
                                 </Grid>
                             </Border>
 
                             <!-- 维度 1: 类型 -->
-                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="类型与扩展名" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="类型与扩展名" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
-                                    <TextBlock Text="kind:code" FontFamily="Consolas" FontSize="10" Foreground="#0F172A"/>
-                                    <TextBlock Text="kind:pics  /  ext:log" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="kind:code" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <TextBlock Text="kind:pics  /  ext:log" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="按类型类别收敛。kind:code 匹配 .cs/.py/.js/.cpp 等全部源码文件；ext: 针对确切后缀过滤。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="按类型类别收敛。kind:code 匹配 .cs/.py/.js/.cpp 等全部源码文件；ext: 针对确切后缀过滤。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="kind:code ext:log" Click="BtnCopyCmd_Click"/>
                             </Border>
 
                             <!-- 维度 2: 容量 -->
-                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="容量阶梯与大小" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="容量阶梯与大小" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
-                                    <TextBlock Text="size:>1GB" FontFamily="Consolas" FontSize="10" Foreground="#0F172A"/>
-                                    <TextBlock Text="size:gigantic  /  size:>500MB" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="size:>1GB" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <TextBlock Text="size:gigantic  /  size:>500MB" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="精确容量或别名：tiny(&lt;10KB)、small(10-100KB)、medium(100KB-1MB)、large(1-16MB)、huge(16-128MB)、gigantic(&gt;128MB)。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="精确容量或别名：tiny(&lt;10KB)、small(10-100KB)、medium(100KB-1MB)、large(1-16MB)、huge(16-128MB)、gigantic(&gt;128MB)。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="size:>1GB" Click="BtnCopyCmd_Click"/>
                             </Border>
 
                             <!-- 维度 3: 时间 -->
-                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="修改时间与区间" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="修改时间与区间" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
-                                    <TextBlock Text="datemodified:today" FontFamily="Consolas" FontSize="10" Foreground="#0F172A"/>
-                                    <TextBlock Text="datemodified:2024-01-01..2024-06-30" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="datemodified:today" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <TextBlock Text="datemodified:2024-01-01..2024-06-30" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="支持自然语言相对日期（today, yesterday, this week, last month）或双点闭区间绝对日期范围。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="支持自然语言相对日期（today, yesterday, this week, last month）或双点闭区间绝对日期范围。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="3" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="datemodified:this week" Click="BtnCopyCmd_Click"/>
                             </Border>
 
                             <!-- 维度 4: 名字 vs 内容 -->
-                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="文件名 vs 内容" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="文件名 vs 内容" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
-                                    <TextBlock Text="name:config.json" FontFamily="Consolas" FontSize="10" Foreground="#0F172A"/>
-                                    <TextBlock Text="content:&quot;connectionString&quot;" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="name:config.json" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <TextBlock Text="content:&quot;connectionString&quot;" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="4" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="显式限定 name: 仅比对文件名（速度极快）；content: 则对已建立索引的文件执行全文内容语义搜索。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="4" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="显式限定 name: 仅比对文件名（速度极快）；content: 则对已建立索引的文件执行全文内容语义搜索。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="4" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="4" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="content:&quot;api_key&quot;" Click="BtnCopyCmd_Click"/>
                             </Border>
 
                             <!-- 维度 5: 布尔复合实战 -->
-                            <Border Grid.Row="5" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
-                                <TextBlock Text="布尔逻辑工程组合" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="5" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                <TextBlock Text="布尔逻辑工程组合" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="5" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
-                                <TextBlock Text="(kind:docs OR kind:code) AND size:>10MB NOT name:min" FontFamily="Consolas" FontSize="9" Foreground="#0F172A" TextWrapping="Wrap"/>
+                            <Border Grid.Row="5" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                <TextBlock Text="(kind:docs OR kind:code) AND size:>10MB NOT name:min" FontFamily="Consolas" FontSize="9" Foreground="{DynamicResource BrushTextPrimary}" TextWrapping="Wrap"/>
                             </Border>
                             <Border Grid.Row="5" Grid.Column="2" Padding="8,6">
-                                <TextBlock Text="利用大写 AND、OR、NOT 及圆括号实现复杂条件筛选，精确定位开发仓库或文档目录中的巨型异常文件。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                                <TextBlock Text="利用大写 AND、OR、NOT 及圆括号实现复杂条件筛选，精确定位开发仓库或文档目录中的巨型异常文件。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
                             <Border Grid.Row="5" Grid.Column="3" Padding="6" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="(kind:docs OR kind:code) AND size:>10MB NOT name:min" Click="BtnCopyCmd_Click"/>
@@ -149,14 +149,14 @@
             </Border>
 
             <!-- 工具 2: MMC 管理控制台速查矩阵 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="2. Windows 管理控制台核心管理单元 (MMC Snap-ins)" FontSize="14" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,4"/>
+                    <TextBlock Text="2. Windows 管理控制台核心管理单元 (MMC Snap-ins)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                     <TextBlock Text="在 Win + R 运行框中直接启动核心管理单元，绕开层层嵌套的现代设置应用，直击系统底层。"
-                               FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
 
-                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4">
-                        <Grid Background="White">
+                    <Border BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="1" CornerRadius="4">
+                        <Grid Background="{DynamicResource BrushCardBg}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -171,7 +171,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="8,6">
+                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="{DynamicResource BrushTableHeaderBg}" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" Padding="8,6">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="150"/>
@@ -179,60 +179,60 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="控制台指令" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="1" Text="管理单元名称" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="2" Text="核心巡检与排障场景" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="#475569" Margin="0,0,12,0"/>
+                                    <TextBlock Grid.Column="0" Text="控制台指令" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="1" Text="管理单元名称" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="2" Text="核心巡检与排障场景" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,12,0"/>
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="devmgmt.msc" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="devmgmt.msc" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="设备管理器" FontSize="11" Foreground="#334155"/>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="设备管理器" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="排查带黄色感叹号的缺失驱动，或回滚近期导致蓝屏的不稳定外设驱动。" FontSize="10" TextWrapping="Wrap" Foreground="#475569"/>
+                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="排查带黄色感叹号的缺失驱动，或回滚近期导致蓝屏的不稳定外设驱动。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="启动" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="devmgmt.msc" Click="BtnLaunchCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="services.msc" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="services.msc" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="系统服务管理器" FontSize="11" Foreground="#334155"/>
+                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="系统服务管理器" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="配置服务的启动类型（自动/手动/禁用），查看登录身份与失败后的自愈恢复动作。" FontSize="10" TextWrapping="Wrap" Foreground="#475569"/>
+                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="配置服务的启动类型（自动/手动/禁用），查看登录身份与失败后的自愈恢复动作。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="启动" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="services.msc" Click="BtnLaunchCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="gpedit.msc" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="gpedit.msc" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="本地组策略编辑器" FontSize="11" Foreground="#334155"/>
+                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="本地组策略编辑器" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="专业版及以上系统配置 Windows Update、BitLocker 策略及系统安全策略的权威中枢。" FontSize="10" TextWrapping="Wrap" Foreground="#475569"/>
+                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="专业版及以上系统配置 Windows Update、BitLocker 策略及系统安全策略的权威中枢。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="3" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="启动" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="gpedit.msc" Click="BtnLaunchCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
-                                <TextBlock Text="cleanmgr.exe" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                <TextBlock Text="cleanmgr.exe" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}"/>
                             </Border>
-                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
-                                <TextBlock Text="磁盘清理实用程序" FontSize="11" Foreground="#334155"/>
+                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                <TextBlock Text="磁盘清理实用程序" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
                             <Border Grid.Row="4" Grid.Column="2" Padding="8,6">
-                                <TextBlock Text="点击「清理系统文件」安全删除 Windows.old、DirectX 着色器缓存与驱动安装包备份。" FontSize="10" TextWrapping="Wrap" Foreground="#475569"/>
+                                <TextBlock Text="点击「清理系统文件」安全删除 Windows.old、DirectX 着色器缓存与驱动安装包备份。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextSecondary}"/>
                             </Border>
                             <Border Grid.Row="4" Grid.Column="3" Padding="6" VerticalAlignment="Center">
                                 <Button Content="启动" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="cleanmgr.exe" Click="BtnLaunchCmd_Click"/>
@@ -243,16 +243,16 @@
             </Border>
 
             <!-- 工具 3: 远程协助与步骤记录器 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="3. 原生故障协作与重现工具 (msra.exe / psr.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="3. 原生故障协作与重现工具 (msra.exe / psr.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                         <TextBlock Text="远程技术支持与故障自动截图重现。注意：在 Win11 新版本中微软已标记废弃 psr，推荐使用 Snipping Tool 视频录屏。"
-                                   FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                                   FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Content="步骤记录器 (psr)" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnStepsRecorder_Click"/>

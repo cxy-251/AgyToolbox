@@ -8,10 +8,10 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
         <StackPanel Margin="10">
             <TextBlock Text="Windows 内置实用命令行工具与网络诊断能力速查："
-                       FontSize="13" Foreground="#64748B" Margin="0,0,0,16"/>
+                       FontSize="13" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,16"/>
 
             <!-- 功能 1: WiFi 密码一键提取 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -23,14 +23,14 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="📶 本机已存 WiFi 密码一键导出" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (原理: netsh wlan show profile key=clear)" FontSize="12" Foreground="#94A3B8" Margin="6,3,0,0"/>
+                            <TextBlock Text="📶 本机已存 WiFi 密码一键导出" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                            <TextBlock Text=" (原理: netsh wlan show profile key=clear)" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,3,0,0"/>
                         </WrapPanel>
                         <Button Grid.Column="1" Content="立即提取" Click="BtnGetWifi_Click"/>
                     </Grid>
                     <DataGrid x:Name="GridWifi" Grid.Row="1" Margin="0,12,0,0" AutoGenerateColumns="False" IsReadOnly="True"
-                              Background="White" BorderBrush="#E2E8F0" MaxHeight="180" Visibility="Collapsed"
-                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9">
+                              Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushTableBorder}" MaxHeight="180" Visibility="Collapsed"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="WiFi 名称 (SSID)" Binding="{Binding Ssid}" Width="250"/>
                             <DataGridTextColumn Header="明文密码" Binding="{Binding Password}" Width="*"/>
@@ -40,11 +40,11 @@
             </Border>
 
             <!-- 功能 2: 端口占用终结 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="🌐 端口占用嗅探与一键终结" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                        <TextBlock Text=" (解决 8080/3000/5000 端口莫名被占问题)" FontSize="12" Foreground="#94A3B8" Margin="8,2,0,0"/>
+                        <TextBlock Text="🌐 端口占用嗅探与一键终结" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                        <TextBlock Text=" (解决 8080/3000/5000 端口莫名被占问题)" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="8,2,0,0"/>
                     </StackPanel>
                     <Grid Margin="0,12,0,0">
                         <Grid.ColumnDefinitions>
@@ -56,7 +56,7 @@
                         <TextBlock Text="目标端口:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
                         <TextBox x:Name="TxtPortToKill" Grid.Column="1" Text="8080" Padding="6" FontSize="13" Margin="0,0,10,0"/>
                         <Button Grid.Column="2" Content="查占用的进程" Click="BtnCheckPort_Click"/>
-                        <TextBlock x:Name="TxtPortResult" Grid.Column="3" VerticalAlignment="Center" Margin="14,0,0,0" FontSize="13" Foreground="#64748B"/>
+                        <TextBlock x:Name="TxtPortResult" Grid.Column="3" VerticalAlignment="Center" Margin="14,0,0,0" FontSize="13" Foreground="{DynamicResource BrushTextSecondary}"/>
                     </Grid>
                     <StackPanel x:Name="PanelKillPort" Orientation="Horizontal" Margin="0,10,0,0" Visibility="Collapsed">
                         <TextBlock x:Name="TxtPortOccupantDesc" Text="-" VerticalAlignment="Center" Foreground="#DC2626" FontWeight="SemiBold" Margin="0,0,12,0"/>
@@ -66,7 +66,7 @@
             </Border>
 
             <!-- 功能 3: 官方电池寿命与损耗体检报告 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -74,37 +74,37 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🔋 官方笔记本电池健康与损耗体检" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (原理: powercfg /batteryreport)" FontSize="12" Foreground="#94A3B8" Margin="8,2,0,0"/>
+                            <TextBlock Text="🔋 官方笔记本电池健康与损耗体检" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                            <TextBlock Text=" (原理: powercfg /batteryreport)" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="8,2,0,0"/>
                         </StackPanel>
                         <TextBlock Text="无需安装任何第三方大师软件，直接调用 Windows 内核电源驱动生成权威 HTML 体检报告。"
-                                   FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                                   FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="生成并打开报告" Click="BtnBatteryReport_Click" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
 
             <!-- 功能 4: 常用内置神器入口与原理解析 -->
-            <TextBlock Text="🛠️ Windows 内置隐藏工具 (点击直达 + 底层原理解密)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,6,0,12"/>
+            <TextBlock Text="🛠️ Windows 内置隐藏工具 (点击直达 + 底层原理解密)" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,6,0,12"/>
 
             <!-- 4.1 可靠性历史 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="📉 可靠性历史监视器 (perfmon /rel)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】直接聚合系统内核事件日志中的应用程序崩溃、蓝屏代码与硬件故障，生成 1~10 分的稳定性折线图。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】电脑莫名闪退、死机或蓝屏时，点击对应日期即可看到是哪个具体 DLL 模块报错，排查真凶必备。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="📉 可靠性历史监视器 (perfmon /rel)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="【底层原理】直接聚合系统内核事件日志中的应用程序崩溃、蓝屏代码与硬件故障，生成 1~10 分的稳定性折线图。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】电脑莫名闪退、死机或蓝屏时，点击对应日期即可看到是哪个具体 DLL 模块报错，排查真凶必备。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="打开可靠性图表" Style="{DynamicResource SecondaryButton}" Click="BtnReliability_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- 4.2 免权限编辑 Hosts -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -112,107 +112,107 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📝 免权限极速编辑 Hosts 文件" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                            <TextBlock Text=" (notepad.exe runas drivers/etc/hosts)" FontSize="12" Foreground="#94A3B8" Margin="8,1,0,0"/>
+                            <TextBlock Text="📝 免权限极速编辑 Hosts 文件" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <TextBlock Text=" (notepad.exe runas drivers/etc/hosts)" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="8,1,0,0"/>
                         </StackPanel>
-                        <TextBlock Text="【底层原理】以 UAC 提升管理员权限调用记事本。新手直接编辑受系统保护的 hosts 时，保存必弹‘拒绝访问’或另存为 txt。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】为 GitHub、Steam 或本地开发项目绑定固定静态 IP 域名解析，直接保存生效。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="【底层原理】以 UAC 提升管理员权限调用记事本。新手直接编辑受系统保护的 hosts 时，保存必弹‘拒绝访问’或另存为 txt。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】为 GitHub、Steam 或本地开发项目绑定固定静态 IP 域名解析，直接保存生效。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="编辑 Hosts" Style="{DynamicResource SecondaryButton}" Click="BtnEditHosts_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- 4.3 刷新 DNS 解析缓存 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="🌐 刷新本地 DNS 解析缓存 (ipconfig /flushdns)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】强制清空本地系统 Dnscache 驻留内存中的域名与 IP 映射表，避免继续使用旧的污染解析。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】换了网络节点、改了 Hosts、或‘微信能发消息但网页打不开’时一键还原生效。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="🌐 刷新本地 DNS 解析缓存 (ipconfig /flushdns)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="【底层原理】强制清空本地系统 Dnscache 驻留内存中的域名与 IP 映射表，避免继续使用旧的污染解析。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】换了网络节点、改了 Hosts、或‘微信能发消息但网页打不开’时一键还原生效。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="刷新 DNS 缓存" Style="{DynamicResource SecondaryButton}" Click="BtnFlushDns_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- 4.4 上帝模式 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="🧙 上帝模式全能控制台 (GodMode)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】系统虚拟命名空间 GUID 文件夹，将 Windows 注册表内的全部 200+ 项系统底层控制项聚合成一个平面列表。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】Windows 11 新设置界面折叠太深，用它免翻菜单，一步搜出任意老版经典控制面板功能。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="🧙 上帝模式全能控制台 (GodMode)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="【底层原理】系统虚拟命名空间 GUID 文件夹，将 Windows 注册表内的全部 200+ 项系统底层控制项聚合成一个平面列表。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】Windows 11 新设置界面折叠太深，用它免翻菜单，一步搜出任意老版经典控制面板功能。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="打开上帝模式" Style="{DynamicResource SecondaryButton}" Click="BtnGodMode_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- 4.5 步骤记录器 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="📸 问题步骤自动截图记录器 (psr.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】微软内置的无感诊断工具，监听全局鼠标动作，每点击一次自动在目标控件加绿框截图并生成步骤报表。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】指导他人使用软件、或者复现复杂 Bug 发给技术支持，无需手动一步步截图打字。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="📸 问题步骤自动截图记录器 (psr.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="【底层原理】微软内置的无感诊断工具，监听全局鼠标动作，每点击一次自动在目标控件加绿框截图并生成步骤报表。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】指导他人使用软件、或者复现复杂 Bug 发给技术支持，无需手动一步步截图打字。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="启动 PSR" Style="{DynamicResource SecondaryButton}" Click="BtnPsr_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- 4.6 微软恶意软件查杀 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="🛡️ 微软官方恶意软件删除工具 (mrt.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】Windows 随月度安全更新下发的恶意代码清除程序，查杀完成后自动退出，无后台驻留进程。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】系统疑似感染恶意程序，或外接移动存储设备后进行专项安全扫描。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="🛡️ 微软官方恶意软件删除工具 (mrt.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="【底层原理】Windows 随月度安全更新下发的恶意代码清除程序，查杀完成后自动退出，无后台驻留进程。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】系统疑似感染恶意程序，或外接移动存储设备后进行专项安全扫描。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="启动 MRT" Style="{DynamicResource SecondaryButton}" Click="BtnMrt_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- 4.7 硬件与显卡 DirectX 诊断 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="🕹️ DirectX 显卡驱动与硬件诊断工具 (dxdiag.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】通过 WDDM 显示驱动模型接口读取显示芯片、显存规格、Direct3D 功能级别与驱动签名状态。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】核验显示适配器规格参数，查看高刷新率与 HDR 支持状态。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="🕹️ DirectX 显卡驱动与硬件诊断工具 (dxdiag.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="【底层原理】通过 WDDM 显示驱动模型接口读取显示芯片、显存规格、Direct3D 功能级别与驱动签名状态。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】核验显示适配器规格参数，查看高刷新率与 HDR 支持状态。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="启动 DXDiag" Style="{DynamicResource SecondaryButton}" Click="BtnDxDiag_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>
             </Border>
 
             <!-- 4.8 深度资源监视器 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="📊 深度资源监视器 (resmon.exe)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="【底层原理】系统内核句柄与 I/O 过滤器，比任务管理器更细粒度地监控具体进程锁定了哪个文件和哪个 TCP 端口连接。" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
-                        <TextBlock Text="【日常场景】删除文件夹提示‘文件被占用无法删除’时，直接在里面搜关联句柄一键解除占用。" FontSize="12" Foreground="#0284C7" Margin="0,2,0,0"/>
+                        <TextBlock Text="📊 深度资源监视器 (resmon.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="【底层原理】系统内核句柄与 I/O 过滤器，比任务管理器更细粒度地监控具体进程锁定了哪个文件和哪个 TCP 端口连接。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0"/>
+                        <TextBlock Text="【日常场景】删除文件夹提示‘文件被占用无法删除’时，直接在里面搜关联句柄一键解除占用。" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,2,0,0"/>
                     </StackPanel>
                     <Button Grid.Column="1" Content="启动 ResMon" Style="{DynamicResource SecondaryButton}" Click="BtnResmon_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </Grid>

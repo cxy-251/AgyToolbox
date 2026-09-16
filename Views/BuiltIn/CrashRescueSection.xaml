@@ -9,16 +9,16 @@
         <StackPanel Margin="0,0,0,24">
 
             <!-- 模块概述 -->
-            <Border Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushAlertRedBg}" BorderBrush="{DynamicResource BrushAlertRedBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="💥 崩溃分析、内核转储与系统完整性急救" FontSize="14" FontWeight="Bold" Foreground="#991B1B" Margin="0,0,0,4"/>
+                    <TextBlock Text="💥 崩溃分析、内核转储与系统完整性急救" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushAlertRedText}" Margin="0,0,0,4"/>
                     <TextBlock Text="当 Windows 遇到死机、蓝屏 (BSOD)、随机重启或系统核心 DLL 损坏时，无需盲目重装。通过内核转储 (Minidump)、BugCheck 故障码定位、硬件内存诊断与映像自愈，可实现根因闭环处置。"
-                               FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushAlertRedText}" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
             <!-- 工具 1: BSOD 蓝屏内核转储与 BugCheck 致命故障码速查 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -27,13 +27,13 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="1. BSOD 崩溃转储分析与关键 BugCheck 判定" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                                <TextBlock Text="1. BSOD 崩溃转储分析与关键 BugCheck 判定" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                 <Border Background="#EF4444" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
                                     <TextBlock Text="内核级故障" FontSize="10" Foreground="White" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="蓝屏并非毫无由头，Windows 会在崩溃瞬间向磁盘落盘内核堆栈快照 (Dump)。首要任务是获取转储并读取停机代码。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <Button Content="打开 Minidump 目录" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,0" Click="BtnOpenMinidump_Click"/>
@@ -42,19 +42,19 @@
                     </Grid>
 
                     <!-- 转储配置巡检指南 -->
-                    <Border Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                    <Border Background="{DynamicResource BrushWindowBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
                         <StackPanel>
-                            <TextBlock Text="📋 转储配置巡检指南 (高级系统设置 ➔ 启动和故障恢复)" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                            <TextBlock Text="• 存储路径：%SystemRoot%\Minidump（即 C:\Windows\Minidump\*.dmp）为轻量分析首选；完整转储为 C:\Windows\MEMORY.DMP。" FontSize="11" Foreground="#475569" Margin="0,1"/>
-                            <TextBlock Text="• 推荐设置：写入调试信息选择「小内存转储 (256KB)」，勾选「自动重新启动」，取消勾选「覆盖任何现有文件」。" FontSize="11" Foreground="#475569" Margin="0,1"/>
-                            <TextBlock Text="• 分析工具：使用 WinDbg Preview 或轻量级 BlueScreenView 打开 .dmp 文件，重点查看 Caused By Driver（导致崩溃的驱动模块）。" FontSize="11" Foreground="#475569" Margin="0,1"/>
+                            <TextBlock Text="📋 转储配置巡检指南 (高级系统设置 ➔ 启动和故障恢复)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="• 存储路径：%SystemRoot%\Minidump（即 C:\Windows\Minidump\*.dmp）为轻量分析首选；完整转储为 C:\Windows\MEMORY.DMP。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
+                            <TextBlock Text="• 推荐设置：写入调试信息选择「小内存转储 (256KB)」，勾选「自动重新启动」，取消勾选「覆盖任何现有文件」。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
+                            <TextBlock Text="• 分析工具：使用 WinDbg Preview 或轻量级 BlueScreenView 打开 .dmp 文件，重点查看 Caused By Driver（导致崩溃的驱动模块）。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
                         </StackPanel>
                     </Border>
 
                     <!-- 4 大典型 BugCheck 代码矩阵 -->
-                    <TextBlock Text="核心 BugCheck 代码与排障对策矩阵：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,4,0,6"/>
-                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4">
-                        <Grid Background="White">
+                    <TextBlock Text="核心 BugCheck 代码与排障对策矩阵：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,4,0,6"/>
+                    <Border BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="1" CornerRadius="4">
+                        <Grid Background="{DynamicResource BrushCardBg}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -68,73 +68,73 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="0" Grid.ColumnSpan="3" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="8,6">
+                            <Border Grid.Row="0" Grid.ColumnSpan="3" Background="{DynamicResource BrushTableHeaderBg}" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" Padding="8,6">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="220"/>
                                         <ColumnDefinition Width="260"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="停机故障码 (BugCheck)" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="1" Text="物理诱因与常发驱动" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="2" Text="标准化工程处置对策" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
+                                    <TextBlock Grid.Column="0" Text="停机故障码 (BugCheck)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="1" Text="物理诱因与常发驱动" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="2" Text="标准化工程处置对策" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
                                 </Grid>
                             </Border>
 
                             <!-- Row 1: 0x3B -->
-                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
                                     <TextBlock Text="0x0000003B" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#DC2626"/>
-                                    <TextBlock Text="SYSTEM_SERVICE_EXCEPTION" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="SYSTEM_SERVICE_EXCEPTION" FontSize="10" Foreground="{DynamicResource BrushTextMuted}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="核心态执行非法代码。多发于显卡驱动 (nvlddmkm.sys/amdkmdag.sys)、反作弊驱动或内存接触不良。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="核心态执行非法代码。多发于显卡驱动 (nvlddmkm.sys/amdkmdag.sys)、反作弊驱动或内存接触不良。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1">
-                                <TextBlock Text="使用 DDU 彻底卸载显卡驱动后重装 WHQL 稳定版；运行 mdsched.exe 排查内存接触与 XMP。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="使用 DDU 彻底卸载显卡驱动后重装 WHQL 稳定版；运行 mdsched.exe 排查内存接触与 XMP。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
 
                             <!-- Row 2: 0x7E -->
-                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
                                     <TextBlock Text="0x0000007E" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#DC2626"/>
-                                    <TextBlock Text="SYSTEM_THREAD_EXCEPTION_NOT_HANDLED" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="SYSTEM_THREAD_EXCEPTION_NOT_HANDLED" FontSize="10" Foreground="{DynamicResource BrushTextMuted}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="系统线程引发未被捕获的异常。多见于新安装的外设驱动或系统补丁与硬件驱动冲突。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="系统线程引发未被捕获的异常。多见于新安装的外设驱动或系统补丁与硬件驱动冲突。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1">
-                                <TextBlock Text="安全模式下回滚最近更新的驱动；运行 DISM 修复受损映像；检查系统磁盘可用空间。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="安全模式下回滚最近更新的驱动；运行 DISM 修复受损映像；检查系统磁盘可用空间。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
 
                             <!-- Row 3: 0x9F -->
-                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
                                     <TextBlock Text="0x0000009F" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#DC2626"/>
-                                    <TextBlock Text="DRIVER_POWER_STATE_FAILURE" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="DRIVER_POWER_STATE_FAILURE" FontSize="10" Foreground="{DynamicResource BrushTextMuted}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="电源状态转换死锁。系统休眠、睡眠或唤醒时，网卡/主板/蓝牙驱动未在时限内响应电源 IRP 请求。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="电源状态转换死锁。系统休眠、睡眠或唤醒时，网卡/主板/蓝牙驱动未在时限内响应电源 IRP 请求。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1">
-                                <TextBlock Text="在设备管理器中关闭无线网卡与 USB Hub 的「允许计算机关闭此设备以节约电源」；更新主板芯片组驱动。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1">
+                                <TextBlock Text="在设备管理器中关闭无线网卡与 USB Hub 的「允许计算机关闭此设备以节约电源」；更新主板芯片组驱动。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
 
                             <!-- Row 4: 0x133 -->
-                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
+                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
                                 <StackPanel>
                                     <TextBlock Text="0x00000133" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#DC2626"/>
-                                    <TextBlock Text="DPC_WATCHDOG_VIOLATION" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="DPC_WATCHDOG_VIOLATION" FontSize="10" Foreground="{DynamicResource BrushTextMuted}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
-                                <TextBlock Text="DPC/ISR 延时看门狗超时。NVMe 固态硬盘固件挂起、SATA 控制器驱动冲突或音频驱动堆积。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                <TextBlock Text="DPC/ISR 延时看门狗超时。NVMe 固态硬盘固件挂起、SATA 控制器驱动冲突或音频驱动堆积。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
                             <Border Grid.Row="4" Grid.Column="2" Padding="8,6">
-                                <TextBlock Text="升级 SSD 官方固件；更新主板快速存储技术驱动 (IRST) 或降级为微软标准 NVMe 控制器驱动。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                                <TextBlock Text="升级 SSD 官方固件；更新主板快速存储技术驱动 (IRST) 或降级为微软标准 NVMe 控制器驱动。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
                         </Grid>
                     </Border>
@@ -142,7 +142,7 @@
             </Border>
 
             <!-- 工具 2: 可靠性监视器 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -155,25 +155,25 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="2. 系统可靠性监视器 (Reliability Monitor)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#E0E7FF" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="perfmon /rel" FontSize="10" FontFamily="Consolas" Foreground="#3730A3"/>
+                                <TextBlock Text="2. 系统可靠性监视器 (Reliability Monitor)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="perfmon /rel" FontSize="10" FontFamily="Consolas" Foreground="{DynamicResource BrushAlertBlueText}"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="比事件查看器直观十倍的崩溃历史时间轴。自动对每天的应用程序崩溃、Windows 未正常关机、驱动安装进行打分 (1~10 分)。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="打开可靠性监视器" VerticalAlignment="Center" Click="BtnReliability_Click"/>
                     </Grid>
-                    <Border Grid.Row="1" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
+                    <Border Grid.Row="1" Background="{DynamicResource BrushWindowBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
                         <TextBlock Text="🔍 巡检要点：重点点击曲线上出现红色叉号 (X) 的日期，在下方列表查看具体哪个 exe 崩溃或哪个 Windows 更新导致系统异常，双击可查看故障模块名称与异常代码 (如 c0000005 访问违规)。"
-                                   FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
+                                   FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                     </Border>
                 </Grid>
             </Border>
 
             <!-- 工具 3: Windows 内存诊断 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -186,29 +186,29 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="3. Windows 内存诊断 (mdsched.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="物理硬件级排查" FontSize="10" Foreground="#B45309" FontWeight="Bold"/>
+                                <TextBlock Text="3. Windows 内存诊断 (mdsched.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="物理硬件级排查" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="当遇到频繁无规律蓝屏、文件解压校验 CRC 错误或软件莫名闪退时，用于排查物理内存颗粒缺陷或 XMP 超频不稳。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="启动内存诊断" VerticalAlignment="Center" Click="BtnMemoryDiag_Click"/>
                     </Grid>
-                    <Border Grid.Row="1" Background="#FEFCE8" BorderBrush="#FEF08A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
+                    <Border Grid.Row="1" Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
                         <StackPanel>
-                            <TextBlock Text="⚠️ 执行手册与排障准则：" FontWeight="Bold" FontSize="11" Foreground="#854D0E" Margin="0,0,0,2"/>
-                            <TextBlock Text="• 触发后会弹出选择：推荐「立即重新启动并检查问题 (请先保存未完成工作)」。" FontSize="11" Foreground="#713F12"/>
-                            <TextBlock Text="• 重启后在蓝色纯文本界面按 F1 可调整测试级别：分为「基本 (Basic)」、「标准 (Standard，默认)」、「扩展 (Extended)」。" FontSize="11" Foreground="#713F12"/>
-                            <TextBlock Text="• 硬件决策：一旦测试阶段出现任何红色报错，证明物理内存金手指氧化接触不良、XMP 频率过高或颗粒虚焊，必须关机重新插拔或进 BIOS 降频，无法靠重装系统解决。" FontSize="11" Foreground="#713F12" TextWrapping="Wrap"/>
+                            <TextBlock Text="⚠️ 执行手册与排障准则：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,2"/>
+                            <TextBlock Text="• 触发后会弹出选择：推荐「立即重新启动并检查问题 (请先保存未完成工作)」。" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                            <TextBlock Text="• 重启后在蓝色纯文本界面按 F1 可调整测试级别：分为「基本 (Basic)」、「标准 (Standard，默认)」、「扩展 (Extended)」。" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                            <TextBlock Text="• 硬件决策：一旦测试阶段出现任何红色报错，证明物理内存金手指氧化接触不良、XMP 频率过高或颗粒虚焊，必须关机重新插拔或进 BIOS 降频，无法靠重装系统解决。" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                         </StackPanel>
                     </Border>
                 </Grid>
             </Border>
 
             <!-- 工具 4: 驱动程序验证程序管理器 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -221,21 +221,21 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="4. 驱动程序验证程序 (verifier.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#FEE2E2" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="内核极限压测" FontSize="10" Foreground="#DC2626" FontWeight="Bold"/>
+                                <TextBlock Text="4. 驱动程序验证程序 (verifier.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertRedBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="内核极限压测" FontSize="10" Foreground="{DynamicResource BrushAlertRedText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="揪出导致随机蓝屏的“隐形劣质驱动”。对选中的第三方驱动进行极限边界参数压力测试，迫使其在出错时当场蓝屏以记录模块名。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="打开验证程序管理器" VerticalAlignment="Center" Click="BtnDriverVerifier_Click"/>
                     </Grid>
-                    <Border Grid.Row="1" Background="#FEF2F2" BorderBrush="#FECACA" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
+                    <Border Grid.Row="1" Background="{DynamicResource BrushAlertRedBg}" BorderBrush="{DynamicResource BrushAlertRedBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
                         <StackPanel>
-                            <TextBlock Text="🚨 严格操作规程与紧急复原手段：" FontWeight="Bold" FontSize="11" Foreground="#991B1B" Margin="0,0,0,2"/>
-                            <TextBlock Text="• 操作路径：选择「创建自定义设置」➔ 勾选除“低资源模拟”之外的测试项 ➔ 选择「从列表中选择驱动程序名称」➔ 按供应商排序，仅勾选非 Microsoft 的第三方驱动。" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap"/>
-                            <TextBlock Text="• 紧急恢复命令：若开机无限蓝屏，按住 Shift 重启进入安全模式，在命令提示符中执行 verifier /reset 即可彻底清空验证配置。" FontSize="11" Foreground="#7F1D1D" TextWrapping="Wrap"/>
+                            <TextBlock Text="🚨 严格操作规程与紧急复原手段：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertRedText}" Margin="0,0,0,2"/>
+                            <TextBlock Text="• 操作路径：选择「创建自定义设置」➔ 勾选除“低资源模拟”之外的测试项 ➔ 选择「从列表中选择驱动程序名称」➔ 按供应商排序，仅勾选非 Microsoft 的第三方驱动。" FontSize="11" Foreground="{DynamicResource BrushAlertRedText}" TextWrapping="Wrap"/>
+                            <TextBlock Text="• 紧急恢复命令：若开机无限蓝屏，按住 Shift 重启进入安全模式，在命令提示符中执行 verifier /reset 即可彻底清空验证配置。" FontSize="11" Foreground="{DynamicResource BrushAlertRedText}" TextWrapping="Wrap"/>
                             <WrapPanel Margin="0,6,0,0">
                                 <Button Content="复制 verifier /reset 复原命令" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Tag="verifier /reset" Click="BtnCopyCmd_Click"/>
                             </WrapPanel>
@@ -245,20 +245,20 @@
             </Border>
 
             <!-- 工具 5: SFC 与 DISM 映像修复闭环 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Text="5. 系统组件完整性与映像自愈 (SFC + DISM)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                        <Border Background="#E0F2FE" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="联机/离线修复" FontSize="10" Foreground="#0369A1" FontWeight="Bold"/>
+                        <TextBlock Text="5. 系统组件完整性与映像自愈 (SFC + DISM)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="联机/离线修复" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
                         </Border>
                     </WrapPanel>
                     <TextBlock Text="当 Windows 出现任务栏卡死、控制面板弹窗报错或系统文件丢失时，SFC 与 DISM 构成自底层映像到运行态组件的双层修复链路。"
-                               FontSize="11" Foreground="#64748B" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                     <!-- 参数矩阵 -->
-                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
-                        <Grid Background="White">
+                    <Border BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                        <Grid Background="{DynamicResource BrushCardBg}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -271,53 +271,53 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="0" Grid.ColumnSpan="3" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="8,6">
+                            <Border Grid.Row="0" Grid.ColumnSpan="3" Background="{DynamicResource BrushTableHeaderBg}" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" Padding="8,6">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="280"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="阶段与核心指令" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="1" Text="技术机制与执行成本" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="2" Text="操作" FontWeight="Bold" FontSize="11" Foreground="#475569" Margin="0,0,12,0"/>
+                                    <TextBlock Grid.Column="0" Text="阶段与核心指令" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="1" Text="技术机制与执行成本" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="2" Text="操作" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,12,0"/>
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
                                     <TextBlock Text="sfc /scannow" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
-                                    <TextBlock Text="系统文件检查器" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="系统文件检查器" FontSize="10" Foreground="{DynamicResource BrushTextMuted}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="联机扫描所有受保护的系统核心文件，若哈希不符则直接从本地 WinSxS 备份仓库中调取纯净版本覆盖修复。耗时约 3~5 分钟。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="联机扫描所有受保护的系统核心文件，若哈希不符则直接从本地 WinSxS 备份仓库中调取纯净版本覆盖修复。耗时约 3~5 分钟。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="2" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="1" Grid.Column="2" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="sfc /scannow" Click="BtnCopyCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <StackPanel>
                                     <TextBlock Text="dism ... /RestoreHealth" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
-                                    <TextBlock Text="联机修复本地映像组件库" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="联机修复本地映像组件库" FontSize="10" Foreground="{DynamicResource BrushTextMuted}"/>
                                 </StackPanel>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="当 WinSxS 本身受损导致 SFC 报无法修复时使用。通过 Windows Update 联机下载官方纯净 CAB 包重构本地组件库。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="当 WinSxS 本身受损导致 SFC 报无法修复时使用。通过 Windows Update 联机下载官方纯净 CAB 包重构本地组件库。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="2" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="2" Grid.Column="2" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="dism /online /cleanup-image /restorehealth" Click="BtnCopyCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
+                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
                                 <StackPanel>
                                     <TextBlock Text="dism ... /Source:WIM:... /LimitAccess" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
-                                    <TextBlock Text="离线 ISO 映像自愈 (内网专用)" FontSize="10" Foreground="#64748B"/>
+                                    <TextBlock Text="离线 ISO 映像自愈 (内网专用)" FontSize="10" Foreground="{DynamicResource BrushTextMuted}"/>
                                 </StackPanel>
                             </Border>
                             <Border Grid.Row="3" Grid.Column="1" Padding="8,6">
-                                <TextBlock Text="断网内网机无法访问微软服务器时的核心离线自愈方案。挂载官方 Windows ISO，指向 sources\install.wim 提取干净文件完成脱机修复。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                                <TextBlock Text="断网内网机无法访问微软服务器时的核心离线自愈方案。挂载官方 Windows ISO，指向 sources\install.wim 提取干净文件完成脱机修复。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
                             <Border Grid.Row="3" Grid.Column="2" Padding="6" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="dism /online /cleanup-image /restorehealth /source:wim:D:\sources\install.wim:1 /limitaccess" Click="BtnCopyCmd_Click"/>

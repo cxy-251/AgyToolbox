@@ -1,7 +1,59 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- 现代化扁平按钮样式 -->
+    <!-- ── 调色板初始默认资源 (浅色基准，运行时由 ThemeService 动态覆盖) ── -->
+    <SolidColorBrush x:Key="BrushWindowBg" Color="#F1F5F9"/>
+    <SolidColorBrush x:Key="BrushCardBg" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="BrushCardBgAlt" Color="#F8FAFC"/>
+    <SolidColorBrush x:Key="BrushCardBorder" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="BrushSidebarBg" Color="#F8FAFC"/>
+    <SolidColorBrush x:Key="BrushSidebarBorder" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="BrushSidebarItemHover" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="BrushSidebarItemSelected" Color="#EFF6FF"/>
+    <SolidColorBrush x:Key="BrushSidebarItemSelectedText" Color="#0284C7"/>
+
+    <SolidColorBrush x:Key="BrushTextPrimary" Color="#0F172A"/>
+    <SolidColorBrush x:Key="BrushTextSecondary" Color="#475569"/>
+    <SolidColorBrush x:Key="BrushTextMuted" Color="#94A3B8"/>
+
+    <SolidColorBrush x:Key="BrushSubTabBg" Color="#F1F5F9"/>
+    <SolidColorBrush x:Key="BrushSubTabSelectedBg" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="BrushSubTabHoverBg" Color="#E2E8F0"/>
+
+    <SolidColorBrush x:Key="BrushInputBg" Color="#F8FAFC"/>
+    <SolidColorBrush x:Key="BrushInputBorder" Color="#CBD5E1"/>
+
+    <SolidColorBrush x:Key="BrushSecondaryBtnBg" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="BrushSecondaryBtnHover" Color="#CBD5E1"/>
+    <SolidColorBrush x:Key="BrushSecondaryBtnText" Color="#1E293B"/>
+
+    <SolidColorBrush x:Key="BrushCodeBg" Color="#F8FAFC"/>
+    <SolidColorBrush x:Key="BrushCodeBorder" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="BrushTableBorder" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="BrushTableHeaderBg" Color="#F8FAFC"/>
+
+    <!-- 语义警示与高亮背景 -->
+    <SolidColorBrush x:Key="BrushAlertRedBg" Color="#FEF2F2"/>
+    <SolidColorBrush x:Key="BrushAlertRedBorder" Color="#FECACA"/>
+    <SolidColorBrush x:Key="BrushAlertRedText" Color="#991B1B"/>
+
+    <SolidColorBrush x:Key="BrushAlertBlueBg" Color="#EFF6FF"/>
+    <SolidColorBrush x:Key="BrushAlertBlueBorder" Color="#BFDBFE"/>
+    <SolidColorBrush x:Key="BrushAlertBlueText" Color="#1E40AF"/>
+
+    <SolidColorBrush x:Key="BrushAlertYellowBg" Color="#FEFCE8"/>
+    <SolidColorBrush x:Key="BrushAlertYellowBorder" Color="#FEF08A"/>
+    <SolidColorBrush x:Key="BrushAlertYellowText" Color="#854D0E"/>
+
+    <SolidColorBrush x:Key="BrushAlertGreenBg" Color="#F0FDF4"/>
+    <SolidColorBrush x:Key="BrushAlertGreenBorder" Color="#BBF7D0"/>
+    <SolidColorBrush x:Key="BrushAlertGreenText" Color="#166534"/>
+
+    <SolidColorBrush x:Key="BrushAlertPurpleBg" Color="#FAF5FF"/>
+    <SolidColorBrush x:Key="BrushAlertPurpleBorder" Color="#E9D5FF"/>
+    <SolidColorBrush x:Key="BrushAlertPurpleText" Color="#6B21A8"/>
+
+    <!-- ── 现代化主按钮样式 ── -->
     <Style TargetType="Button">
         <Setter Property="Background" Value="#0078D4"/>
         <Setter Property="Foreground" Value="White"/>
@@ -26,46 +78,46 @@
         </Style.Triggers>
     </Style>
 
-    <!-- 次要按钮样式 -->
+    <!-- ── 次要按钮样式 (响应动态主题) ── -->
     <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-        <Setter Property="Background" Value="#E2E8F0"/>
-        <Setter Property="Foreground" Value="#1E293B"/>
+        <Setter Property="Background" Value="{DynamicResource BrushSecondaryBtnBg}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushSecondaryBtnText}"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#CBD5E1"/>
+                <Setter Property="Background" Value="{DynamicResource BrushSecondaryBtnHover}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
 
-    <!-- 通用横向子标签样式 (PowerToys / Modern TabItem) -->
+    <!-- ── 通用横向子标签样式 (响应动态主题) ── -->
     <Style x:Key="SubTabItemStyle" TargetType="TabItem">
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Padding" Value="14,9"/>
         <Setter Property="Margin" Value="0,0,4,0"/>
         <Setter Property="Cursor" Value="Hand"/>
-        <Setter Property="Foreground" Value="#64748B"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextSecondary}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border x:Name="SubTabBorder" Background="#F1F5F9" CornerRadius="6,6,0,0" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
+                    <Border x:Name="SubTabBorder" Background="{DynamicResource BrushSubTabBg}" CornerRadius="6,6,0,0" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
                         <ContentPresenter x:Name="SubContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
+                            <Setter TargetName="SubTabBorder" Property="Background" Value="{DynamicResource BrushSubTabSelectedBg}"/>
                             <Setter Property="Foreground" Value="#0284C7"/>
                             <Setter Property="FontWeight" Value="Bold"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="SubTabBorder" Property="Background" Value="#E2E8F0"/>
+                            <Setter TargetName="SubTabBorder" Property="Background" Value="{DynamicResource BrushSubTabHoverBg}"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="True"/>
                                 <Condition Property="IsMouseOver" Value="True"/>
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
+                            <Setter TargetName="SubTabBorder" Property="Background" Value="{DynamicResource BrushSubTabSelectedBg}"/>
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

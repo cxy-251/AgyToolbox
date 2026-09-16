@@ -8,9 +8,9 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
         <StackPanel Margin="10">
             <TextBlock Text="Windows 高频工程快捷键与窗口调度速查表："
-                       FontSize="13" Foreground="#64748B" Margin="0,0,0,16"/>
+                       FontSize="13" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,16"/>
 
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="220"/>
@@ -18,13 +18,13 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Win + V" FontSize="18" FontWeight="Bold" Foreground="#0078D4" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="自带全局剪贴板历史记录" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="别再装第三方剪贴板工具了！首次按下开启后，自动记录多次复制的文本和图片，支持常用文本置顶和跨设备同步。" FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                        <TextBlock Text="Windows 内置剪贴板历史记录" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="启用后系统自动记录多次复制的文本与图像历史，支持常用条目置顶锁定以及跨设备剪贴板同步。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="220"/>
@@ -32,13 +32,13 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Win + Ctrl + Shift + B" FontSize="16" FontWeight="Bold" Foreground="#DC2626" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="瞬间重启显卡驱动 (黑屏/掉驱动急救)" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="全屏游戏黑屏、外接显示器无信号时按一下，电脑会蜂鸣一声屏幕闪烁一次，不关机直接重载 GPU 驱动。" FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                        <TextBlock Text="直接重置显示驱动程序 (GPU DWM 重载)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="显示器无信号、渲染异常或界面假死时用于重载桌面窗口管理器与显卡驱动，无需强制断电重启计算机。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="220"/>
@@ -46,13 +46,13 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Win + Shift + S" FontSize="18" FontWeight="Bold" Foreground="#16A34A" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="全能原生截图工具" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="支持矩形选择、任意不规则形状套索、单个应用窗口、以及全屏截图，截图自动进剪贴板并支持直接涂鸦画笔标注。" FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                        <TextBlock Text="原生全屏与区域截图工具" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="支持矩形选择、任意不规则形状套索、活动窗口以及全屏截图，截图自动进入剪贴板并支持即时编辑标注。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="220"/>
@@ -60,13 +60,13 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Win + ." FontSize="18" FontWeight="Bold" Foreground="#8B5CF6" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="原生 Emoji 与特殊数学符号键盘" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="打字时随时按 Win + 句号，弹出表情包、希腊字母、数学符号、货币单位面板，无需上网搜索复制粘贴。" FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                        <TextBlock Text="原生 Emoji 与符号输入面板" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="快速调出表情符号、希腊字母、数学符号及货币单位输入面板，便于在编写文档和代码注释时快速插入专业符号。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="220"/>
@@ -74,8 +74,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Ctrl + Shift + Esc" FontSize="18" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
                     <StackPanel Grid.Column="1">
-                        <TextBlock Text="一步秒开任务管理器" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
-                        <TextBlock Text="不要再按 Ctrl + Alt + Del 慢慢选任务管理器了，单手按下秒开，卡顿假死排查快人一步。" FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                        <TextBlock Text="直接启动任务管理器" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="通过直接系统热键绕过安全桌面，快速调出任务管理器进行进程排查与系统性能资源监控。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,4,0,0"/>
                     </StackPanel>
                 </Grid>
             </Border>

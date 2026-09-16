@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AgyToolbox.Views.DiskHunterView"
+<UserControl x:Class="AgyToolbox.Views.DiskHunterView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -28,8 +28,8 @@
 
         <!-- 扫描结果列表 -->
         <DataGrid x:Name="GridDiskFiles" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
-                  Background="White" BorderBrush="#E2E8F0" RowHeight="28" GridLinesVisibility="Horizontal"
-                  HorizontalGridLinesBrush="#F1F5F9" SelectionMode="Single" MouseDoubleClick="GridDiskFiles_MouseDoubleClick">
+                  Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushTableBorder}" RowHeight="28" GridLinesVisibility="Horizontal"
+                  HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}" SelectionMode="Single" MouseDoubleClick="GridDiskFiles_MouseDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="序号" Binding="{Binding Rank}" Width="60"/>
                 <DataGridTextColumn Header="文件名" Binding="{Binding Name}" Width="200"/>
@@ -41,7 +41,7 @@
 
         <!-- 底部提示与操作 -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-            <TextBlock x:Name="TxtScanStatus" Text="就绪" VerticalAlignment="Center" Foreground="#64748B" Margin="0,0,20,0"/>
+            <TextBlock x:Name="TxtScanStatus" Text="就绪" VerticalAlignment="Center" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,20,0"/>
             <Button Content="在资源管理器中定位选中文件" Click="BtnLocateFile_Click"/>
         </StackPanel>
     </Grid>

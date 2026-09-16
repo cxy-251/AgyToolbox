@@ -9,7 +9,7 @@
         <StackPanel Margin="10">
 
             <!-- DNS 深度透视与一键测速 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
@@ -18,14 +18,14 @@
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                             <TextBlock Text="⚡ 公共 DNS 地址含义与一键实时延迟测速" FontSize="15" FontWeight="Bold" Foreground="#0078D4"/>
-                            <TextBlock Text=" (帮你挑出当前网络最快的公共解析服务器)" FontSize="12" Foreground="#94A3B8" Margin="6,3,0,0"/>
+                            <TextBlock Text=" (帮你挑出当前网络最快的公共解析服务器)" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,3,0,0"/>
                         </WrapPanel>
                         <Button Grid.Column="1" Content="⚡ 开始全网 DNS 实时测速" Click="BtnTestDns_Click"/>
                     </Grid>
 
                     <DataGrid x:Name="GridDns" AutoGenerateColumns="False" IsReadOnly="True"
-                              Background="White" BorderBrush="#E2E8F0" RowHeight="32" GridLinesVisibility="Horizontal"
-                              HorizontalGridLinesBrush="#F1F5F9"
+                              Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" RowHeight="32" GridLinesVisibility="Horizontal"
+                              HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}"
                               MouseDoubleClick="GridDns_MouseDoubleClick"
                               ToolTip="💡 点击任意列标题可升序/降序排序；双击任意行可直接复制该 DNS IP 到剪贴板">
                         <DataGrid.Columns>
@@ -39,90 +39,90 @@
             </Border>
 
             <!-- Steam/GitHub 改 DNS 原理解剖卡片 -->
-            <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="💡 深度解密：为什么改 DNS 访问 Steam / GitHub 有时管用，有时不管用？" FontSize="14" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,8"/>
-                    <TextBlock Text="很多教程说‘改 DNS 就能畅玩 Steam 社区 / 打开 GitHub’，这是不准确的。其底层分两个不同维度的封锁机制："
-                               FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                    <TextBlock Text="① 【为什么改 DNS 管用？针对 DNS 污染】" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
-                    <TextBlock Text="国内部分运营商的本地 DNS（Local DNS）为了省流量或限制，故意将 github.com / steamcommunity.com 解析到了虚假 IP 或错误 IP。换用阿里 (223.5.5.5) 或 Google (8.8.8.8) 后拿到了真实的全球 Anycast IP，就能秒开。"
-                               FontSize="12" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,8"/>
-                    <TextBlock Text="② 【为什么有时改 DNS 依然卡死打不开？针对 SNI 握手阻断与 TCP 重置】" FontWeight="Bold" FontSize="12" Foreground="#1E293B"/>
-                    <TextBlock Text="HTTPS 访问在建立 TLS 连接时，客户端会发送一段明文的‘SNI (服务器名称指示)’。防火墙（GFW）检测到包含敏感域名时，直接向客户端和服务器两端发送伪造的 RST 报文断开连接。此时 DNS 解析再正确也没用，因为路在传输层被切断了！"
-                               FontSize="12" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,8"/>
-                    <TextBlock Text="👉 【正解解法】若仅为 DNS 污染，改公共 DNS 即可；若遭遇 SNI 阻断，需通过 Hosts 绑定可用 CDN 节点或使用反向代理工具（如 Watt Toolkit / Steam++）。"
-                               FontSize="12" FontWeight="SemiBold" Foreground="#047857" TextWrapping="Wrap"/>
+                    <TextBlock Text="💡 深度解密：为什么改 DNS 访问 Steam / GitHub 有时管用，有时不管用？" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,8"/>
+                    <TextBlock Text="常见教程中'改 DNS 即可访问 Steam 社区或 GitHub'的说法并不全面。其底层涉及两个不同层面的网络控制机制："
+                               FontSize="12" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                    <TextBlock Text="① 【改 DNS 生效场景：针对 DNS 污染】" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                    <TextBlock Text="部分网络环境的本地递归 DNS 为节省网间结算或管控，将域名解析至无效 IP。切换至公共 Anycast DNS（如阿里 223.5.5.5 或 Google 8.8.8.8）可获取真实节点 IP，从而恢复访问。"
+                               FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                    <TextBlock Text="② 【改 DNS 失效场景：针对 SNI 阻断与 TCP 重置】" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                    <TextBlock Text="HTTPS 在建立 TLS 握手时，客户端发送明文 SNI（服务器名称指示）。网关检测到受控域名时，会向双向发送伪造 RST 报文重置连接。此时即使 DNS 解析正确，传输层连接亦会被直接阻断。"
+                               FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,8"/>
+                    <TextBlock Text="👉 【处理建议】若为 DNS 污染，切换公共 DNS 即可解决；若遭遇 SNI 阻断，需通过 Hosts 绑定可用 CDN 节点或配合合规反向代理工具处理。"
+                               FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BrushAlertGreenText}" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
             <!-- 现代化开发镜像源速查 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
-                    <TextBlock Text="📦 常用开发镜像源现代标准配置 (告别 2022 年老旧配置)" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,12"/>
+                    <TextBlock Text="📦 常用开发镜像源现代标准配置" FontSize="15" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,12"/>
 
                     <!-- Conda 镜像 -->
-                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                    <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
                         <StackPanel>
                             <Grid>
-                                <TextBlock Text="🐍 Anaconda / Miniconda 现代标准 .condarc" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
+                                <TextBlock Text="🐍 Anaconda / Miniconda 现代标准 .condarc" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Content="一键写入本地 .condarc" Style="{DynamicResource SecondaryButton}" Click="BtnApplyCondarc_Click" Margin="0,0,8,0" Padding="8,4" FontSize="11"/>
                                     <Button Content="📋 复制配置文本" Style="{DynamicResource SecondaryButton}" Click="BtnCopyCondarc_Click" Padding="8,4" FontSize="11"/>
                                 </StackPanel>
                             </Grid>
-                            <TextBlock Text="【避坑警示】2022 年老教程里常用的 free 通道早已被清华/中科大下线归档，配了就会报 404；且旧配置用 http:// 明文传输易被劫持，必须全面升级为现代全 HTTPS 清华 TUNA 标准源。"
-                                       FontSize="12" Foreground="#DC2626" TextWrapping="Wrap" Margin="0,4,0,6"/>
+                            <TextBlock Text="【配置说明】旧版 free 通道已被多数上游源下线归档，配置后易导致 404；且旧配置使用 HTTP 明文传输存在完整性风险，推荐使用全 HTTPS TUNA 标准镜像源。"
+                                       FontSize="12" Foreground="{DynamicResource BrushAlertRedText}" TextWrapping="Wrap" Margin="0,4,0,6"/>
                             <TextBox Text="channels:&#x0a;  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main&#x0a;  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge&#x0a;show_channel_urls: true&#x0a;ssl_verify: true&#x0a;auto_activate_base: false"
-                                     IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas, Courier New" FontSize="11" Padding="6" BorderBrush="#E2E8F0"/>
+                                     IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Consolas, Courier New" FontSize="11" Padding="6" BorderBrush="{DynamicResource BrushCodeBorder}"/>
                         </StackPanel>
                     </Border>
 
                     <!-- Pip 镜像 -->
-                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                    <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="📦 Python Pip 现代一键换源命令 (清华 TUNA)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【避坑警示】不要再去手动在 AppData 建立 pip.ini 了，官方支持一行命令永久配置全局源并信任域名。" FontSize="12" Foreground="#64748B" Margin="0,2,0,4"/>
+                                <TextBlock Text="📦 Python Pip 现代一键换源命令 (清华 TUNA)" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="【配置说明】推荐通过 pip config 官方 CLI 永久写入全局配置，无需手动编辑 pip.ini 文件。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
                                 <TextBox x:Name="TxtPipCmd" Text="pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple"
-                                         IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas, Courier New" FontSize="12" Padding="6" BorderBrush="#E2E8F0"/>
+                                         IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Consolas, Courier New" FontSize="12" Padding="6" BorderBrush="{DynamicResource BrushCodeBorder}"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" Click="BtnCopyPip_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                         </Grid>
                     </Border>
 
                     <!-- Npm 镜像 -->
-                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
+                    <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,12">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="🌐 Node.js Npm 最新官方国内镜像源" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="【严重避坑】2024 年 1 月淘宝旧域名 npm.taobao.org 证书已彻底过期废弃！使用老教程必定报错证书失效，请统一更新为 npmmirror 官方最新域名。" FontSize="12" Foreground="#DC2626" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                <TextBlock Text="🌐 Node.js Npm 最新官方国内镜像源" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="【重要提示】旧域名 npm.taobao.org 证书已过期废弃，请统一更新为 npmmirror 官方最新域名。" FontSize="12" Foreground="{DynamicResource BrushAlertRedText}" TextWrapping="Wrap" Margin="0,2,0,4"/>
                                 <TextBox x:Name="TxtNpmCmd" Text="npm config set registry https://registry.npmmirror.com"
-                                         IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas, Courier New" FontSize="12" Padding="6" BorderBrush="#E2E8F0"/>
+                                         IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Consolas, Courier New" FontSize="12" Padding="6" BorderBrush="{DynamicResource BrushCodeBorder}"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" Click="BtnCopyNpm_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                         </Grid>
                     </Border>
 
                     <!-- NuGet 镜像 -->
-                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
+                    <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="🔷 .NET NuGet 华为云加速镜像源" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                <TextBlock Text="解决部分地区拉取 nuget.org 缓慢或超时的痛点，一行命令添加国内高速镜像源。" FontSize="12" Foreground="#64748B" Margin="0,2,0,4"/>
+                                <TextBlock Text="🔷 .NET NuGet 华为云加速镜像源" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="解决部分网络环境下访问 nuget.org 缓慢或超时的延迟问题，通过 CLI 快速添加国内镜像通道。" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
                                 <TextBox x:Name="TxtNugetCmd" Text="dotnet nuget add source https://repo.huaweicloud.com/repository/nuget/v3/index.json -n huaweicloud"
-                                         IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas, Courier New" FontSize="12" Padding="6" BorderBrush="#E2E8F0"/>
+                                         IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Consolas, Courier New" FontSize="12" Padding="6" BorderBrush="{DynamicResource BrushCodeBorder}"/>
                             </StackPanel>
                             <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" Click="BtnCopyNuget_Click" VerticalAlignment="Center" Margin="10,0,0,0"/>
                         </Grid>

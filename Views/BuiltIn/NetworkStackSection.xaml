@@ -9,16 +9,16 @@
         <StackPanel Margin="0,0,0,24">
 
             <!-- 模块概述 -->
-            <Border Background="#F0FDF4" BorderBrush="#BBF7D0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushAlertGreenBg}" BorderBrush="{DynamicResource BrushAlertGreenBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
                 <StackPanel>
-                    <TextBlock Text="🌐 网络栈探测、路由分流与协议层排障" FontSize="14" FontWeight="Bold" Foreground="#15803D" Margin="0,0,0,4"/>
+                    <TextBlock Text="🌐 网络栈探测、路由分流与协议层排障" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}" Margin="0,0,0,4"/>
                     <TextBlock Text="摆脱老旧第三方 Telnet。利用原生 Test-NetConnection 探测 TCP 端口与跃点，结合 MTU 分片验证、双网卡静态路由分流与防火墙策略审查。"
-                               FontSize="11" Foreground="#166534" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushAlertGreenText}" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
             <!-- 工具 1: Test-NetConnection 原生端口测试 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -27,22 +27,22 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="1. 原生端口与 TCP 三次握手探测 (Test-NetConnection)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#DCFCE7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="彻底取代 Telnet" FontSize="10" Foreground="#15803D" FontWeight="Bold"/>
+                                <TextBlock Text="1. 原生端口与 TCP 三次握手探测 (Test-NetConnection)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="彻底取代 Telnet" FontSize="10" Foreground="{DynamicResource BrushAlertGreenText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="Windows 原生自带强大的 TNC 命令。无需到控制面板开启不安全的 Telnet 客户端，即可精确实时测试远程服务器端口与解析。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="测试 api.github.com:443" VerticalAlignment="Center" Click="BtnTestNetConnection_Click"/>
                     </Grid>
 
-                    <Border Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                    <Border Background="{DynamicResource BrushWindowBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="📋 输出指标诊断手册：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                            <TextBlock Text="• TcpTestSucceeded：若为 True 表示网络链路通畅且目标服务端口正常监听；若为 False 说明中间防火墙阻断、安全组未开或服务宕机。" FontSize="10" Foreground="#475569" Margin="0,1"/>
-                            <TextBlock Text="• RoundTripTime：回环延迟（RTT 毫秒数），评估连通延迟基线。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                            <TextBlock Text="📋 输出指标诊断手册：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="• TcpTestSucceeded：若为 True 表示网络链路通畅且目标服务端口正常监听；若为 False 说明中间防火墙阻断、安全组未开或服务宕机。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
+                            <TextBlock Text="• RoundTripTime：回环延迟（RTT 毫秒数），评估连通延迟基线。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
                             <WrapPanel Margin="0,6,0,0">
                                 <Button Content="复制通用端口探测命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="8,2" Tag="Test-NetConnection -ComputerName 127.0.0.1 -Port 8080 -InformationLevel Detailed" Click="BtnCopyCmd_Click"/>
                             </WrapPanel>
@@ -52,7 +52,7 @@
             </Border>
 
             <!-- 工具 2: ipconfig 与 netsh 协议栈重置 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -61,13 +61,13 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="2. TCP/IP 协议栈、Winsock 重置与 WLAN 审计 (netsh &amp; ipconfig)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="网络急救组合拳" FontSize="10" Foreground="#B45309" FontWeight="Bold"/>
+                                <TextBlock Text="2. TCP/IP 协议栈、Winsock 重置与 WLAN 审计 (netsh &amp; ipconfig)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="网络急救组合拳" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
                             <TextBlock Text="处理“微信能发但网页打不开”、“代理软件卸载后全局断网”、“DHCP 租约失效”与“已存无线密码安全审计”。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <Button Content="刷新 DNS 缓存" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnFlushDns_Click"/>
@@ -83,31 +83,31 @@
                         </Grid.ColumnDefinitions>
 
                         <!-- 卡片 A: Winsock -->
-                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                             <StackPanel>
-                                <TextBlock Text="🔌 Winsock 目录重置" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="清除恶意 LSP 套接字劫持。修复杀毒软件、网络加速器或代理残留导致的套接字异常。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="netsh winsock reset" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🔌 Winsock 目录重置" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="清除恶意 LSP 套接字劫持。修复杀毒软件、网络加速器或代理残留导致的套接字异常。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="netsh winsock reset" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制命令 (需重启生效)" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="netsh winsock reset" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
 
                         <!-- 卡片 B: TCP/IP 重置 -->
-                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
                             <StackPanel>
-                                <TextBlock Text="🛠️ TCP/IP 协议栈重构" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="将 IPv4/IPv6 协议栈重写并重置注册表表项，解决顽固的无有效 IP 分配故障。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="netsh int ip reset" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="🛠️ TCP/IP 协议栈重构" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="将 IPv4/IPv6 协议栈重写并重置注册表表项，解决顽固的无有效 IP 分配故障。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="netsh int ip reset" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制命令 (需重启)" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="netsh int ip reset" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
 
                         <!-- 卡片 C: WLAN 审计 -->
-                        <Border Grid.Column="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                        <Border Grid.Column="2" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                             <StackPanel>
-                                <TextBlock Text="📶 WLAN Profile 导出审计" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                                <TextBlock Text="一键将本机连接过的所有 WiFi 配置以明文 XML 格式批量导出，方便设备迁移与密码备份。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBox Text="netsh wlan export profile key=clear" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <TextBlock Text="📶 WLAN Profile 导出审计" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="一键将本机连接过的所有 WiFi 配置以明文 XML 格式批量导出，方便设备迁移与密码备份。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="netsh wlan export profile key=clear" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,6"/>
                                 <Button Content="复制导出命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="netsh wlan export profile key=clear folder=C:\" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
@@ -116,19 +116,19 @@
             </Border>
 
             <!-- 工具 3: ping vs tracert vs pathping 链路探测 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <StackPanel>
                     <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Text="3. 链路层与逐跳排障 (ping vs tracert vs pathping)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
-                        <Border Background="#E0E7FF" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="链路分层诊断" FontSize="10" Foreground="#3730A3" FontWeight="Bold"/>
+                        <TextBlock Text="3. 链路层与逐跳排障 (ping vs tracert vs pathping)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="链路分层诊断" FontSize="10" Foreground="{DynamicResource BrushAlertPurpleText}" FontWeight="Bold"/>
                         </Border>
                     </WrapPanel>
                     <TextBlock Text="从 MTU 巨型帧不分片探测，到逐跳路由追踪及长程统计丢包，区分三者的耗时成本与诊断价值。"
-                               FontSize="11" Foreground="#64748B" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
-                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4">
-                        <Grid Background="White">
+                    <Border BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="1" CornerRadius="4">
+                        <Grid Background="{DynamicResource BrushCardBg}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -142,7 +142,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="8,6">
+                            <Border Grid.Row="0" Grid.ColumnSpan="4" Background="{DynamicResource BrushTableHeaderBg}" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" Padding="8,6">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="220"/>
@@ -150,44 +150,44 @@
                                         <ColumnDefinition Width="160"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="命令范例" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="1" Text="技术机制与核心用途" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="2" Text="执行成本与耗时" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
-                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="#475569" Margin="0,0,12,0"/>
+                                    <TextBlock Grid.Column="0" Text="命令范例" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="1" Text="技术机制与核心用途" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="2" Text="执行成本与耗时" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                    <TextBlock Grid.Column="3" Text="操作" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,12,0"/>
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="ping -f -l 1472 1.1.1.1" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="设置 DF (不分片) 标志发送 1472 字节载荷。若报「需要拆分数据包」，说明链路上 MTU 小于 1500，导致握手慢或断流。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="设置 DF (不分片) 标志发送 1472 字节载荷。若报「需要拆分数据包」，说明链路上 MTU 小于 1500，导致握手慢或断流。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="秒级完成。" FontSize="10" Foreground="#16A34A"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="1" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="ping -f -l 1472 1.1.1.1" Click="BtnCopyCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="tracert -d 8.8.8.8" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
-                                <TextBlock Text="追踪到达目标经历的所有路由跃点。加上 -d 可跳过逐跳反向 DNS 解析，将追踪耗时从 1 分钟缩短至 5 秒！" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                <TextBlock Text="追踪到达目标经历的所有路由跃点。加上 -d 可跳过逐跳反向 DNS 解析，将追踪耗时从 1 分钟缩短至 5 秒！" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                            <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
                                 <TextBlock Text="约 5~10 秒。" FontSize="10" Foreground="#16A34A"/>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                            <Border Grid.Row="2" Grid.Column="3" Padding="6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" VerticalAlignment="Center">
                                 <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="tracert -d 8.8.8.8" Click="BtnCopyCmd_Click"/>
                             </Border>
 
-                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
+                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
                                 <TextBlock Text="pathping 8.8.8.8" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
                             </Border>
                             <Border Grid.Row="3" Grid.Column="1" Padding="8,6">
-                                <TextBlock Text="先追踪路由路径，随后对沿途每个路由器发送数十个探测包并统计丢包率，精确定位到底是公司网关还是骨干运营商节点在丢包。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                                <TextBlock Text="先追踪路由路径，随后对沿途每个路由器发送数十个探测包并统计丢包率，精确定位到底是公司网关还是骨干运营商节点在丢包。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
                             </Border>
                             <Border Grid.Row="3" Grid.Column="2" Padding="8,6">
                                 <TextBlock Text="耗时较长 (需 3~5 分钟)。" FontSize="10" Foreground="#D97706"/>
@@ -201,7 +201,7 @@
             </Border>
 
             <!-- 工具 4: 静态路由与双网卡分流 + 防火墙 -->
-            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16">
                 <StackPanel>
                     <Grid Margin="0,0,0,10">
                         <Grid.ColumnDefinitions>
@@ -209,20 +209,20 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="4. 静态路由内外网分流 (route.exe) 与高级防火墙 (wf.msc)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                            <TextBlock Text="4. 静态路由内外网分流 (route.exe) 与高级防火墙 (wf.msc)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                             <TextBlock Text="办公场景高频需求：同时连接公司有线内网与手机热点/WiFi 外网，避免内网 IP 冲突走错网关。"
-                                       FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                                       FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0"/>
                         </StackPanel>
                         <Button Grid.Column="1" Content="打开高级安全防火墙" VerticalAlignment="Center" Click="BtnFirewall_Click"/>
                     </Grid>
 
-                    <Border Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10">
+                    <Border Background="{DynamicResource BrushWindowBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="🧭 双网卡静态路由分流标准化工程模板：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
-                            <TextBlock Text="1. 查阅跃点与网关：执行 route print 查看两张网卡的接口编号 (Interface List) 与当前默认路由跃点 (Metric)。" FontSize="10" Foreground="#475569" Margin="0,1"/>
-                            <TextBlock Text="2. 写入永久路由 (-p)：假设公司内网为 10.0.0.0/8，内网网关为 10.12.1.1，执行以下指令将内网流量锁定走内网卡，其余全部走外网网关：" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                            <TextBlock Text="🧭 双网卡静态路由分流标准化工程模板：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="1. 查阅跃点与网关：执行 route print 查看两张网卡的接口编号 (Interface List) 与当前默认路由跃点 (Metric)。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
+                            <TextBlock Text="2. 写入永久路由 (-p)：假设公司内网为 10.0.0.0/8，内网网关为 10.12.1.1，执行以下指令将内网流量锁定走内网卡，其余全部走外网网关：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
                             <WrapPanel Margin="0,4,0,0">
-                                <TextBox Text="route add -p 10.0.0.0 mask 255.0.0.0 10.12.1.1 metric 10" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBox Text="route add -p 10.0.0.0 mask 255.0.0.0 10.12.1.1 metric 10" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,8,0" VerticalAlignment="Center"/>
                                 <Button Content="复制内网路由命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="8,2" Tag="route add -p 10.0.0.0 mask 255.0.0.0 10.12.1.1 metric 10" Click="BtnCopyCmd_Click"/>
                             </WrapPanel>
                         </StackPanel>

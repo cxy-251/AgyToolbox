@@ -12,16 +12,17 @@
         </Grid.RowDefinitions>
 
         <!-- 模块说明看板 (保留在 TabControl 外层，始终可见) -->
-        <Border Grid.Row="0" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+        <!-- 模块说明看板 (保留在 TabControl 外层，始终可见) -->
+        <Border Grid.Row="0" Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
             <StackPanel>
-                <TextBlock Text="🧹 步骤一：新机开荒与预装管理 (Debloat &amp; 应用精简)" FontSize="15" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,4"/>
+                <TextBlock Text="🧹 步骤一：新机开荒与预装管理 (Debloat &amp; 应用精简)" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
                 <TextBlock Text="系统初始化与预装组件管理：提供 Windows 预装 UWP 应用管理、品牌厂商预装附带软件排查、关闭系统后台静默推荐安装策略，以及浏览器和 OneDrive 的管理选项。推荐使用 Windows 原生包管理器 winget 维护应用。"
-                           FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap"/>
+                           FontSize="12" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
 
         <!-- 4 个功能横向子标签 -->
-        <TabControl Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1"
+        <TabControl Grid.Row="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1"
                     ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
             <!-- Tab 1: 预装应用清理 (UWP + OEM) -->
@@ -29,7 +30,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
                         <!-- 板块 1: 预装 UWP 应用管理 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -38,14 +39,14 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="📋 1. Windows 预装应用查看与按需卸载" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (官方用途说明、卸载影响评估与替代建议)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text=" (官方用途说明、卸载影响评估与替代建议)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <Button Grid.Column="1" Content="⚡ 重新扫描预装状态" Style="{DynamicResource SecondaryButton}" Click="BtnScanUwp_Click"/>
                                 </Grid>
 
                                 <DataGrid x:Name="GridUwpApps" AutoGenerateColumns="False" IsReadOnly="True" Height="240"
-                                          Background="White" BorderBrush="#E2E8F0" RowHeight="38" GridLinesVisibility="Horizontal"
-                                          HorizontalGridLinesBrush="#F1F5F9">
+                                          Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" RowHeight="38" GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="软件名称" Binding="{Binding DisplayName}" Width="140"/>
                                         <DataGridTextColumn Header="类别" Binding="{Binding Category}" Width="70"/>
@@ -74,7 +75,7 @@
                         </Border>
 
                         <!-- 板块 2: OEM 品牌厂商预装软件 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -83,22 +84,22 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="🛡️ 2. OEM 品牌厂商预装管理软件排查与建议" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (分析后台服务与开销，提供轻量替代)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text=" (分析后台服务与开销，提供轻量替代)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <Button Grid.Column="1" Content="🔄 扫描预装软件" Style="{DynamicResource SecondaryButton}" Click="BtnScanOem_Click"/>
                                 </Grid>
 
-                                <Border Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
                                     <StackPanel>
-                                        <TextBlock Text="💡 常见厂商预装软件特性与处理说明：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,2"/>
-                                        <TextBlock Text="• 麦咖啡 (McAfee)：品牌机预装试用版包含多项实时监控服务。常规卸载后若有网络过滤残留，建议使用其官方 MCPR 工具清理。" FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
-                                        <TextBlock Text="• 华硕奥创中心 (Armoury Crate)：集成了较多驱动守护进程。若仅需调节基础性能与背光，开源工具 G-Helper 是极佳的低开销替代。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        <TextBlock Text="💡 常见厂商预装软件特性与处理说明：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                        <TextBlock Text="• 麦咖啡 (McAfee)：品牌机预装试用版包含多项实时监控服务。常规卸载后若有网络过滤残留，建议使用其官方 MCPR 工具清理。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="• 华硕奥创中心 (Armoury Crate)：集成了较多驱动守护进程。若仅需调节基础性能与背光，开源工具 G-Helper 是极佳的低开销替代。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                     </StackPanel>
                                 </Border>
 
                                 <DataGrid x:Name="GridOemApps" AutoGenerateColumns="False" IsReadOnly="True" Height="160"
-                                          Background="White" BorderBrush="#E2E8F0" RowHeight="34" GridLinesVisibility="Horizontal"
-                                          HorizontalGridLinesBrush="#F1F5F9">
+                                          Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" RowHeight="34" GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="软件名称" Binding="{Binding Name}" Width="180"/>
                                         <DataGridTextColumn Header="所属品牌" Binding="{Binding Vendor}" Width="80"/>
@@ -124,7 +125,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
                         <!-- 浏览器管理 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -133,7 +134,7 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="🌐 浏览器生态管理：Edge 卸载与 Chrome 部署" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (严格保留 WebView2 运行时，保障第三方桌面客户端正常运行)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text=" (严格保留 WebView2 运行时，保障第三方桌面客户端正常运行)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock x:Name="TxtBrowserStatus" Text="[检测浏览器状态...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
@@ -141,8 +142,8 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Border Background="#FEF3C7" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <TextBlock Text="💡 技术说明：卸载操作仅移除 Edge 浏览器主体外壳，严格保留底层的 WebView2 运行时（确保基于 WebView2 的第三方应用正常工作），并配置策略防止后续版本更新自动重新部署。" FontSize="11" Foreground="#78350F" TextWrapping="Wrap"/>
+                                <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <TextBlock Text="💡 技术说明：卸载操作仅移除 Edge 浏览器主体外壳，严格保留底层的 WebView2 运行时（确保基于 WebView2 的第三方应用正常工作），并配置策略防止后续版本更新自动重新部署。" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                                 </Border>
 
                                 <Grid>
@@ -152,19 +153,19 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- 卸载 Edge -->
-                                    <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
                                         <StackPanel>
                                             <TextBlock Text="🗑️ 卸载 Microsoft Edge 浏览器主体" FontWeight="Bold" FontSize="13" Foreground="#EF4444" Margin="0,0,0,4"/>
-                                            <TextBlock Text="调用官方静默卸载命令，移除应用外壳与快捷方式，并配置策略阻止自动重新安装。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                            <TextBlock Text="调用官方静默卸载命令，移除应用外壳与快捷方式，并配置策略阻止自动重新安装。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
                                             <Button x:Name="BtnUninstallEdge" Content="立即卸载 Edge 浏览器" Background="#EF4444" Click="BtnUninstallEdge_Click"/>
                                         </StackPanel>
                                     </Border>
 
                                     <!-- 安装 Chrome & 设为默认 -->
-                                    <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="🚀 安装 Google Chrome 官方纯净版" FontWeight="Bold" FontSize="13" Foreground="#047857" Margin="0,0,0,4"/>
-                                            <TextBlock Text="通过 winget 直接从 Google 官方源拉取安装包，执行静默安装。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                            <TextBlock Text="通过 winget 直接从 Google 官方源拉取安装包，执行静默安装。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
@@ -180,7 +181,7 @@
                         </Border>
 
                         <!-- OneDrive 管理 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -189,7 +190,7 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="☁️ 微软 OneDrive 卸载与资源管理器导航栏清理" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (恢复本地文档/桌面目录结构，移除侧边栏图标)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text=" (恢复本地文档/桌面目录结构，移除侧边栏图标)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock x:Name="TxtOneDriveStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
@@ -197,7 +198,7 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -205,7 +206,7 @@
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,10,0">
                                             <TextBlock Text="卸载 OneDrive 并清理资源管理器图标" FontWeight="Bold" FontSize="13" Foreground="#EF4444"/>
-                                            <TextBlock Text="执行系统自带卸载程序，并清理注册表中资源管理器侧边栏的同步目录图标。" FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                            <TextBlock Text="执行系统自带卸载程序，并清理注册表中资源管理器侧边栏的同步目录图标。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,0"/>
                                         </StackPanel>
                                         <Button x:Name="BtnUninstallOneDrive" Grid.Column="1" Content="🗑️ 卸载 OneDrive 并清理侧边栏" Background="#EF4444" Click="BtnUninstallOneDrive_Click"/>
                                     </Grid>
@@ -221,7 +222,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
                         <!-- 静默后台推广 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -233,14 +234,14 @@
                                         <TextBlock x:Name="TxtSilentAppStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0,0,0"/>
                                     </StackPanel>
                                     <TextBlock Text="新系统接入网络后，系统默认会通过内容交付管理器在后台静默安装预设的推荐应用，并在开始菜单展示建议。关闭 SilentInstalledAppsEnabled 策略可阻止此类自动下载行为。"
-                                               FontSize="11" Foreground="#64748B" TextWrapping="Wrap" Margin="0,3,0,0"/>
+                                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,3,0,0"/>
                                 </StackPanel>
                                 <Button x:Name="BtnToggleSilentApps" Grid.Column="1" Content="切换策略状态" VerticalAlignment="Center" Click="BtnToggleSilentApps_Click"/>
                             </Grid>
                         </Border>
 
                         <!-- 开机自启项管理 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="14">
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
@@ -249,14 +250,14 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="🚀 开机自启动项 (Startup Items) 管理" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <TextBlock Text=" (审查注册表 Run 启动项，管理常驻后台进程)" FontSize="11" Foreground="#64748B" Margin="6,2,0,0"/>
+                                        <TextBlock Text=" (审查注册表 Run 启动项，管理常驻后台进程)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <Button Grid.Column="1" Content="🔄 刷新启动项" Style="{DynamicResource SecondaryButton}" Click="BtnReloadStartup_Click"/>
                                 </Grid>
 
                                 <DataGrid x:Name="GridStartupItems" AutoGenerateColumns="False" IsReadOnly="True" Height="220"
-                                          Background="White" BorderBrush="#E2E8F0" RowHeight="34" GridLinesVisibility="Horizontal"
-                                          HorizontalGridLinesBrush="#F1F5F9">
+                                          Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" RowHeight="34" GridLinesVisibility="Horizontal"
+                                          HorizontalGridLinesBrush="{DynamicResource BrushTableBorder}">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="自启程序名称" Binding="{Binding Name}" Width="160"/>
                                         <DataGridTextColumn Header="作用域" Binding="{Binding Scope}" Width="120"/>
@@ -283,15 +284,15 @@
                     <StackPanel>
                         <TextBlock Text="Windows 官方包管理器 winget 实操指南与技术说明" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
                         <TextBlock Text="winget 是 Windows 原生软件包管理器，直接从各软件官方源拉取纯净安装包。在管理更新时，了解其底层机制有助于更稳定地维护开发环境。"
-                                   FontSize="11" Foreground="#64748B" Margin="0,0,0,10"/>
+                                   FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
 
                         <!-- 技术说明与使用建议卡片 -->
-                        <Border Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="💡 关于批量更新命令【winget upgrade --all】的技术机制与注意事项：" FontWeight="Bold" FontSize="11" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                <TextBlock Text="• 适用场景：适用于全新装机或测试环境快速部署最新软件。在已配置复杂开发依赖的生产环境中，建议进行受控更新。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,2"/>
-                                <TextBlock Text="• 版本检测机制：若搭配【--include-unknown】参数，winget 会将未规范记录版本号的应用一律视作需要更新，可能导致重复下载安装。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,2,0,2"/>
-                                <TextBlock Text="• 推荐工作流：建议先使用【winget upgrade】查看候选清单，使用【winget pin】锁定需要保留固定版本的生产力软件，再针对性单包更新。" FontSize="11" Foreground="#475569" TextWrapping="Wrap"/>
+                                <TextBlock Text="💡 关于批量更新命令【winget upgrade --all】的技术机制与注意事项：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 适用场景：适用于全新装机或测试环境快速部署最新软件。在已配置复杂开发依赖的生产环境中，建议进行受控更新。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                                <TextBlock Text="• 版本检测机制：若搭配【--include-unknown】参数，winget 会将未规范记录版本号的应用一律视作需要更新，可能导致重复下载安装。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,2"/>
+                                <TextBlock Text="• 推荐工作流：建议先使用【winget upgrade】查看候选清单，使用【winget pin】锁定需要保留固定版本的生产力软件，再针对性单包更新。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                             </StackPanel>
                         </Border>
 
@@ -301,10 +302,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8">
+                            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8">
                                 <StackPanel>
-                                    <TextBlock Text="✅ 步骤 1：仅查看可更新列表 (安全，仅检测不改动系统):" FontWeight="Bold" FontSize="11" Foreground="#166534"/>
-                                    <TextBox Text="winget upgrade" IsReadOnly="True" Background="White" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
+                                    <TextBlock Text="✅ 步骤 1：仅查看可更新列表 (安全，仅检测不改动系统):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertGreenText}"/>
+                                    <TextBox Text="winget upgrade" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Border>
                             <Button Grid.Column="1" Content="📋 查列表" Style="{DynamicResource SecondaryButton}" Margin="6,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetCheck_Click"/>
@@ -315,10 +316,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8">
+                            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8">
                                 <StackPanel>
-                                    <TextBlock Text="🔒 步骤 2：使用 pin 锁定核心依赖 (防止特定版本被意外升级):" FontWeight="Bold" FontSize="11" Foreground="#1E293B"/>
-                                    <TextBox Text="winget pin add --id Python.Python.3.10" IsReadOnly="True" Background="White" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
+                                    <TextBlock Text="🔒 步骤 2：使用 pin 锁定核心依赖 (防止特定版本被意外升级):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <TextBox Text="winget pin add --id Python.Python.3.10" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Border>
                             <Button Grid.Column="1" Content="📋 锁版本" Style="{DynamicResource SecondaryButton}" Margin="6,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetPin_Click"/>
@@ -329,16 +330,16 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8">
+                            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8">
                                 <StackPanel>
-                                    <TextBlock Text="🎯 步骤 3：针对性单包更新 (推荐做法，明确受控):" FontWeight="Bold" FontSize="11" Foreground="#1E293B"/>
-                                    <TextBox Text="winget upgrade --id 7zip.7zip" IsReadOnly="True" Background="White" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
+                                    <TextBlock Text="🎯 步骤 3：针对性单包更新 (推荐做法，明确受控):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <TextBox Text="winget upgrade --id 7zip.7zip" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Margin="0,2,0,0"/>
                                 </StackPanel>
                             </Border>
                             <Button Grid.Column="1" Content="📋 单包更新" Style="{DynamicResource SecondaryButton}" Margin="6,0,0,0" VerticalAlignment="Center" Click="BtnCopyWingetUpgradeSingle_Click"/>
                         </Grid>
 
-                        <TextBlock Text="常用纯净开发与办公软件一键安装命令 (点击 📋 复制)：" FontSize="12" FontWeight="SemiBold" Foreground="#334155" Margin="0,2,0,6"/>
+                        <TextBlock Text="常用纯净开发与办公软件一键安装命令 (点击 📋 复制)：" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,6"/>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -347,41 +348,41 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" Margin="0,0,6,0">
-                                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="Visual Studio Code" FontWeight="Bold" FontSize="12"/>
-                                            <TextBlock Text="winget install Microsoft.VisualStudioCode" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                            <TextBlock Text="Visual Studio Code" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="winget install Microsoft.VisualStudioCode" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                         </StackPanel>
                                         <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Microsoft.VisualStudioCode"/>
                                     </Grid>
                                 </Border>
-                                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="Git 版本控制" FontWeight="Bold" FontSize="12"/>
-                                            <TextBlock Text="winget install Git.Git" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                            <TextBlock Text="Git 版本控制" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="winget install Git.Git" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                         </StackPanel>
                                         <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Git.Git"/>
                                     </Grid>
                                 </Border>
-                                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="Google Chrome 浏览器" FontWeight="Bold" FontSize="12"/>
-                                            <TextBlock Text="winget install Google.Chrome" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                            <TextBlock Text="Google Chrome 浏览器" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="winget install Google.Chrome" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                         </StackPanel>
                                         <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Google.Chrome"/>
                                     </Grid>
@@ -389,41 +390,41 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Margin="6,0,0,0">
-                                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="7-Zip 开源极简解压" FontWeight="Bold" FontSize="12"/>
-                                            <TextBlock Text="winget install 7zip.7zip" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                            <TextBlock Text="7-Zip 开源极简解压" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="winget install 7zip.7zip" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                         </StackPanel>
                                         <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install 7zip.7zip"/>
                                     </Grid>
                                 </Border>
-                                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,6">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="Node.js LTS 运行环境" FontWeight="Bold" FontSize="12"/>
-                                            <TextBlock Text="winget install OpenJS.NodeJS.LTS" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                            <TextBlock Text="Node.js LTS 运行环境" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="winget install OpenJS.NodeJS.LTS" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                         </StackPanel>
                                         <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install OpenJS.NodeJS.LTS"/>
                                     </Grid>
                                 </Border>
-                                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="8">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="8">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <TextBlock Text="微信 PC 官方纯净版" FontWeight="Bold" FontSize="12"/>
-                                            <TextBlock Text="winget install Tencent.WeChat" FontFamily="Consolas" FontSize="10" Foreground="#64748B"/>
+                                            <TextBlock Text="微信 PC 官方纯净版" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="winget install Tencent.WeChat" FontFamily="Consolas" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}"/>
                                         </StackPanel>
                                         <Button Grid.Column="1" Content="📋" Style="{DynamicResource SecondaryButton}" Click="BtnCopySnippet_Click" Tag="winget install Tencent.WeChat"/>
                                     </Grid>
