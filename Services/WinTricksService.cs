@@ -125,6 +125,22 @@ public class WinTricksService
     }
 
     /// <summary>
+    /// 解锁并导入 Windows 原生“卓越性能”电源方案 (Ultimate Performance Scheme)
+    /// </summary>
+    public (bool Success, string Message) EnableUltimatePerformanceScheme()
+    {
+        try
+        {
+            var output = RunProcessAndGetOutput("powercfg", "-duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61");
+            return (true, "已成功导入 Windows 原生【卓越性能】电源方案！\n可在系统“电源与睡眠”或控制面板“电源选项”中勾选启用。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"执行失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// 启动 Windows 内存诊断工具 (mdsched.exe)
     /// </summary>
     public void OpenMemoryDiagnostic()

@@ -47,6 +47,12 @@ public partial class BuiltInGuideView : UserControl
         MessageBox.Show(info, "唤醒源与休眠阻止项查询", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
+    private void BtnEnableUltimateScheme_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winTricksService.EnableUltimatePerformanceScheme();
+        MessageBox.Show(msg, "电源方案", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
     private void BtnChkdskScan_Click(object sender, RoutedEventArgs e)
     {
         var (ok, msg) = _winTricksService.RunChkdskScanInConsole("C:");

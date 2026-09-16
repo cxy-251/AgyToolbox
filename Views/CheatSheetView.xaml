@@ -7,7 +7,7 @@
              d:DesignHeight="600" d:DesignWidth="800">
     <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
         <StackPanel Margin="10">
-            <TextBlock Text="短视频常吹的 Windows 快捷键神技，整理为直白的一键速览卡片："
+            <TextBlock Text="Windows 高频工程快捷键与窗口调度速查表："
                        FontSize="13" Foreground="#64748B" Margin="0,0,0,16"/>
 
             <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,12">
