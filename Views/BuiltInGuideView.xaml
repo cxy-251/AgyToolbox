@@ -1,805 +1,204 @@
 <UserControl x:Class="AgyToolbox.Views.BuiltInGuideView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:builtin="clr-namespace:AgyToolbox.Views.BuiltIn"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="750" d:DesignWidth="850">
-    <Grid Margin="10">
+             d:DesignHeight="950" d:DesignWidth="1100">
+
+    <UserControl.Resources>
+        <!-- 子标签页平铺现代化样式 -->
+        <Style x:Key="SubTabItemStyle" TargetType="TabItem">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="Margin" Value="0,0,3,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="SubTabBorder" Background="#F1F5F9" CornerRadius="6,6,0,0" Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}">
+                            <ContentPresenter x:Name="SubContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="#0284C7"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="SubTabBorder" Property="Background" Value="#E2E8F0"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="SubTabBorder" Property="Background" Value="White"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#F8FAFC">
         <Grid.RowDefinitions>
+            <!-- 顶部标题与故障检索栏 -->
             <RowDefinition Height="Auto"/>
+            <!-- 主内容展示区 (TabControl 或 检索结果) -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- 模块说明看板 (保留在 TabControl 外层，始终可见) -->
-        <Border Grid.Row="0" Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
-            <StackPanel>
-                <TextBlock Text="📖 步骤三：Windows 内置系统工具与诊断修复指南 (Built-in Diagnostics &amp; System Tools)" FontSize="15" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,4"/>
-                <TextBlock Text="本指南严格遵循系统工程分析标准。针对 CLI 命令行工具，提供全参数用法对比、执行代价与丰富的实战场景实例；针对 GUI 管理控制台，提供精准的界面字段判读规范、底层依赖与排查决策依据。"
-                           FontSize="12" Foreground="#3B82F6" TextWrapping="Wrap"/>
-            </StackPanel>
+        <!-- 顶部功能头与搜索过滤栏 -->
+        <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="16,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- 标题与说明 -->
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="📖 步骤三：Windows 内置工具工程排错手册与系统管理体系" FontSize="15" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="收录 30+ 核心原生诊断工具与控制台。各工具模块独立封装，提供参数代价分析、GUI 巡检指南、现代替代方案与 AQS 检索实战。"
+                                   FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <Border Grid.Column="1" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
+                        <TextBlock Text="8 大工程维度 · 零第三方依赖" FontSize="10" Foreground="#475569" FontWeight="SemiBold"/>
+                    </Border>
+                </Grid>
+
+                <!-- 全局故障症状与工具搜索条 -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="8,4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="🔍" FontSize="12" Foreground="#94A3B8" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TbSearch" Grid.Column="1" BorderThickness="0" Background="Transparent" FontSize="12"
+                                     VerticalAlignment="Center" TextChanged="TbSearch_TextChanged"
+                                     ToolTip="输入故障症状或工具名，如：文件被占、蓝屏、端口探测、睡眠发热、恢复环境、WinRE、哈希、双网卡分流、冷重启、TRIM、坏道..."/>
+                            <TextBlock Grid.Column="1" x:Name="TbSearchPlaceholder" Text="输入故障症状、指令或工具名 (如: 端口探测, 蓝屏, 句柄占用, 睡眠发热, 恢复环境, 哈希, 双网卡分流, 清零...)"
+                                       FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" IsHitTestVisible="False" Margin="2,0,0,0"/>
+                            <Button x:Name="BtnClearSearch" Grid.Column="2" Content="✕" Visibility="Collapsed"
+                                    Background="Transparent" Foreground="#94A3B8" BorderThickness="0" Padding="4,0" Cursor="Hand" Click="BtnClearSearch_Click"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
         </Border>
 
-        <!-- 7 个系统工程专业子标签 -->
-        <TabControl Grid.Row="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1"
-                    ItemContainerStyle="{DynamicResource SubTabItemStyle}">
+        <!-- 主内容区：未搜索时显示 TabControl，搜索时切换为检索结果列表 -->
+        <Grid Grid.Row="1">
 
-            <!-- Tab 1: 系统崩溃与内核转储诊断 -->
-            <TabItem Header="💥 崩溃与内核转储">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+            <!-- 1. 常规模式：8 大模块横向标签页 -->
+            <TabControl x:Name="MainTabControl" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0"
+                        ItemContainerStyle="{StaticResource SubTabItemStyle}">
+
+                <!-- Tab 1: 崩溃与内核急救 -->
+                <TabItem Header="💥 崩溃与内核急救">
+                    <builtin:CrashRescueSection />
+                </TabItem>
+
+                <!-- Tab 2: 存储与文件系统 -->
+                <TabItem Header="💾 存储与文件系统">
+                    <builtin:StorageDiskSection />
+                </TabItem>
+
+                <!-- Tab 3: 硬件拓扑与电源 -->
+                <TabItem Header="🔋 硬件拓扑与电源">
+                    <builtin:HardwarePowerSection />
+                </TabItem>
+
+                <!-- Tab 4: 网络栈与路由 -->
+                <TabItem Header="🌐 网络栈与路由">
+                    <builtin:NetworkStackSection />
+                </TabItem>
+
+                <!-- Tab 5: 资源与性能巡检 -->
+                <TabItem Header="🩺 资源与性能巡检">
+                    <builtin:PerfTraceSection />
+                </TabItem>
+
+                <!-- Tab 6: 安全策略与权限 -->
+                <TabItem Header="🛡️ 安全策略与权限">
+                    <builtin:SecurityAuthSection />
+                </TabItem>
+
+                <!-- Tab 7: 引导恢复与配置 -->
+                <TabItem Header="⚙️ 引导恢复与系统配置">
+                    <builtin:BootRecoverySection />
+                </TabItem>
+
+                <!-- Tab 8: 检索语法与控制台 -->
+                <TabItem Header="🧰 检索语法与管理控制台">
+                    <builtin:ConsoleAqsSection />
+                </TabItem>
+
+            </TabControl>
+
+            <!-- 2. 搜索过滤模式：动态匹配卡片列表 -->
+            <Border x:Name="PanelSearchResults" Background="#F8FAFC" Visibility="Collapsed" Padding="14">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
-                        <TextBlock Text="针对应用程序闪退、图形驱动重置、系统冻结及蓝屏 (BSOD) 的标准排查与组件修复链路：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
+                        <WrapPanel Margin="0,0,0,10" VerticalAlignment="Center">
+                            <TextBlock Text="🎯 匹配到的故障场景与诊断方案：" FontSize="13" FontWeight="Bold" Foreground="#0F172A"/>
+                            <TextBlock x:Name="TxtResultCount" Text="(0 项)" FontSize="12" Foreground="#64748B" Margin="6,0,0,0"/>
+                        </WrapPanel>
 
-                        <!-- 1.1 可靠性监视器 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="1. 可靠性监视器 (perfmon.exe /rel) — 崩溃溯源与模块定位" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1" Content="打开可靠性监视器" Style="{DynamicResource SecondaryButton}" Click="BtnReliability_Click"/>
-                                </Grid>
-                                <TextBlock Text="【界面判读重点】&#x0a;• 关键事件 (Critical Events, 红叉标记)：定位应用程序故障与 Windows 系统故障。&#x0a;• 技术详细信息：双击具体故障条目，提取 Faulting module name 与 Exception code。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8">
-                                    <StackPanel>
-                                        <TextBlock Text="💡 高频典型异常代码 (Exception Code) 快速对照实战：" FontWeight="Bold" FontSize="11" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 0xc0000005 (STATUS_ACCESS_VIOLATION)：内存访问违规（最常见空指针引用或野指针越界）。&#x0a;• 0xc0000374 (STATUS_HEAP_CORRUPTION)：进程堆内存损坏，常见于 C++ 运行时缓冲区溢出或野指针释放。&#x0a;• 0xc00000fd (STATUS_STACK_OVERFLOW)：栈内存溢出，多见于递归死循环。&#x0a;• 故障模块为 nvlddmkm.sys / amdkmdag.sys：确定为显卡驱动崩溃；ntdll.dll / clr.dll：系统底层库或 .NET 运行时异常。"
-                                                   FontSize="10" Foreground="#64748B" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 1.2 Windows 内存诊断工具 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="2. Windows 内存诊断 (mdsched.exe) — 脱机底层 RAM 硬件测试" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1" Content="启动内存诊断计划" Style="{DynamicResource SecondaryButton}" Click="BtnMemoryDiag_Click"/>
-                                </Grid>
-                                <TextBlock Text="【运行流程与测试模式】一键安排在下次重启时直接进入 UEFI/BIOS 底层独立环境进行多轮算法跑圈：&#x0a;• 测试模式 (按 F1 切换)：基本 (Basic, 快速)、标准 (Standard, 默认推荐，包含 LRAND 与 Stride6)、扩展 (Extended, 针对高负载隐蔽位翻转 Bit Flips)。&#x0a;• 结果查看路径：重启登入系统后，在事件查看器 (eventvwr.msc) -> Windows 日志 -> 系统 中筛选来源 MemoryDiagnostics-Results (Event ID 1101)。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <TextBlock Text="【实战排查场景】系统无故蓝屏且每次崩溃报错代码随机变动（如 MEMORY_MANAGEMENT, KMODE_EXCEPTION_NOT_HANDLED）时，用于排除物理 RAM 坏块、金手指接触不良或时序不稳定。" FontSize="10" Foreground="#0284C7"/>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 1.3 驱动程序验证程序管理器 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="3. 驱动程序验证程序 (verifier.exe) — 内核驱动压力测试" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1" Content="启动驱动验证管理器" Style="{DynamicResource SecondaryButton}" Click="BtnDriverVerifier_Click"/>
-                                </Grid>
-                                <TextBlock Text="【技术机制】针对 DRIVER_IRQL_NOT_LESS_OR_EQUAL 等疑难蓝屏，对选定的第三方内核驱动（外设、声卡、网卡、杀毒过滤驱动）施加极端的特殊内存池和强制 IRQL 校验，逼出潜伏的野指针并生成转储 Dump。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,6">
-                                    <StackPanel>
-                                        <TextBlock Text="🛠️ 常用命令行指令与应急恢复：" FontWeight="Bold" FontSize="11" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="verifier /querysettings" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 查验证状态" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="verifier /querysettings"/>
-                                        </Grid>
+                        <!-- 动态渲染的匹配项列表 -->
+                        <ItemsControl x:Name="ListSearchResults">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,8">
                                         <Grid>
-                                            <TextBox Text="verifier /reset" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 彻底重置清除" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="verifier /reset"/>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <WrapPanel Margin="0,0,0,4">
+                                                    <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="13" Foreground="#0F172A"/>
+                                                    <Border Background="#EFF6FF" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                                        <TextBlock Text="{Binding Category}" FontSize="10" Foreground="#0284C7" FontWeight="SemiBold"/>
+                                                    </Border>
+                                                </WrapPanel>
+                                                <TextBlock Text="{Binding Symptom}" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                                <Border Background="#F1F5F9" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left">
+                                                    <TextBlock Text="{Binding CommandOrAction}" FontFamily="Consolas" FontSize="10" Foreground="#0284C7"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="11" Padding="8,3" Margin="0,0,6,0"
+                                                        Tag="{Binding CommandOrAction}" Click="BtnCopySearchResult_Click"/>
+                                                <Button Content="前往模块" FontSize="11" Padding="8,3"
+                                                        Tag="{Binding TargetTabIndex}" Click="BtnGoToTab_Click"/>
+                                            </StackPanel>
                                         </Grid>
-                                    </StackPanel>
-                                </Border>
-                                <TextBlock Text="⚠️ 【应急防护规范】若开启驱动验证后导致开机反复蓝屏循环，在开机时按 F8 进入 Windows 安全模式，打开命令行执行 verifier /reset 即可彻底清除所有验证规则正常进系统。"
-                                           FontSize="10" Foreground="#DC2626" FontWeight="SemiBold" TextWrapping="Wrap"/>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 1.4 SFC 与 DISM 在线/脱机全参数规范 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
-                            <StackPanel>
-                                <TextBlock Text="4. 系统核心文件与组件库映像修复流水线 (SFC &amp; DISM)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,6"/>
-                                <TextBlock Text="【参数对比与执行逻辑】标准修复链推荐先 SFC 后 DISM：&#x0a;• sfc /scannow：扫描并修复受损系统核心文件，从本地 WinSxS 提取官方签名副本恢复。&#x0a;• sfc /verifyonly：只读完整性扫描，仅输出差异报告，不修改任何磁盘文件。&#x0a;• DISM /Online /Cleanup-Image /ScanHealth：深度扫描本地组件存储结构损坏（耗时 5~10 分钟）。&#x0a;• DISM /Online /Cleanup-Image /RestoreHealth：联机与 Windows Update 通信，下载完好组件替换受损源。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Content="运行 SFC 扫描修复" Background="#0284C7" Margin="0,0,4,0" Click="BtnRunSfc_Click"/>
-                                    <Button Grid.Column="1" Content="运行 DISM 联机修复" Style="{DynamicResource SecondaryButton}" Margin="4,0,0,0" Click="BtnRunDism_Click"/>
-                                </Grid>
-
-                                <!-- 脱机急救实例 -->
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8">
-                                    <StackPanel>
-                                        <TextBlock Text="🚨 无法正常开机时的 WinRE PE 命令行脱机急救指令 (Offline Recovery)：" FontWeight="Bold" FontSize="11" Foreground="#B45309" Margin="0,0,0,4"/>
-                                        <TextBlock Text="当 Windows 无法启动进桌面，在 Windows RE 恢复环境命令提示符下指定脱机目录修复：" FontSize="10" Foreground="#64748B" Margin="0,0,0,4"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="sfc /scannow /offbootdir=C:\ /offwindir=C:\Windows" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 脱机 SFC" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="sfc /scannow /offbootdir=C:\ /offwindir=C:\Windows"/>
-                                        </Grid>
-                                        <Grid>
-                                            <TextBox Text="dism /image:C:\ /cleanup-image /restorehealth /source:WIM:D:\sources\install.wim:1" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 脱机 DISM" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="dism /image:C:\ /cleanup-image /restorehealth /source:WIM:D:\sources\install.wim:1"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
                 </ScrollViewer>
-            </TabItem>
+            </Border>
 
-            <!-- Tab 2: 存储系统与文件系统维护 -->
-            <TabItem Header="💾 存储与文件系统">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <TextBlock Text="文件系统元数据校验、坏扇区抢救、底层 TRIM 状态与组件存储管理：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
-
-                        <!-- 2.1 chkdsk 参数全景与丰富实战 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="1. 磁盘检查与元数据修复 (chkdsk) — 全参数规范与代价分析" FontWeight="Bold" FontSize="13" Foreground="#1E293B" VerticalAlignment="Center"/>
-                                    <Button Grid.Column="1" Content="运行只读联机预检 (C: /scan)" Style="{DynamicResource SecondaryButton}" Click="BtnChkdskScan_Click"/>
-                                </Grid>
-                                <TextBlock Text="【参数矩阵与代价说明】&#x0a;• chkdsk C: /scan：【联机只读预检】首选推荐！系统正常运行时秒级跑完，不独占锁盘、无需重启，仅生成错误检测报告。&#x0a;• chkdsk C: /f：【修复文件系统】修复 MFT 与目录索引错误。必须独占卷；系统盘会安排在下次重启时脱机执行（耗时约 2~10 分钟）。&#x0a;• chkdsk C: /r：【物理坏道扫描】包含 /f 所有逻辑，外加物理扇区逐一读取与数据抢救。执行代价极高（大容量磁盘耗时数小时，对 I/O 产生重载）。&#x0a;• chkdsk D: /f /x：【强制卸载并修复】针对外接 U 盘或非系统数据盘，强制断开所有打开的文件句柄 (Handle) 并立即修复。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8">
-                                    <StackPanel>
-                                        <TextBlock Text="🛠️ 典型实战场景命令速查：" FontWeight="Bold" FontSize="11" Foreground="#1E293B" Margin="0,0,0,6"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="chkdsk C: /scan /perf" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 性能加速预检 (/perf)" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="chkdsk C: /scan /perf"/>
-                                        </Grid>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="chkdsk D: /f /x" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 强制卸载数据盘修复 (/f /x)" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="chkdsk D: /f /x"/>
-                                        </Grid>
-                                        <Grid>
-                                            <TextBox Text="chkdsk D: /r" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 机械硬盘坏道数据抢救 (/r)" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="chkdsk D: /r"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 2.2 fsutil 文件系统行为与 TRIM -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="2. 文件系统底层行为与 SSD TRIM 状态 (fsutil)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                <TextBlock Text="【关键指令与判据】&#x0a;• fsutil behavior query DisableDeleteNotify：检查 SSD TRIM 状态。返回 0 代表已正常启用；返回 1 代表已禁用（会导致 SSD 垃圾回收失效、写入降速并加速磨损）。&#x0a;• fsutil dirty query C:：检查卷是否被内核标记为“脏卷 (Dirty Bit)”。若标记为脏卷，系统将在下次启动时强制运行自检。&#x0a;• fsutil volumeinfo C:：获取文件系统高级特性支持（CoW、对象 ID、配额、精简配置支持等）。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8">
-                                    <StackPanel>
-                                        <TextBlock Text="🛠️ 常用实战维护指令：" FontWeight="Bold" FontSize="11" Foreground="#1E293B" Margin="0,0,0,6"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="fsutil behavior set DisableDeleteNotify 0" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 强制开启 SSD TRIM" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="fsutil behavior set DisableDeleteNotify 0"/>
-                                        </Grid>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="fsutil dirty set C:" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 标记下次开机强制自检" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="fsutil dirty set C:"/>
-                                        </Grid>
-                                        <Grid>
-                                            <TextBox Text="fsutil file createnew test_1g.dat 1073741824" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 秒级生成 1GB 测试占位文件" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="fsutil file createnew test_1g.dat 1073741824"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 2.3 磁盘管理与驱动器优化 -->
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <!-- diskmgmt.msc -->
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="3. 磁盘管理 (diskmgmt.msc)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【界面判读】&#x0a;• 分区样式 (Partition Style)：磁盘属性 -> 卷 -> GUID 分区表 (GPT) vs 主启动记录 (MBR)。GPT 支持 UEFI 引导与 2TB+ 卷。&#x0a;• 异常状态：RAW 分区代表文件系统结构受损未挂载，需抢救；EFI 系统分区为引导必需，切勿强行抹除。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开磁盘管理" Style="{DynamicResource SecondaryButton}" Click="BtnRunCmd_Click" Tag="diskmgmt.msc"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- dfrgui.exe -->
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="5,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="4. 驱动器优化与 TRIM (dfrgui.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【技术机制】&#x0a;• 对固态硬盘 (SSD)：发送原生 TRIM 指令回收擦除块，保持最佳写入性能。&#x0a;• 对机械硬盘 (HDD)：合并碎片文件，降低磁头物理寻道延迟。&#x0a;• 建议状态：保持每周计划自动优化开启即可。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开驱动器优化" Style="{DynamicResource SecondaryButton}" Click="BtnDiskDefrag_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                        <!-- 2.4 WinSxS 组件库清理 -->
-                        <Border Background="#FFFBEB" BorderBrush="#FDE68A" BorderThickness="1" CornerRadius="6" Padding="12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                    <TextBlock Text="5. WinSxS 组件库清理与重基准化 (DISM /ResetBase)" FontWeight="Bold" FontSize="13" Foreground="#B45309"/>
-                                    <TextBlock Text="【技术后果与不可逆警告】调用 /StartComponentCleanup /ResetBase 彻底清除已被新更新替代的陈旧补丁备份，释放数 GB 存储空间。&#x0a;⚠️ 注意：执行后将永久无法回滚或卸载当前已安装的历史系统更新！"
-                                               FontSize="11" Foreground="#92400E" TextWrapping="Wrap" Margin="0,4,0,0"/>
-                                </StackPanel>
-                                <Button Grid.Column="1" Content="清理组件库" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnRunWinSxSCleanup_Click"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 3: 硬件拓扑与电源管理诊断 -->
-            <TabItem Header="🔋 硬件拓扑与电源">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <TextBlock Text="底层固件拓扑、DirectX 硬件功能级别与 Modern Standby 待机能耗分析：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
-
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <!-- 3.1 msinfo32 -->
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="1. 系统信息 (msinfo32.exe) — 硬件与固件拓扑" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【界面判读重点】&#x0a;• BIOS 模式：显示 UEFI 或 传统 (Legacy)。现代安全功能必需 UEFI。&#x0a;• 安全启动状态：Secure Boot 开启状态。&#x0a;• PCR7 绑定：BitLocker 启动完整性是否由 TPM 2.0 自动接管。&#x0a;• 基于虚拟化的安全性 (VBS / HVCI)：显示正在运行代表内核隔离已生效。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,6"/>
-                                    <Grid Margin="0,0,0,6">
-                                        <TextBox Text="msinfo32 /report C:\sys_report.txt" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                        <Button Content="📋 导出文本报告" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCmd_Click" Tag="msinfo32 /report C:\sys_report.txt"/>
-                                    </Grid>
-                                    <Button Content="打开系统信息 (msinfo32)" Style="{DynamicResource SecondaryButton}" Click="BtnMsInfo32_Click"/>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- 3.2 dxdiag -->
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="5,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="2. DirectX 诊断 (dxdiag.exe) — 图形与驱动模型" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【界面判读重点】&#x0a;• 驱动程序模型：WDDM 3.0 / 3.1 / 3.2 等版本。&#x0a;• 功能级别 (Feature Levels)：显卡物理支持的 Direct3D 特性集（如 12_2, 12_1）。游戏报不支持 DX12 时由此字段决定，装软件无法伪造。&#x0a;• WHQL 签名：显卡驱动是否通过微软认证，未签名驱动常为闪退根源。&#x0a;• 显存分配：检查 Dedicated VRAM 与 Shared Memory。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开 DirectX 诊断 (dxdiag)" Style="{DynamicResource SecondaryButton}" Click="BtnDxDiag_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                        <!-- 3.3 powercfg 全参数诊断与丰富实操 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="3. 电源与待机能耗诊断全参数规范 (powercfg)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                <TextBlock Text="【报告与排查指令选型】&#x0a;• powercfg /batteryreport：生成出厂设计容量与完全充电容量比对 HTML 报告，精准核验电池循环次数与健康损耗。&#x0a;• powercfg /sleepstudy：生成 Modern Standby 待机耗电报告，诊断笔记本合盖放背包异常发烫、异常掉电的后台元凶。&#x0a;• powercfg -lastwake 与 /requests：秒查上一次究竟是谁唤醒了系统，以及当前阻止系统进入休眠的活动设备与流。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Content="生成电池健康报告" Background="#10B981" Margin="0,0,4,0" Click="BtnBatteryReport_Click"/>
-                                    <Button Grid.Column="1" Content="生成睡眠待机报告" Style="{DynamicResource SecondaryButton}" Margin="2,0,2,0" Click="BtnSleepStudy_Click"/>
-                                    <Button Grid.Column="2" Content="查唤醒源与休眠阻止项" Style="{DynamicResource SecondaryButton}" Margin="4,0,0,0" Click="BtnLastWake_Click"/>
-                                </Grid>
-
-                                <!-- 实操命令行清单 -->
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8">
-                                    <StackPanel>
-                                        <TextBlock Text="🛠️ 高频电源实战命令速查：" FontWeight="Bold" FontSize="11" Foreground="#1E293B" Margin="0,0,0,6"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="powercfg -h off" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 关闭休眠释放 C 盘等同 RAM 大小空间 (-h off)" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="powercfg -h off"/>
-                                        </Grid>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="powercfg /devicequery wake_armed" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 列出允许唤醒计算机的硬件设备" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="powercfg /devicequery wake_armed"/>
-                                        </Grid>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="powercfg /energy /output &quot;C:\energy_report.html&quot;" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 生成 60 秒系统能效评估报告 (/energy)" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopyCmd_Click" Tag="powercfg /energy /output &quot;C:\energy_report.html&quot;"/>
-                                        </Grid>
-                                        <Grid>
-                                            <TextBox Text="powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="⚡ 一键导入【卓越性能】电源方案" HorizontalAlignment="Right" Background="#7C3AED" Padding="6,2" FontSize="10"
-                                                    Click="BtnEnableUltimateScheme_Click"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 3.4 显示器校准与 ClearType 文本调谐 -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="4. ClearType 文本调谐 (cttune.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【使用场景】解决外接高分屏或特定面板代码字体发虚、边缘呈现红蓝彩色杂边的问题，校准子像素亚像素渲染平滑度。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开 ClearType 调谐器" Style="{DynamicResource SecondaryButton}" Click="BtnClearType_Click"/>
-                                </StackPanel>
-                            </Border>
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="5,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="5. 显示颜色校准 (dccw.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【使用场景】硬件显示器未带校色文件时，通过原生向导调整伽马值 (Gamma)、亮度、对比度与红绿蓝三色色彩平衡。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开显示颜色校准" Style="{DynamicResource SecondaryButton}" Click="BtnColorCalib_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 4: 网络协议栈与路由诊断 -->
-            <TabItem Header="🌐 网络栈与路由">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <TextBlock Text="网络协议栈状态检测、路由跃点追踪、DNS 解析反查与多网卡分流：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
-
-                        <!-- 4.1 ipconfig 与 netsh 核心操作 -->
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="1. 网络适配器配置 (ipconfig)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【全参数规范与断网急救组合】&#x0a;• /all：完整输出物理 MAC、IPv4/IPv6、DHCP 租约与 DNS 地址。&#x0a;• /flushdns：清空本地解析器缓存。&#x0a;• /release &amp; /renew：重新向路由器申请获取 IP。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,6"/>
-                                    <Grid Margin="0,0,0,6">
-                                        <TextBox Text="ipconfig /release &amp;&amp; ipconfig /renew &amp;&amp; ipconfig /flushdns" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                        <Button Content="📋 断网急救三连" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                Click="BtnCopyCmd_Click" Tag="ipconfig /release &amp;&amp; ipconfig /renew &amp;&amp; ipconfig /flushdns"/>
-                                    </Grid>
-                                    <Button Content="刷新 DNS 缓存" Style="{DynamicResource SecondaryButton}" Click="BtnFlushDns_Click"/>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="5,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="2. 协议栈复位 (netsh)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【技术机制】&#x0a;• winsock reset：清除代理工具残留的 LSP 分层服务提供者。&#x0a;• int ip reset：重置 TCP/IP 协议栈至初始状态。&#x0a;• 编辑 Hosts：以管理员权限编辑域名静态映射文件。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,6"/>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Content="重置协议栈" Background="#EF4444" Margin="0,0,3,0" Click="BtnResetWinsock_Click"/>
-                                        <Button Grid.Column="1" Content="编辑 Hosts 文件" Style="{DynamicResource SecondaryButton}" Margin="3,0,0,0" Click="BtnEditHosts_Click"/>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                        <!-- 4.2 链路测试选型矩阵 ping vs tracert vs pathping -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="3. 链路连通性与丢包诊断选型矩阵 (ping vs tracert vs pathping)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                <TextBlock Text="【技术选型与参数说明】&#x0a;• ping -f -l 1472 target：探测链路 MTU 极限大小（设置不分片 DF 标志）。&#x0a;• tracert -d target：-d 参数跳过反向 DNS PTR 解析，可将跟踪耗时从数分钟压缩至数秒。&#x0a;• pathping -q 50 -n target：综合统计沿途每个路由器节点的丢包百分比，一眼看清是内网交换机、城域网还是机房在丢包。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Content="📋 ping (测 MTU 1472)" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0"
-                                            Click="BtnCopyCmd_Click" Tag="ping -f -l 1472 1.1.1.1"/>
-                                    <Button Grid.Column="1" Content="📋 tracert -d (高速跳点)" Style="{DynamicResource SecondaryButton}" Margin="2,0,2,0"
-                                            Click="BtnCopyCmd_Click" Tag="tracert -d github.com"/>
-                                    <Button Grid.Column="2" Content="📋 pathping (丢包率分析)" Style="{DynamicResource SecondaryButton}" Margin="4,0,0,0"
-                                            Click="BtnCopyCmd_Click" Tag="pathping -q 50 -n github.com"/>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 4.3 域名解析与双网卡路由分流实战 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="4. 域名解析排查 (nslookup) 与双网卡静态分流 (route)" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                <TextBlock Text="【排错与分流实例】&#x0a;• 查 IPv6 AAAA 记录：nslookup -querytype=AAAA github.com&#x0a;• 查权威邮件交换 MX 记录：nslookup -querytype=MX qq.com&#x0a;• 双网卡静态分流：route add 10.0.0.0 mask 255.0.0.0 10.15.2.1 -p（将 10.x.x.x 内网流量强制定向至内网网关，外网流量走主默认网关，彻底避免断网）。"
-                                           FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                <Grid Margin="0,0,0,4">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Content="📋 查 IPv6 记录 (-type=AAAA)" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0"
-                                            Click="BtnCopyCmd_Click" Tag="nslookup -querytype=AAAA github.com 223.5.5.5"/>
-                                    <Button Grid.Column="1" Content="📋 查邮件 MX 记录 (-type=MX)" Style="{DynamicResource SecondaryButton}" Margin="4,0,0,0"
-                                            Click="BtnCopyCmd_Click" Tag="nslookup -querytype=MX qq.com 223.5.5.5"/>
-                                </Grid>
-                                <Grid>
-                                    <TextBox Text="route add 10.0.0.0 mask 255.0.0.0 10.15.2.1 -p" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                    <Button Content="📋 复制双网卡分流命令" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                            Click="BtnCopyCmd_Click" Tag="route add 10.0.0.0 mask 255.0.0.0 10.15.2.1 -p"/>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 4.4 WiFi 配置管理与密码提取 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                        <TextBlock Text="5. WLAN 配置管理与已存密码查看 (netsh wlan)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                        <TextBlock Text="【技术机制】调用 netsh wlan show profile name=... key=clear 读取 Windows 本地存储的安全凭据。" FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1" Content="查看已保存密码" Style="{DynamicResource SecondaryButton}" Click="BtnGetWifi_Click"/>
-                                </Grid>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Grid.Column="0" Content="📋 导出全部 WiFi 配置文件为 XML" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0"
-                                            Click="BtnCopyCmd_Click" Tag="netsh wlan export profile folder=C:\ key=clear"/>
-                                    <Button Grid.Column="1" Content="📋 查看周围 WiFi 频段与信道拥堵" Style="{DynamicResource SecondaryButton}" Margin="4,0,0,0"
-                                            Click="BtnCopyCmd_Click" Tag="netsh wlan show networks mode=bssid"/>
-                                </Grid>
-                                <DataGrid x:Name="GridWifi" Margin="0,4,0,0" AutoGenerateColumns="False" IsReadOnly="True"
-                                          Background="White" BorderBrush="#E2E8F0" MaxHeight="140" Visibility="Collapsed">
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="WiFi 名称 (SSID)" Binding="{Binding Ssid}" Width="240"/>
-                                        <DataGridTextColumn Header="已保存密码" Binding="{Binding Password}" Width="*"/>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 5: 系统资源与性能监控 -->
-            <TabItem Header="🩺 资源与性能监控">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <TextBlock Text="死锁句柄检索、内存分配拓扑、磁盘 I/O 响应时间瓶颈与性能基准线：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
-
-                        <!-- 5.1 资源监视器深度解析手册 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                    <TextBlock Text="1. 资源监视器 (resmon.exe) — 4 大选项卡深度判读手册" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【界面指标与排查决策】&#x0a;• 【CPU】选项卡 -> 关联的句柄 (Associated Handles)：搜索被占用文件名，立即定位锁定该文件的进程并强杀，解决文件无法删除移动问题。&#x0a;• 【内存 (Memory)】选项卡 -> 彩条分布：重点关注【为硬件保留的内存】若高达数 GB，通常为双通道插槽松动、氧化或 BIOS 预分配 iGPU 过大；【备用 (Standby)】为随时可释放的系统缓存。&#x0a;• 【磁盘 (Disk)】选项卡 -> 响应时间 (Response Time)：持续高于 50~100ms 代表磁盘存在 I/O 拥塞或物理老化；活动时间持续 100% 为存储瓶颈。&#x0a;• 【网络 (Network)】选项卡：查看各进程 TCP 握手状态与重传丢失。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,0"/>
-                                </StackPanel>
-                                <Button Grid.Column="1" Content="启动资源监视器" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnResmon_Click"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- 5.2 性能监视器与基准线 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                    <TextBlock Text="2. 性能监视器 (perfmon.msc) — 计数器与系统基准线" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【核心计数器基准线规范】&#x0a;• Processor(_Total)\% Processor Time：持续高于 80% 代表 CPU 计算瓶颈。&#x0a;• Memory\Available MBytes：可用物理内存。低于 500MB 时系统将频繁触发页面文件分页置换，造成明显顿挫。&#x0a;• PhysicalDisk(_Total)\Current Disk Queue Length：磁盘队列长度。持续超过磁盘主轴物理数量的 2 倍即代表 I/O 阻塞。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,0"/>
-                                </StackPanel>
-                                <Button Grid.Column="1" Content="打开性能监视器" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnPerfMon_Click"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- 5.3 事件查看器与排查实战 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                    <TextBlock Text="3. 事件查看器 (eventvwr.msc) — 内核关键日志筛选节点" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【关键排查日志节点】&#x0a;• Windows 日志 -> 系统：筛选 Event ID 41 (Kernel-Power 异常断电/强行关机重启)、Event ID 1001 (BugCheck 蓝屏 Dump 转储)、Event ID 7 (磁盘坏道 Bad Block)。&#x0a;• Windows 日志 -> 应用程序：排查软件崩溃与 .NET 运行时异常。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,0"/>
-                                </StackPanel>
-                                <Button Grid.Column="1" Content="打开事件查看器" Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center" Click="BtnEventVwr_Click"/>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 6: 安全策略与权限管理 -->
-            <TabItem Header="🛡️ 安全策略与权限">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <TextBlock Text="恶意软件脱机查杀、本地组策略、特权账户提权与根证书信任审查：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
-
-                        <!-- 6.1 MRT 恶意软件删除工具 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                    <TextBlock Text="1. 微软恶意软件删除工具 (mrt.exe) — 官方独立脱机查杀引擎" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【机制与用途】微软随每月 Windows 累积更新定期推送的独立安全扫描程序。专注于查杀活跃流行的特洛伊木马、蠕虫后门与挖矿程序，适合在怀疑系统被注入时进行干净脱机排查。" FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,0"/>
-                                </StackPanel>
-                                <Button Grid.Column="1" Content="启动 MRT 查杀工具" Background="#0284C7" VerticalAlignment="Center" Click="BtnMrt_Click"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- 6.2 本地安全策略与用户组 -->
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="2. 本地安全策略 (secpol.msc)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【核心配置策略项】&#x0a;• 账户策略 -> 密码策略：设定密码复杂度与历史记录保留。&#x0a;• 账户锁定策略：设定阈值锁定，防范暴力破解登录。&#x0a;• 本地策略 -> 用户权限分配：配置作为服务登录与提权权限。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开本地安全策略" Style="{DynamicResource SecondaryButton}" Click="BtnSecPol_Click"/>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="5,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="3. 本地用户和组 (lusrmgr.msc)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【管理与提权控制】&#x0a;• 本地账户管理：激活内置 Administrator 特权账户、强制重置密码。&#x0a;• 用户组归属：审查 Administrators 组成员，清除未授权提权的残留账户。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开用户和组管理" Style="{DynamicResource SecondaryButton}" Click="BtnLusrMgr_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                        <!-- 6.3 证书管理器与 DCOM 配置 -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="4. 证书管理器 (certmgr.msc)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【安全审查指南】&#x0a;• 检查【受信任的根证书颁发机构】，排查抓包调试工具（如 Fiddler、Charles）残留的自签名根证书与可疑证书链。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开证书管理器" Style="{DynamicResource SecondaryButton}" Click="BtnCertMgr_Click"/>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="5,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="5. 组件服务 (dcomcnfg.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【DCOM 权限排查】&#x0a;• 管理分布式 COM 访问与身份验证级别，解决 Windows 日志中高频出现的 DistributedCOM 10016 拒绝访问报错。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="打开组件服务" Style="{DynamicResource SecondaryButton}" Click="BtnDcomCnfg_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 7: 系统管理控制台与 AQS 高级查询语法 -->
-            <TabItem Header="🧰 管理控制台与检索">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <TextBlock Text="步骤复现工具、原生远程协助、核心 MMC 管理控制台与 AQS 检索语法全景示范：" FontSize="12" Foreground="#64748B" Margin="0,0,0,12"/>
-
-                        <!-- 7.1 步骤记录器与远程协助 -->
-                        <Grid Margin="0,0,0,10">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Border Grid.Column="0" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,5,0">
-                                <StackPanel>
-                                    <TextBlock Text="1. 步骤记录器 (psr.exe - Steps Recorder)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【机制与用途】排障复现利器。每次点击操作自动截取当前屏幕，在点击坐标添加绿色高亮框并附带按键动作说明，导出为单文件 HTML 格式技术排错报告。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="启动步骤记录器" Style="{DynamicResource SecondaryButton}" Click="BtnStepsRecorder_Click"/>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Grid.Column="1" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="5,0,0,0">
-                                <StackPanel>
-                                    <TextBlock Text="2. 原生远程协助 (msra.exe)" FontWeight="Bold" FontSize="13" Foreground="#1E293B"/>
-                                    <TextBlock Text="【机制与用途】Windows 内置安全远程屏幕共享与控制协议，无需安装第三方远控软件，通过邀请文件或连接密码建立受保护的远程桌面通道。"
-                                               FontSize="11" Foreground="#475569" TextWrapping="Wrap" Margin="0,4,0,8"/>
-                                    <Button Content="启动远程协助" Style="{DynamicResource SecondaryButton}" Click="BtnRemoteAssist_Click"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                        <!-- 7.2 核心系统管理控制台速查矩阵 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="3. 核心管理控制台 (MMC &amp; CPL) 快捷启动矩阵" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,8"/>
-                                <WrapPanel>
-                                    <Button Content="devmgmt.msc (设备管理器)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="devmgmt.msc"/>
-                                    <Button Content="diskmgmt.msc (磁盘管理)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="diskmgmt.msc"/>
-                                    <Button Content="services.msc (系统服务)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="services.msc"/>
-                                    <Button Content="ncpa.cpl (网络连接适配器)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="ncpa.cpl"/>
-                                    <Button Content="sysdm.cpl (系统属性与变量)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="sysdm.cpl"/>
-                                    <Button Content="gpedit.msc (本地组策略)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="gpedit.msc"/>
-                                    <Button Content="compmgmt.msc (计算机综合管理)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="compmgmt.msc"/>
-                                    <Button Content="cleanmgr.exe (系统磁盘清理)" Style="{DynamicResource SecondaryButton}" Margin="0,0,8,6" Click="BtnRunCmd_Click" Tag="cleanmgr.exe"/>
-                                    <Button Content="GodMode (全局设置集合面板)" Style="{DynamicResource SecondaryButton}" Margin="0,0,0,6" Click="BtnGodMode_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 7.3 AQS 搜索语法全景示范矩阵 -->
-                        <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="12">
-                            <StackPanel>
-                                <TextBlock Text="4. 文件资源管理器高级查询语法 (AQS, Advanced Query Syntax) 全景示范" FontWeight="Bold" FontSize="13" Foreground="#1E293B" Margin="0,0,0,4"/>
-                                <TextBlock Text="直接在 Windows 资源管理器右上角搜索框中输入以下结构化表达式，支持多维度复合秒级过滤：" FontSize="11" Foreground="#64748B" Margin="0,0,0,8"/>
-
-                                <!-- 维度 1: 文件分类与类型 -->
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,8">
-                                    <StackPanel>
-                                        <TextBlock Text="📂 维度一：文件类型 (kind / type)" FontWeight="Bold" FontSize="11" Foreground="#0284C7" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• kind:docs (全部文档: docx, xlsx, ppt, pdf, txt)&#x0a;• kind:pictures (图像) | kind:videos (视频) | kind:music (音频) | kind:folders (仅文件夹)&#x0a;• type:=.zip (精准限定压缩包文件类型)"
-                                                   FontSize="10" Foreground="#64748B" Margin="0,0,0,4"/>
-                                        <Grid>
-                                            <TextBox Text="kind:docs" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 复制 kind:docs" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="kind:docs"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 维度 2: 文件大小区间 -->
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,8">
-                                    <StackPanel>
-                                        <TextBlock Text="💾 维度二：文件大小区间 (size)" FontWeight="Bold" FontSize="11" Foreground="#0284C7" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• size:>1GB (超大文件排查) | size:100MB..500MB (区间范围检索)&#x0a;• size:empty (0 字节空文件清理) | size:tiny (0~16KB 极小文件) | size:gigantic (&gt;4GB 超大镜像)"
-                                                   FontSize="10" Foreground="#64748B" Margin="0,0,0,4"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="size:&gt;1GB" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 搜大于 1GB 文件" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="size:&gt;1GB"/>
-                                        </Grid>
-                                        <Grid>
-                                            <TextBox Text="size:100MB..500MB" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 搜区间 100M~500M" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="size:100MB..500MB"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 维度 3: 修改日期与时间 -->
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,8">
-                                    <StackPanel>
-                                        <TextBlock Text="📅 维度三：修改日期与时间 (datemodified / datecreated)" FontWeight="Bold" FontSize="11" Foreground="#0284C7" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• datemodified:today (今天) | datemodified:yesterday (昨天) | datemodified:this week (本周)&#x0a;• datemodified:last month (上月) | datemodified:2024-01-01..2024-06-30 (指定日期范围)"
-                                                   FontSize="10" Foreground="#64748B" Margin="0,0,0,4"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="datemodified:today" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 搜今天修改的文件" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="datemodified:today"/>
-                                        </Grid>
-                                        <Grid>
-                                            <TextBox Text="datemodified:2024-01-01..2024-06-30" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 搜区间修改时间" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="datemodified:2024-01-01..2024-06-30"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 维度 4: 文件名、扩展名与正文内容全文检索 -->
-                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,8">
-                                    <StackPanel>
-                                        <TextBlock Text="🔍 维度四：文件名、扩展名与正文全文检索 (name / ext / content)" FontWeight="Bold" FontSize="11" Foreground="#0284C7" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• name:~=&quot;backup&quot; (文件名包含 backup) | name:app* (以 app 开头)&#x0a;• ext:.log OR ext:.dmp (同时匹配多种特定扩展名)&#x0a;• content:&quot;connection timeout&quot; (检索文件内部正文包含特定关键词)"
-                                                   FontSize="10" Foreground="#64748B" Margin="0,0,0,4"/>
-                                        <Grid Margin="0,0,0,4">
-                                            <TextBox Text="ext:.log OR ext:.dmp" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 搜 log 与 dmp" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="ext:.log OR ext:.dmp"/>
-                                        </Grid>
-                                        <Grid>
-                                            <TextBox Text="content:&quot;connection timeout&quot;" IsReadOnly="True" Background="#F8FAFC" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 搜正文含关键词" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="content:&quot;connection timeout&quot;"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 维度 5: 逻辑运算与实战组合拳 -->
-                                <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="4" Padding="8">
-                                    <StackPanel>
-                                        <TextBlock Text="⚡ 维度五：排错与磁盘瘦身经典组合拳示范 (实战推荐)" FontWeight="Bold" FontSize="11" Foreground="#1E40AF" Margin="0,0,0,6"/>
-                                        
-                                        <TextBlock Text="1. 排查 C 盘大于 1GB 的非 Windows 系统文件 (排除系统盘误删风险)：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
-                                        <Grid Margin="0,2,0,4">
-                                            <TextBox Text="size:>1GB -path:C:\Windows" IsReadOnly="True" Background="White" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 复制" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="size:>1GB -path:C:\Windows"/>
-                                        </Grid>
-
-                                        <TextBlock Text="2. 检索最近 3 天内产生的崩溃转储 Dump 或报错日志：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
-                                        <Grid Margin="0,2,0,4">
-                                            <TextBox Text="(ext:.dmp OR ext:.log) datemodified:last 3 days" IsReadOnly="True" Background="White" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 复制" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="(ext:.dmp OR ext:.log) datemodified:last 3 days"/>
-                                        </Grid>
-
-                                        <TextBlock Text="3. 精准查找包含特定内网 IP 或端口的 JSON / 配置文件：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
-                                        <Grid Margin="0,2,0,4">
-                                            <TextBox Text="ext:.json content:&quot;127.0.0.1&quot;" IsReadOnly="True" Background="White" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 复制" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="ext:.json content:&quot;127.0.0.1&quot;"/>
-                                        </Grid>
-
-                                        <TextBlock Text="4. 排查并清理磁盘中的 0 字节空文件 (排除文件夹)：" FontSize="10" FontWeight="Bold" Foreground="#334155"/>
-                                        <Grid Margin="0,2,0,0">
-                                            <TextBox Text="size:empty -kind:folders" IsReadOnly="True" Background="White" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                            <Button Content="📋 复制" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                    Click="BtnCopySnippet_Click" Tag="size:empty -kind:folders"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-        </TabControl>
+        </Grid>
     </Grid>
 </UserControl>

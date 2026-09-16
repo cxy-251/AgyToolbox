@@ -1,0 +1,250 @@
+<UserControl x:Class="AgyToolbox.Views.BuiltIn.HardwarePowerSection"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="1400" d:DesignWidth="850">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+        <StackPanel Margin="0,0,0,24">
+
+            <!-- 模块概述 -->
+            <Border Background="#EFF6FF" BorderBrush="#BFDBFE" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+                <StackPanel>
+                    <TextBlock Text="🔋 硬件拓扑巡检、现代 CIM 诊断与电源能效调控" FontSize="14" FontWeight="Bold" Foreground="#1E40AF" Margin="0,0,0,4"/>
+                    <TextBlock Text="彻底告别已被 Windows 11 24H2 淘汰的旧版 wmic。采用基于 CIM 与 PowerShell 原生的硬件与 S.M.A.R.T. 健康体检，搭配内核级待机能耗分析 (SleepStudy) 与卓越性能电源计划。"
+                               FontSize="11" Foreground="#1E3A8A" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 1: 现代 CIM/PowerShell 硬件体检 (取代废弃的 wmic) -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <WrapPanel VerticalAlignment="Center">
+                                <TextBlock Text="1. 现代化 CIM/PowerShell 原生硬件诊断" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="替代废弃的 WMIC" FontSize="10" Foreground="#B45309" FontWeight="Bold"/>
+                                </Border>
+                            </WrapPanel>
+                            <TextBlock Text="在 Windows 11 24H2 中，微软已默认弃用 wmic.exe。现代硬件审计全面切换至基于 WMIv2 的 CIM 接口，输出更快且数据结构化。"
+                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <Button Grid.Column="1" Content="运行物理硬盘 CIM 诊断" VerticalAlignment="Center" Click="BtnCimDisk_Click"/>
+                    </Grid>
+
+                    <!-- 三张 CIM 经典指令卡片 -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 硬盘与健康状态 -->
+                        <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="💾 磁盘介质与 S.M.A.R.T. 健康" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                <TextBlock Text="直接辨识 NVMe / SSD / HDD 介质，并输出底层控制器返回的健康状态 (Healthy 为健康)。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="Get-PhysicalDisk | Select DeviceId, FriendlyName, MediaType, HealthStatus" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-PhysicalDisk | Select-Object DeviceId, FriendlyName, MediaType, BusType, OperationalStatus, HealthStatus | Format-Table -AutoSize" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 内存槽位与单条频率 -->
+                        <Border Grid.Column="1" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
+                            <StackPanel>
+                                <TextBlock Text="🧠 内存物理插槽与单条频率" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                <TextBlock Text="无需拆开机箱，直接读取物理插槽号 (Bank)、单条容量、XMP 当前运行频率与厂商型号。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="Get-CimInstance Win32_PhysicalMemory | Select BankLabel, Capacity, ConfiguredClockSpeed" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-CimInstance Win32_PhysicalMemory | Select-Object BankLabel, Capacity, Speed, ConfiguredClockSpeed, Manufacturer, PartNumber | Format-Table -AutoSize" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 C: 主板与 BIOS 版本 -->
+                        <Border Grid.Column="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🖥️ 主板型号与 BIOS 发布日期" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                <TextBlock Text="用于排查主板是否支持最新微码补丁或新一代 CPU，核验当前固件版本是否落后。" FontSize="10" Foreground="#64748B" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="Get-CimInstance Win32_Bios | Select SMBIOSBIOSVersion, ReleaseDate" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="#F8FAFC" Margin="0,0,0,6"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-CimInstance Win32_Bios | Select-Object Manufacturer, SMBIOSBIOSVersion, ReleaseDate" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 2: msinfo32 与 dxdiag -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <WrapPanel VerticalAlignment="Center">
+                                <TextBlock Text="2. 权威硬件与图形诊断 (msinfo32.exe / dxdiag.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                                <Border Background="#E0F2FE" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="微软认证标准" FontSize="10" Foreground="#0284C7" FontWeight="Bold"/>
+                                </Border>
+                            </WrapPanel>
+                            <TextBlock Text="用于精准核验底层固件特性与 GPU 图形驱动模型。" FontSize="11" Foreground="#64748B" Margin="0,3,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="系统信息 (msinfo32)" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnMsInfo32_Click"/>
+                            <Button Content="DirectX 诊断 (dxdiag)" Click="BtnDxDiag_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <Border Grid.Row="1" Background="#F1F5F9" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                                <TextBlock Text="🔍 msinfo32 核心巡检项：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                <TextBlock Text="• BIOS 模式：必须显示为「UEFI」；若为「传统 (Legacy)」将无法启用 Win11 安全特性。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                                <TextBlock Text="• 安全引导状态：显示为「开启」是众多反作弊游戏与系统完整性校验的前提。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                                <TextBlock Text="• 基于虚拟化的安全性 (VBS)：查看是否已开启内核隔离与 Hypervisor 保护。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                                <TextBlock Text="🎮 dxdiag 核心巡检项：" FontWeight="Bold" FontSize="11" Foreground="#334155" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 显示标签页 -> 功能级别 (Feature Levels)：12_2 表示完整支持 DirectX 12 Ultimate 特性。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                                <TextBlock Text="• 驱动程序模型：应为「WDDM 3.1 / 3.2」现代驱动架构。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                                <TextBlock Text="• WHQL 徽标：必须为「是」，表示驱动已通过微软硬件质量实验室签名认证。" FontSize="10" Foreground="#475569" Margin="0,1"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- 工具 3: powercfg 电源与待机全套诊断 -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <WrapPanel VerticalAlignment="Center">
+                                <TextBlock Text="3. 电源状态与现代待机深度诊断 (powercfg.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="耗电/发热排查" FontSize="10" Foreground="#B45309" FontWeight="Bold"/>
+                                </Border>
+                            </WrapPanel>
+                            <TextBlock Text="解决笔记本合盖放进背包发热掉电、电脑无法自动息屏休眠、查明是谁唤醒了系统，并解锁终极性能。"
+                                       FontSize="11" Foreground="#64748B" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="导出 SleepStudy 报告" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnSleepStudy_Click"/>
+                            <Button Content="查询阻止睡眠进程" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnLastWake_Click"/>
+                            <Button Content="解锁卓越性能计划" Click="BtnEnableUltimateScheme_Click"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- 参数矩阵 -->
+                    <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4">
+                        <Grid Background="White">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="220"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Row="0" Grid.ColumnSpan="3" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="8,6">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="220"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="核心诊断参数" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
+                                    <TextBlock Grid.Column="1" Text="技术机制与故障排查价值" FontWeight="Bold" FontSize="11" Foreground="#475569"/>
+                                    <TextBlock Grid.Column="2" Text="操作" FontWeight="Bold" FontSize="11" Foreground="#475569" Margin="0,0,12,0"/>
+                                </Grid>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                                <TextBlock Text="powercfg /sleepstudy" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                                <TextBlock Text="生成现代待机 (Modern Standby) 诊断图表。用红黄色彩直观标注待机时是谁在偷跑 CPU、网络或后台蓝牙活动。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="2" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                                <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="powercfg /sleepstudy" Click="BtnCopyCmd_Click"/>
+                            </Border>
+
+                            <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                                <TextBlock Text="powercfg /requests" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                                <TextBlock Text="查看 DISPLAY、SYSTEM、AWAYMODE 中当前有哪些驱动（如声卡驱动、视频播放器、USB 唤醒设备）正死锁阻止系统休眠。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="2" Grid.Column="2" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                                <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="powercfg /requests" Click="BtnCopyCmd_Click"/>
+                            </Border>
+
+                            <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                                <TextBlock Text="powercfg /batteryreport" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#0284C7"/>
+                            </Border>
+                            <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,1">
+                                <TextBlock Text="导出笔记本电池健康体检 HTML 报告。对比设计容量 (Design Capacity) 与当前充满电容量 (Full Charge Capacity) 计算损耗比率。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="3" Grid.Column="2" Padding="6" BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" VerticalAlignment="Center">
+                                <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="powercfg /batteryreport" Click="BtnCopyCmd_Click"/>
+                            </Border>
+
+                            <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="#F1F5F9" BorderThickness="0,0,1,0">
+                                <TextBlock Text="powercfg -h off" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="#D97706"/>
+                            </Border>
+                            <Border Grid.Row="4" Grid.Column="1" Padding="8,6">
+                                <TextBlock Text="关闭休眠功能并立即删除 C 盘根目录下庞大的 hiberfil.sys 文件（通常可释放与物理内存等大的 16GB~64GB 空间）。" FontSize="10" TextWrapping="Wrap" Foreground="#334155"/>
+                            </Border>
+                            <Border Grid.Row="4" Grid.Column="2" Padding="6" VerticalAlignment="Center">
+                                <Button Content="复制" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="10" Tag="powercfg -h off" Click="BtnCopyCmd_Click"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 4: 显示与字体校准 -->
+            <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Padding="16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="4. 原生文本平滑与显示色彩校准 (cttune.exe / dccw.exe)" FontSize="14" FontWeight="Bold" Foreground="#0F172A"/>
+                        <TextBlock Text="消除高分屏或外接显示器字体发虚/锯齿感 (ClearType)，调校 Gamma 伽玛值与白平衡色偏。"
+                                   FontSize="11" Foreground="#64748B" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="ClearType 字体调校" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnClearType_Click"/>
+                        <Button Content="显示颜色校准" Click="BtnColorCalib_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

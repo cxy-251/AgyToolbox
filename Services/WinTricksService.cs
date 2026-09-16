@@ -686,6 +686,163 @@ public class WinTricksService
         }
     }
 
+    /// <summary>
+    /// 启动磁盘管理控制台 (diskmgmt.msc)
+    /// </summary>
+    public void OpenDiskManagement()
+    {
+        Process.Start("diskmgmt.msc");
+    }
+
+    /// <summary>
+    /// 在管理员控制台启动 DiskPart 交互式磁盘分区管理工具
+    /// </summary>
+    public void OpenDiskPartConsole()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/k echo [正在启动 DiskPart 交互式磁盘分区引擎] && diskpart.exe",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"启动 DiskPart 失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 启动高级安全 Windows 防火墙 (wf.msc)
+    /// </summary>
+    public void OpenAdvancedFirewall()
+    {
+        Process.Start("wf.msc");
+    }
+
+    /// <summary>
+    /// 启动 Windows 性能记录器图形化界面 (wprui.exe)
+    /// </summary>
+    public (bool Success, string Message) OpenPerformanceRecorder()
+    {
+        try
+        {
+            Process.Start("wprui.exe");
+            return (true, "已成功启动 Windows Performance Recorder (WPR)！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"启动 WPR 失败: {ex.Message}。\n提示：部分精简版系统可能未安装 WPR 模块，可通过命令行 wpr.exe 录制。");
+        }
+    }
+
+    /// <summary>
+    /// 启动系统配置实用程序 (msconfig.exe)
+    /// </summary>
+    public void OpenSystemConfiguration()
+    {
+        Process.Start("msconfig.exe");
+    }
+
+    /// <summary>
+    /// 在管理员控制台中检查 Windows RE 恢复环境状态 (reagentc /info)
+    /// </summary>
+    public (bool Success, string Message) RunReagentcInfoInConsole()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/k echo [正在检查 Windows RE 恢复环境状态: reagentc /info] && reagentc /info",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, "已在管理员控制台启动 Windows RE (reagentc /info) 状态查询！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"启动失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 打开物理蓝屏转储存储路径 (C:\\Windows\\Minidump)
+    /// </summary>
+    public (bool Success, string Message) OpenMinidumpFolder()
+    {
+        try
+        {
+            string winDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+            string minidumpDir = Path.Combine(winDir, "Minidump");
+            if (!Directory.Exists(minidumpDir))
+            {
+                Directory.CreateDirectory(minidumpDir);
+            }
+            Process.Start("explorer.exe", minidumpDir);
+            return (true, $"已打开转储目录: {minidumpDir}");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"打开 Minidump 目录失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 在控制台中执行现代 CIM/PowerShell 物理硬盘与健康状态查询 (替代废弃的 wmic)
+    /// </summary>
+    public void RunGetPhysicalDiskInConsole()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = "-NoExit -Command \"Write-Host '== 现代 PowerShell/CIM 物理存储健康状态与介质类型诊断 (已弃用旧版 wmic) ==' -ForegroundColor Cyan; Get-PhysicalDisk | Select-Object DeviceId, FriendlyName, MediaType, BusType, OperationalStatus, HealthStatus | Format-Table -AutoSize; Write-Host '`n提示: HealthStatus 为 Healthy 表示 S.M.A.R.T. 与驱动器运行正常。' -ForegroundColor Green\"",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"启动 CIM 磁盘诊断失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 在控制台中执行 Test-NetConnection (TNC 原生端口连通性与路由跃点探测，取代 Telnet)
+    /// </summary>
+    public void RunTestNetConnectionInConsole(string host = "api.github.com", int port = 443)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoExit -Command \"Write-Host '== 原生网络端口连通性探测 (Test-NetConnection 代替第三方 Telnet) ==' -ForegroundColor Cyan; Test-NetConnection -ComputerName '{host}' -Port {port} -InformationLevel Detailed\"",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"启动 TNC 失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 触发彻底冷重启 (shutdown /r /t 0，绕过快速启动内核混合休眠)
+    /// </summary>
+    public void TriggerColdRestart()
+    {
+        Process.Start("shutdown.exe", "/r /t 0");
+    }
+
     private static string RunProcessAndGetOutput(string fileName, string args)
     {
         var psi = new ProcessStartInfo
