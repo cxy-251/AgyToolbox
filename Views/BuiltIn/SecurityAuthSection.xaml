@@ -116,17 +116,20 @@
                             <Button Content="本地安全策略" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnSecPol_Click"/>
                             <Button Content="用户和组" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnLusrMgr_Click"/>
                             <Button Content="证书管理" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnCertMgr_Click"/>
+                            <Button Content="刷新组策略" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnGpUpdate_Click"/>
                             <Button Content="恶意软件删除" Click="BtnMrt_Click"/>
                         </StackPanel>
                     </Grid>
 
                     <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
                         <StackPanel>
-                            <TextBlock Text="📋 whoami 核心特权与完整性级别审计：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                            <TextBlock Text="📋 whoami 核心特权与组策略即时刷新：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                             <TextBlock Text="• whoami /priv：查看当前进程持有的特权。若包含 SeDebugPrivilege（调试程序）表示拥有读写其他进程内存的能力。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
                             <TextBlock Text="• whoami /groups：核实当前用户属于哪些本地组，以及 Mandatory Label（强制完整性级别：Medium 为普通用户，High 为提升管理员，System 为系统内核级）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
+                            <TextBlock Text="• gpupdate /force：强制且立即刷新计算机与用户所有活动目录/本地组策略对象（无需注销或重启系统）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1"/>
                             <WrapPanel Margin="0,4,0,0">
-                                <Button Content="复制 whoami /priv 审计命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="8,2" Tag="whoami /priv" Click="BtnCopyCmd_Click"/>
+                                <Button Content="复制 whoami /priv" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="8,2" Tag="whoami /priv" Click="BtnCopyCmd_Click" Margin="0,0,6,0"/>
+                                <Button Content="复制 gpupdate /force" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="8,2" Tag="gpupdate /force" Click="BtnCopyCmd_Click"/>
                             </WrapPanel>
                         </StackPanel>
                     </Border>

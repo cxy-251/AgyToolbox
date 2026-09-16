@@ -28,6 +28,15 @@ public partial class SecurityAuthSection : UserControl
         _service.OpenCertificateManager();
     }
 
+    private void BtnGpUpdate_Click(object sender, RoutedEventArgs e)
+    {
+        var res = _service.RunGpUpdateForceInConsole();
+        if (!res.Success)
+        {
+            MessageBox.Show(res.Message, "执行失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
     private void BtnMrt_Click(object sender, RoutedEventArgs e)
     {
         _service.OpenMrt();

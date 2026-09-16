@@ -285,6 +285,54 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 6: 本地端口占用与属主 PID 秒查 (netstat & Get-NetTCPConnection) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Text="6. 本地端口占用与属主 PID 秒查 (netstat &amp; Get-NetTCPConnection)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="端口占用击杀闭环" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="开发与日常运维高频痛点：8080/3000/5000 端口提示已被占用。利用原生命令秒查监听状态与占用者 PID，配合 taskkill 即可实现手术刀级强杀。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 1: netstat 经典命令行 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="📋 端口与 PID 快速过滤 (netstat -ano)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="经典高效组合。输出最后一列即为该监听套接字的属主进程 PID，随后配合 tasklist /fi &quot;PID eq &lt;PID&gt;&quot; 即可揪出具体软件。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="netstat -ano | findstr :8080" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="复制 8080 端口查 PID" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="netstat -ano | findstr :8080" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="列出全部 LISTENING" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="netstat -ano | findstr LISTENING" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 2: PowerShell Get-NetTCPConnection -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="⚡ PowerShell 对象化端口查询 (Get-NetTCPConnection)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="原生 PowerShell 现代接口。支持强类型过滤本地端口，直接联立 Get-Process 输出进程名称、路径与内存开销。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="Get-NetTCPConnection -LocalPort 8080 | Select-Object Local*, State, OwningProcess" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制端口与进程联合查询命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-NetTCPConnection -LocalPort 8080 | Select-Object LocalAddress, LocalPort, State, OwningProcess, @{Name='ProcessName';Expression={(Get-Process -Id $_.OwningProcess).ProcessName}}" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

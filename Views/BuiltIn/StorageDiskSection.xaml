@@ -377,6 +377,58 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 7: NTFS 底层文件系统高级控制 (fsutil.exe) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Text="7. NTFS 底层文件系统高级特性与测试 (fsutil.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="NTFS 终极诊断" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="Windows 最强大的文件系统底层调试引擎。涵盖断电脏卷标志排查、毫秒级测试大文件创建、SSD TRIM 全局支持查询及硬链接管理。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 脏卷标志查询 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,5,0">
+                            <StackPanel>
+                                <TextBlock Text="⚠️ 脏卷标志排查 (dirty query)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="查询驱动器是否因非正常断电被内核置为「有坏数据/未提交事务」。若是，系统开机会被强制卡在自检。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="fsutil dirty query C:" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制查询命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil dirty query C:" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 秒级创建测试大文件 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
+                            <StackPanel>
+                                <TextBlock Text="⚡ 秒级创建测试文件 (createnew)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="无需漫长写零等待，直接向文件分配表瞬间分配指定字节（如下例 10GB），用于磁盘 I/O 读写压测或空间占位。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="fsutil file createnew C:\test_10G.tmp 10737418240" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制创建 10GB 文件" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil file createnew C:\test_10GB.tmp 10737418240" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 C: 查询全局 TRIM 支持 -->
+                        <Border Grid.Column="2" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="5,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🔍 查询全局 TRIM 状态 (behavior)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="核验系统级 TRIM 支持。返回 0 代表已成功激活；若为 1 则表示已禁用，SSD 会随着使用越来越卡顿。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="fsutil behavior query DisableDeleteNotify" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制查询 TRIM 命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil behavior query DisableDeleteNotify" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

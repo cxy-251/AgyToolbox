@@ -148,6 +148,7 @@
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                             <Button Content="导出 SleepStudy 报告" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnSleepStudy_Click"/>
+                            <Button Content="导出 Battery 电池报告" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnBatteryReport_Click"/>
                             <Button Content="查询阻止睡眠进程" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnLastWake_Click"/>
                             <Button Content="解锁卓越性能计划" Click="BtnEnableUltimateScheme_Click"/>
                         </StackPanel>

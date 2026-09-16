@@ -100,6 +100,7 @@ public class WinTricksService
         }
     }
 
+
     /// <summary>
     /// 获取当前系统阻止睡眠的请求源与上一次唤醒源 (powercfg -lastwake & powercfg /requests)
     /// </summary>
@@ -639,6 +640,29 @@ public class WinTricksService
             };
             Process.Start(psi);
             return (true, "已呼出管理员终端执行 DISM 深度组件库修复！");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"执行失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 启动管理员终端执行组策略强制即时刷新 (gpupdate /force)
+    /// </summary>
+    public (bool Success, string Message) RunGpUpdateForceInConsole()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/k echo [正在强制即时刷新计算机与用户组策略引擎] && gpupdate /force",
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            Process.Start(psi);
+            return (true, "已呼出管理员终端执行 gpupdate /force！策略将在数秒内强制刷新完毕。");
         }
         catch (Exception ex)
         {

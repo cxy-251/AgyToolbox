@@ -41,6 +41,19 @@ public partial class HardwarePowerSection : UserControl
         }
     }
 
+    private void BtnBatteryReport_Click(object sender, RoutedEventArgs e)
+    {
+        var res = _service.GenerateBatteryReport();
+        if (res.Success)
+        {
+            MessageBox.Show(res.Message, "电池健康报告已生成", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        else
+        {
+            MessageBox.Show(res.Message, "执行提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
     private void BtnLastWake_Click(object sender, RoutedEventArgs e)
     {
         var res = _service.GetWakeAndRequestsInfo();
