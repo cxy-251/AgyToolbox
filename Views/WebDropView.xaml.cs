@@ -54,7 +54,7 @@ public partial class WebDropView : UserControl
                 await _webDropService.StartAsync();
 
                 TxtDropStatus.Text = "● 服务运行中";
-                TxtDropStatus.Foreground = Brushes.Green;
+                TxtDropStatus.Foreground = ThemeBrushes.Success;
                 BtnToggleDrop.Content = "停止服务";
                 BtnToggleDrop.Background = DangerBrush;
 
@@ -85,7 +85,7 @@ public partial class WebDropView : UserControl
                 await _webDropService.StopAsync();
 
                 TxtDropStatus.Text = "● 服务未启动";
-                TxtDropStatus.Foreground = Brushes.Gray;
+                TxtDropStatus.Foreground = (Brush)Application.Current.Resources["BrushTextSecondary"];
                 BtnToggleDrop.Content = "启动快传服务";
                 BtnToggleDrop.Background = PrimaryBrush;
                 TxtDropUrl.Text = "服务已停止";

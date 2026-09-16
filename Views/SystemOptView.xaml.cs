@@ -11,7 +11,7 @@ public class PathDisplayItem
     public string Path { get; set; } = "";
     public bool Exists { get; set; }
     public string ExistsText => Exists ? "✅ 路径有效" : "🚫 幽灵死路径 (不存在)";
-    public Brush StatusBrush => Exists ? Brushes.DarkGreen : Brushes.Red;
+    public Brush StatusBrush => Exists ? ThemeBrushes.Success : ThemeBrushes.Danger;
 }
 
 public partial class SystemOptView : UserControl
@@ -34,6 +34,7 @@ public partial class SystemOptView : UserControl
         RefreshHiberStatus();
         RefreshFastStartupStatus();
         RefreshReservedStorageStatus();
+        RefreshStorageSenseStatus();
         RefreshExplorerSettings();
     }
 
@@ -43,7 +44,7 @@ public partial class SystemOptView : UserControl
     {
         bool disabled = _windowsUpdateService.IsUpdateDisabled();
         TxtUpdateStatus.Text = disabled ? "● 自动更新已彻底关闭并锁定" : "○ 自动更新处于开启状态";
-        TxtUpdateStatus.Foreground = disabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtUpdateStatus.Foreground = disabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
     private void BtnRefreshUpdateStatus_Click(object sender, RoutedEventArgs e)
@@ -87,11 +88,11 @@ public partial class SystemOptView : UserControl
     {
         bool noAutoReboot = _winOptimizerService.IsNoAutoRebootConfigured();
         TxtNoAutoRebootStatus.Text = noAutoReboot ? "[已配置：用户登录时绝不擅自重启]" : "[系统默认：可能自动重启]";
-        TxtNoAutoRebootStatus.Foreground = noAutoReboot ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtNoAutoRebootStatus.Foreground = noAutoReboot ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool p2pDisabled = _winOptimizerService.IsDeliveryOptimizationP2PDisabled();
         TxtDeliveryOptStatus.Text = p2pDisabled ? "[已彻底阻断 P2P 上传偷跑]" : "[系统默认：允许局域网/互联网上传]";
-        TxtDeliveryOptStatus.Foreground = p2pDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtDeliveryOptStatus.Foreground = p2pDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
     private void BtnRefreshUpdateTuning_Click(object sender, RoutedEventArgs e)
@@ -124,7 +125,7 @@ public partial class SystemOptView : UserControl
     {
         var (isEncrypted, details) = _winOptimizerService.GetBitLockerStatus();
         TxtBitLockerStatus.Text = isEncrypted ? "⚠️ C 盘已启用 BitLocker 加密" : "○ C 盘未开启加密";
-        TxtBitLockerStatus.Foreground = isEncrypted ? Brushes.Red : Brushes.DarkGreen;
+        TxtBitLockerStatus.Foreground = isEncrypted ? ThemeBrushes.Danger : ThemeBrushes.Success;
     }
 
     private void BtnRefreshBitLocker_Click(object sender, RoutedEventArgs e)
@@ -159,21 +160,21 @@ public partial class SystemOptView : UserControl
     {
         bool exists = _winOptimizerService.IsHibernationEnabled();
         TxtHiberStatus.Text = exists ? "[休眠开启中 (hiberfil.sys 占用中)]" : "[已彻底关停休眠 (已释放 100% 空间)]";
-        TxtHiberStatus.Foreground = exists ? Brushes.DarkOrange : Brushes.DarkGreen;
+        TxtHiberStatus.Foreground = exists ? ThemeBrushes.Warning : ThemeBrushes.Success;
     }
 
     private void RefreshFastStartupStatus()
     {
         bool fast = _winOptimizerService.IsFastStartupEnabled();
         TxtFastStartupStatus.Text = fast ? "[已开启快速启动]" : "[已关闭快速启动 (彻底切断硬件电源)]";
-        TxtFastStartupStatus.Foreground = fast ? Brushes.DarkOrange : Brushes.DarkGreen;
+        TxtFastStartupStatus.Foreground = fast ? ThemeBrushes.Warning : ThemeBrushes.Success;
     }
 
     private void RefreshReservedStorageStatus()
     {
         var (enabled, details) = _winOptimizerService.GetReservedStorageStatus();
         TxtReservedStorageStatus.Text = enabled ? "[已启用 (约预留 7GB 磁盘缓冲)]" : "[已停用/已释放]";
-        TxtReservedStorageStatus.Foreground = enabled ? Brushes.DarkOrange : Brushes.DarkGreen;
+        TxtReservedStorageStatus.Foreground = enabled ? ThemeBrushes.Warning : ThemeBrushes.Success;
     }
 
     private void BtnRefreshHiber_Click(object sender, RoutedEventArgs e)
@@ -233,6 +234,27 @@ public partial class SystemOptView : UserControl
     private void BtnSetPrivateNetwork_Click(object sender, RoutedEventArgs e)
     {
         var (ok, msg) = _winOptimizerService.SetNetworkToPrivate();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void RefreshStorageSenseStatus()
+    {
+        bool sense = _winOptimizerService.IsStorageSenseEnabled();
+        TxtStorageSenseStatus.Text = sense ? "[已启用存储感知自动清理]" : "[当前已停用]";
+        TxtStorageSenseStatus.Foreground = sense ? ThemeBrushes.Success : ThemeBrushes.Warning;
+    }
+
+    private void BtnRefreshStorageSense_Click(object sender, RoutedEventArgs e)
+    {
+        RefreshStorageSenseStatus();
+        MessageBox.Show("存储感知状态已刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnToggleStorageSense_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsStorageSenseEnabled();
+        var (ok, msg) = _winOptimizerService.SetStorageSenseEnabled(!current);
+        RefreshStorageSenseStatus();
         MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
@@ -296,27 +318,42 @@ public partial class SystemOptView : UserControl
     {
         bool classic = _winOptimizerService.IsClassicContextMenuEnabled();
         TxtClassicMenuStatus.Text = classic ? "[已开启 Win10 经典菜单]" : "[当前为 Win11 折叠菜单]";
-        TxtClassicMenuStatus.Foreground = classic ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtClassicMenuStatus.Foreground = classic ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool noBing = _winOptimizerService.IsBingSearchDisabled();
         TxtBingStatus.Text = noBing ? "[已关闭必应搜索广告]" : "[当前保留必应搜索与热搜]";
-        TxtBingStatus.Foreground = noBing ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtBingStatus.Foreground = noBing ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool noTele = _winOptimizerService.IsTelemetryDisabled();
         TxtTelemetryStatus.Text = noTele ? "[已禁用个性化遥测广告]" : "[当前为默认遥测]";
-        TxtTelemetryStatus.Foreground = noTele ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtTelemetryStatus.Foreground = noTele ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool noSticky = _winOptimizerService.IsStickyKeysPromptDisabled();
         TxtStickyStatus.Text = noSticky ? "[已禁用 5 次 Shift 弹窗]" : "[当前为系统默认弹窗]";
-        TxtStickyStatus.Foreground = noSticky ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtStickyStatus.Foreground = noSticky ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool clipHist = _winOptimizerService.IsClipboardHistoryEnabled();
         TxtClipboardStatus.Text = clipHist ? "[已开启 Win+V 剪贴板历史]" : "[当前未开启剪贴板历史]";
-        TxtClipboardStatus.Foreground = clipHist ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtClipboardStatus.Foreground = clipHist ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool devMode = _winOptimizerService.IsDevModeAndLongPathsEnabled();
         TxtDevModeStatus.Text = devMode ? "[已开启开发者模式与长路径]" : "[当前为标准用户限制]";
-        TxtDevModeStatus.Foreground = devMode ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtDevModeStatus.Foreground = devMode ? ThemeBrushes.Success : ThemeBrushes.Warning;
+
+        bool uacSec = _winOptimizerService.IsUacSecureDesktopEnabled();
+        TxtUacDesktopStatus.Text = uacSec ? "[已开启全屏暗屏防护 (安全推荐)]" : "[已关闭暗屏 (普通桌面弹窗)]";
+        TxtUacDesktopStatus.Foreground = uacSec ? ThemeBrushes.Success : ThemeBrushes.Info;
+
+        int searchMode = _winOptimizerService.GetTaskbarSearchMode();
+        string searchModeDesc = searchMode switch
+        {
+            0 => "[当前状态：完全隐藏]",
+            1 => "[当前状态：仅显示图标]",
+            2 => "[当前状态：展开搜索框]",
+            _ => "[当前状态：自定义/未设定]"
+        };
+        TxtSearchboxModeStatus.Text = searchModeDesc;
+        TxtSearchboxModeStatus.Foreground = ThemeBrushes.Success;
     }
 
     private void BtnToggleClassicMenu_Click(object sender, RoutedEventArgs e)
@@ -365,6 +402,35 @@ public partial class SystemOptView : UserControl
         var (ok, msg) = _winOptimizerService.SetDevModeAndLongPaths(!current);
         RefreshOptimizerStatus();
         MessageBox.Show(msg, "设置结果", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Error);
+    }
+
+    private void BtnToggleUacDesktop_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsUacSecureDesktopEnabled();
+        var (ok, msg) = _winOptimizerService.SetUacSecureDesktop(!current);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnSearchModeHide_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.SetTaskbarSearchMode(0);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnSearchModeIcon_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.SetTaskbarSearchMode(1);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnSearchModeBox_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.SetTaskbarSearchMode(2);
+        RefreshOptimizerStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
     private void BtnRestartExplorer_Click(object sender, RoutedEventArgs e)

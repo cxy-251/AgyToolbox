@@ -34,7 +34,7 @@ public partial class NativeDevView : UserControl
     {
         var (installed, info) = _nativeDevService.GetWslStatus();
         TxtWslStatus.Text = installed ? "[已安装就绪]" : "[尚未安装]";
-        TxtWslStatus.Foreground = installed ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtWslStatus.Foreground = installed ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
     private void BtnCheckWsl_Click(object sender, RoutedEventArgs e)
@@ -54,7 +54,7 @@ public partial class NativeDevView : UserControl
     {
         bool enabled = _nativeDevService.IsSandboxEnabled();
         TxtSandboxStatus.Text = enabled ? "[已启用]" : "[未启用]";
-        TxtSandboxStatus.Foreground = enabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtSandboxStatus.Foreground = enabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
     private void BtnCheckSandbox_Click(object sender, RoutedEventArgs e)
@@ -76,17 +76,17 @@ public partial class NativeDevView : UserControl
         if (hasDevDrive)
         {
             TxtDevDriveStatus.Text = "[已挂载 Dev Drive 开发驱动器]";
-            TxtDevDriveStatus.Foreground = Brushes.DarkGreen;
+            TxtDevDriveStatus.Foreground = ThemeBrushes.Success;
         }
         else if (supported)
         {
             TxtDevDriveStatus.Text = "[系统支持 Dev Drive (当前未创建)]";
-            TxtDevDriveStatus.Foreground = Brushes.DodgerBlue;
+            TxtDevDriveStatus.Foreground = ThemeBrushes.Info;
         }
         else
         {
             TxtDevDriveStatus.Text = "[当前环境暂不支持 Dev Drive]";
-            TxtDevDriveStatus.Foreground = Brushes.DarkOrange;
+            TxtDevDriveStatus.Foreground = ThemeBrushes.Warning;
         }
     }
 
@@ -123,7 +123,7 @@ public partial class NativeDevView : UserControl
         else
         {
             TxtSudoStatus.Text = $"[{modeName}]";
-            TxtSudoStatus.Foreground = enabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+            TxtSudoStatus.Foreground = enabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
         }
     }
 
@@ -159,7 +159,7 @@ public partial class NativeDevView : UserControl
     {
         bool running = _nativeDevService.IsSshAgentAutoStart();
         TxtSshAgentStatus.Text = running ? "[已开启自启与运行]" : "[当前未自启]";
-        TxtSshAgentStatus.Foreground = running ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtSshAgentStatus.Foreground = running ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
     private void BtnEnableSshAgent_Click(object sender, RoutedEventArgs e)
@@ -173,7 +173,7 @@ public partial class NativeDevView : UserControl
     {
         bool enabled = _nativeDevService.IsDeveloperModeEnabled();
         TxtDevModeStatus.Text = enabled ? "[已开启 (免提权 Symlink 就绪)]" : "[未开启 (创建 Symlink 需管理员权限)]";
-        TxtDevModeStatus.Foreground = enabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtDevModeStatus.Foreground = enabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
         BtnToggleDevMode.Content = enabled ? "关闭开发者模式" : "开启开发者模式";
     }
 
@@ -364,15 +364,15 @@ public partial class NativeDevView : UserControl
             policy.Equals("Unrestricted", StringComparison.OrdinalIgnoreCase) ||
             policy.Equals("Bypass", StringComparison.OrdinalIgnoreCase))
         {
-            TxtExecPolicyStatus.Foreground = Brushes.DarkGreen;
+            TxtExecPolicyStatus.Foreground = ThemeBrushes.Success;
         }
         else if (policy.Equals("Restricted", StringComparison.OrdinalIgnoreCase))
         {
-            TxtExecPolicyStatus.Foreground = Brushes.Crimson;
+            TxtExecPolicyStatus.Foreground = ThemeBrushes.Danger;
         }
         else
         {
-            TxtExecPolicyStatus.Foreground = Brushes.DarkOrange;
+            TxtExecPolicyStatus.Foreground = ThemeBrushes.Warning;
         }
     }
 

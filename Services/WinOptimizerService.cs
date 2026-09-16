@@ -775,5 +775,105 @@ public class WinOptimizerService
         }
     }
 
+    /// <summary>
+    /// 检测存储感知 (Storage Sense) 自动清理是否开启
+    /// </summary>
+    public bool IsStorageSenseEnabled()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy");
+            var val = key?.GetValue("01");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭存储感知 (Storage Sense) 自动清理规则
+    /// </summary>
+    public (bool Success, string Message) SetStorageSenseEnabled(bool enable)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy");
+            key.SetValue("01", enable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, enable ? "已开启【存储感知】自动释放空间！" : "已关闭存储感知自动清理。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置存储感知失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测 UAC 是否开启安全桌面隔离 (PromptOnSecureDesktop)
+    /// </summary>
+    public bool IsUacSecureDesktopEnabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System");
+            var val = key?.GetValue("PromptOnSecureDesktop");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 设置 UAC 安全桌面隔离级别 (黑屏高安全隔离 vs 普通窗口不闪黑屏)
+    /// </summary>
+    public (bool Success, string Message) SetUacSecureDesktop(bool enable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System");
+            key.SetValue("PromptOnSecureDesktop", enable ? 1 : 0, RegistryValueKind.DWord);
+            return (true, enable
+                ? "已开启【安全桌面隔离】(UAC 弹窗时黑屏独占，最高安全级别)。"
+                : "已关闭【安全桌面隔离】(UAC 弹窗时不黑屏，平滑弹窗)。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置 UAC 安全桌面失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 检测任务栏搜索框模式: 0 = 隐藏, 1 = 仅搜索图标, 2 = 搜索框, 3 = 搜索按钮
+    /// </summary>
+    public int GetTaskbarSearchMode()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Search");
+            var val = key?.GetValue("SearchboxTaskbarMode");
+            return val is int intVal ? intVal : 2;
+        }
+        catch { return 2; }
+    }
+
+    /// <summary>
+    /// 设置任务栏搜索框模式 (精简任务栏宽度)
+    /// </summary>
+    public (bool Success, string Message) SetTaskbarSearchMode(int mode)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Search");
+            key.SetValue("SearchboxTaskbarMode", mode, RegistryValueKind.DWord);
+            return (true, mode switch
+            {
+                0 => "已隐藏任务栏搜索框！(释放最大任务栏宽度)",
+                1 => "已将任务栏搜索简化为【仅搜索图标】！",
+                _ => "已恢复任务栏完整搜索框。"
+            });
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置任务栏搜索模式失败: {ex.Message}");
+        }
+    }
+
     #endregion
 }

@@ -133,6 +133,54 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 4: 原生凭据管理器命令行控制 (cmdkey.exe) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Text="4. 原生 Windows 凭据管理与自动化凭据注入 (cmdkey.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="凭据保险箱 CLI" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="审查与管理 Windows 凭据管理器中暂存的 Git、网络共享 (SMB)、远程桌面 (RDP) 及域认证凭据。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 1: cmdkey 列出与审计 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="📋 凭据审计与枚举 (cmdkey /list)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="列出当前用户存储的所有凭据目标、用户名与类型。迅速定位过期失效的 Git 凭据或旧局域网共享账户。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="cmdkey /list" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="列出当前存储凭据" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="cmdkey /list" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="清除过期凭据 (/delete)" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="cmdkey /delete:target_name" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 2: cmdkey 注入与添加 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🔑 自动化注入凭据 (cmdkey /generic)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="通过命令行免交互为远程主机或 Git 仓库预埋登录凭据，极大简化 CI/CD 与多服务器运维脚本。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="cmdkey /generic:TERMSRV/192.168.1.100 /user:admin /pass:secret" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制 RDP 凭据预埋命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="cmdkey /generic:TERMSRV/192.168.1.100 /user:Administrator /pass:Password123" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

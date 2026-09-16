@@ -94,12 +94,12 @@ public partial class DevToolsView : UserControl
             expected == TxtHashSha256.Text || expected == TxtHashSha512.Text)
         {
             TxtHashCompareResult.Text = "✅ 哈希完全匹配！文件完整无篡改。";
-            TxtHashCompareResult.Foreground = Brushes.DarkGreen;
+            TxtHashCompareResult.Foreground = ThemeBrushes.Success;
         }
         else
         {
             TxtHashCompareResult.Text = "❌ 哈希不匹配！文件可能已损坏或被修改。";
-            TxtHashCompareResult.Foreground = Brushes.Red;
+            TxtHashCompareResult.Foreground = ThemeBrushes.Danger;
         }
     }
 

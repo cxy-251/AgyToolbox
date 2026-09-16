@@ -230,6 +230,61 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 5: 原生驱动级抓包 (pktmon) 与二层 ARP 审计 (arp -a) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Text="5. 原生驱动级抓包诊断 (pktmon) 与二层 ARP 审计 (arp -a)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="零驱动原生抓包" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="无需安装任何第三方 Npcap 或 Wireshark 驱动，Windows 10/11 原生内置 pktmon 数据包监视器与二层 ARP 表排查命令。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 1: pktmon 抓包 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="📡 原生数据包监视器 (pktmon.exe)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="微软原生网络栈诊断工具。支持实时控制台抓包或生成 ETL 日志并转换为 Wireshark 兼容的 PCAPNG 格式，完全避开第三方驱动蓝屏隐患。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="pktmon start --etw -m real-time" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="实时控制台监视" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="pktmon start --etw -m real-time" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="停止并转 pcapng" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="pktmon stop; pktmon pcapng pktmon.etl -o network_capture.pcapng" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 2: arp -a 缓存表与欺骗排查 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🔍 二层 MAC 映射与 ARP 防欺骗 (arp.exe)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="检查局域网内 IP 到 MAC 的映射关系。若发现局域网中不同 IP 对应相同 MAC 或网关 MAC 突变，可能遭遇 ARP 投毒攻击。支持一键清空动态缓存。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="arp -a" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="查看 ARP 缓存表" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="arp -a" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="清空动态 ARP 缓存" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="arp -d *" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

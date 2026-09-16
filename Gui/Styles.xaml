@@ -32,6 +32,9 @@
     <SolidColorBrush x:Key="BrushTableBorder" Color="#E2E8F0"/>
     <SolidColorBrush x:Key="BrushTableHeaderBg" Color="#F8FAFC"/>
 
+    <SolidColorBrush x:Key="BrushPrimary" Color="#0078D4"/>
+    <SolidColorBrush x:Key="BrushSuccess" Color="#16A34A"/>
+
     <!-- 语义警示与高亮背景 -->
     <SolidColorBrush x:Key="BrushAlertRedBg" Color="#FEF2F2"/>
     <SolidColorBrush x:Key="BrushAlertRedBorder" Color="#FECACA"/>
@@ -52,6 +55,23 @@
     <SolidColorBrush x:Key="BrushAlertPurpleBg" Color="#FAF5FF"/>
     <SolidColorBrush x:Key="BrushAlertPurpleBorder" Color="#E9D5FF"/>
     <SolidColorBrush x:Key="BrushAlertPurpleText" Color="#6B21A8"/>
+
+    <!-- 语义警示别名与补全 (对齐旧版与不同子视图) -->
+    <SolidColorBrush x:Key="BrushAlertInfoBg" Color="#EFF6FF"/>
+    <SolidColorBrush x:Key="BrushAlertInfoBorder" Color="#BFDBFE"/>
+    <SolidColorBrush x:Key="BrushAlertInfoText" Color="#1E40AF"/>
+
+    <SolidColorBrush x:Key="BrushAlertWarningBg" Color="#FEFCE8"/>
+    <SolidColorBrush x:Key="BrushAlertWarningBorder" Color="#FEF08A"/>
+    <SolidColorBrush x:Key="BrushAlertWarningText" Color="#854D0E"/>
+
+    <SolidColorBrush x:Key="BrushAlertSuccessBg" Color="#F0FDF4"/>
+    <SolidColorBrush x:Key="BrushAlertSuccessBorder" Color="#BBF7D0"/>
+    <SolidColorBrush x:Key="BrushAlertSuccessText" Color="#166534"/>
+
+    <SolidColorBrush x:Key="BrushAlertErrorBg" Color="#FEF2F2"/>
+    <SolidColorBrush x:Key="BrushAlertErrorBorder" Color="#FECACA"/>
+    <SolidColorBrush x:Key="BrushAlertErrorText" Color="#991B1B"/>
 
     <!-- ── 现代化主按钮样式 ── -->
     <Style TargetType="Button">
@@ -240,4 +260,31 @@
         <Setter Property="BorderBrush" Value="{DynamicResource BrushInputBorder}"/>
     </Style>
 
+    <!-- 8. TabControl 与 TabItem 默认隐式样式 -->
+    <Style TargetType="TabControl">
+        <Setter Property="Background" Value="{DynamicResource BrushCardBg}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushCardBorder}"/>
+    </Style>
+
+    <Style TargetType="TabItem" BasedOn="{StaticResource SubTabItemStyle}"/>
+
+    <!-- 9. ToolTip 默认隐式样式 -->
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="{DynamicResource BrushCardBgAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushCardBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="8,5"/>
+    </Style>
+
+    <!-- 10. ContextMenu 与 MenuItem 默认隐式样式 -->
+    <Style TargetType="ContextMenu">
+        <Setter Property="Background" Value="{DynamicResource BrushCardBgAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushCardBorder}"/>
+    </Style>
+
+    <Style TargetType="MenuItem">
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}"/>
+    </Style>
 </ResourceDictionary>

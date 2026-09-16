@@ -14,6 +14,16 @@ public enum AppThemeMode
     System
 }
 
+public static class ThemeBrushes
+{
+    // 自适应深浅主题的高对比度语义纯色画刷 (在白底与暗黑底上均清晰可辨)
+    public static readonly SolidColorBrush Success = new(Color.FromRgb(0x10, 0xB9, 0x81)); // 翠绿 #10B981
+    public static readonly SolidColorBrush Warning = new(Color.FromRgb(0xF5, 0x9E, 0x0B)); // 琥珀橙 #F59E0B
+    public static readonly SolidColorBrush Danger = new(Color.FromRgb(0xEF, 0x44, 0x44));  // 猩红 #EF4444
+    public static readonly SolidColorBrush Info = new(Color.FromRgb(0x02, 0x84, 0xC7));    // 天蓝 #0284C7
+    public static readonly SolidColorBrush Protected = new(Color.FromRgb(0x38, 0xBD, 0xF8)); // 明亮天蓝 #38BDF8
+}
+
 public class ThemeService
 {
     private static ThemeService? _instance;
@@ -155,6 +165,9 @@ public class ThemeService
             res["BrushTableBorder"] = new SolidColorBrush(Color.FromRgb(0x1E, 0x29, 0x3B));
             res["BrushTableHeaderBg"] = new SolidColorBrush(Color.FromRgb(0x0D, 0x14, 0x24));
 
+            res["BrushPrimary"] = new SolidColorBrush(Color.FromRgb(0x38, 0xBD, 0xF8));
+            res["BrushSuccess"] = new SolidColorBrush(Color.FromRgb(0x4A, 0xDE, 0x80));
+
             // ── 语义警示与高亮背景 (深色护眼) ──
             res["BrushAlertRedBg"] = new SolidColorBrush(Color.FromRgb(0x3B, 0x12, 0x19));
             res["BrushAlertRedBorder"] = new SolidColorBrush(Color.FromRgb(0x7F, 0x1D, 0x1D));
@@ -175,6 +188,23 @@ public class ThemeService
             res["BrushAlertPurpleBg"] = new SolidColorBrush(Color.FromRgb(0x26, 0x12, 0x3D));
             res["BrushAlertPurpleBorder"] = new SolidColorBrush(Color.FromRgb(0x7E, 0x22, 0xCE));
             res["BrushAlertPurpleText"] = new SolidColorBrush(Color.FromRgb(0xD8, 0xB4, 0xFE));
+
+            // 别名映射
+            res["BrushAlertInfoBg"] = res["BrushAlertBlueBg"];
+            res["BrushAlertInfoBorder"] = res["BrushAlertBlueBorder"];
+            res["BrushAlertInfoText"] = res["BrushAlertBlueText"];
+
+            res["BrushAlertWarningBg"] = res["BrushAlertYellowBg"];
+            res["BrushAlertWarningBorder"] = res["BrushAlertYellowBorder"];
+            res["BrushAlertWarningText"] = res["BrushAlertYellowText"];
+
+            res["BrushAlertSuccessBg"] = res["BrushAlertGreenBg"];
+            res["BrushAlertSuccessBorder"] = res["BrushAlertGreenBorder"];
+            res["BrushAlertSuccessText"] = res["BrushAlertGreenText"];
+
+            res["BrushAlertErrorBg"] = res["BrushAlertRedBg"];
+            res["BrushAlertErrorBorder"] = res["BrushAlertRedBorder"];
+            res["BrushAlertErrorText"] = res["BrushAlertRedText"];
         }
         else
         {
@@ -209,6 +239,9 @@ public class ThemeService
             res["BrushTableBorder"] = new SolidColorBrush(Color.FromRgb(0xE2, 0xE8, 0xF0));
             res["BrushTableHeaderBg"] = new SolidColorBrush(Color.FromRgb(0xF8, 0xFA, 0xFC));
 
+            res["BrushPrimary"] = new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
+            res["BrushSuccess"] = new SolidColorBrush(Color.FromRgb(0x16, 0xA3, 0x4A));
+
             // ── 语义警示与高亮背景 (浅色清爽) ──
             res["BrushAlertRedBg"] = new SolidColorBrush(Color.FromRgb(0xFE, 0xF2, 0xF2));
             res["BrushAlertRedBorder"] = new SolidColorBrush(Color.FromRgb(0xFE, 0xCA, 0xCA));
@@ -229,6 +262,23 @@ public class ThemeService
             res["BrushAlertPurpleBg"] = new SolidColorBrush(Color.FromRgb(0xFA, 0xF5, 0xFF));
             res["BrushAlertPurpleBorder"] = new SolidColorBrush(Color.FromRgb(0xE9, 0xD5, 0xFF));
             res["BrushAlertPurpleText"] = new SolidColorBrush(Color.FromRgb(0x6B, 0x21, 0xA8));
+
+            // 别名映射
+            res["BrushAlertInfoBg"] = res["BrushAlertBlueBg"];
+            res["BrushAlertInfoBorder"] = res["BrushAlertBlueBorder"];
+            res["BrushAlertInfoText"] = res["BrushAlertBlueText"];
+
+            res["BrushAlertWarningBg"] = res["BrushAlertYellowBg"];
+            res["BrushAlertWarningBorder"] = res["BrushAlertYellowBorder"];
+            res["BrushAlertWarningText"] = res["BrushAlertYellowText"];
+
+            res["BrushAlertSuccessBg"] = res["BrushAlertGreenBg"];
+            res["BrushAlertSuccessBorder"] = res["BrushAlertGreenBorder"];
+            res["BrushAlertSuccessText"] = res["BrushAlertGreenText"];
+
+            res["BrushAlertErrorBg"] = res["BrushAlertRedBg"];
+            res["BrushAlertErrorBorder"] = res["BrushAlertRedBorder"];
+            res["BrushAlertErrorText"] = res["BrushAlertRedText"];
         }
     }
 }

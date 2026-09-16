@@ -199,6 +199,61 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 4: 轻量级原生进程树审查与强杀 (tasklist & taskkill) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Text="4. 原生进程树审查与级联强杀 (tasklist &amp; taskkill)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="零开销命令行" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="在图形化界面卡死、任务管理器拒绝响应或无法彻底结束子进程树时，利用 Windows 内置的 tasklist 与 taskkill 实现手术刀级控制。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 1: tasklist 进程高级筛选 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="📋 假死与依赖模块审查 (tasklist.exe)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="快速检索系统当前处于「未响应」假死状态的进程，或排查特定 DLL 模块被哪些程序加载锁定。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="tasklist /v /fi &quot;STATUS eq NOT RESPONDING&quot;" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="查询未响应进程" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="tasklist /v /fi &quot;STATUS eq NOT RESPONDING&quot;" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="排查模块加载" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="tasklist /m target.dll" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 2: taskkill 进程树终结 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="⚡ 级联强杀子进程树 (taskkill.exe)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="任务管理器常常无法杀死僵死父进程派生出的多层孤儿进程。使用 /t 标志级联强杀整个进程树，彻底杜绝句柄残留。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="taskkill /f /pid 12345 /t" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="按 PID 级联强杀 (/t)" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="taskkill /f /pid &lt;PID&gt; /t" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="按映像名批量终止" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="taskkill /f /im node.exe /t" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

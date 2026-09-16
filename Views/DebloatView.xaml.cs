@@ -22,7 +22,7 @@ public class UwpAppDisplayItem
     public bool CanUninstall => IsInstalled && !IsWhitelisted;
     public string ActionButtonText => IsWhitelisted ? "🛡️ 核心白名单" : (IsInstalled ? "🗑️ 卸载" : "已卸载");
     public string StatusText => IsWhitelisted ? "🛡️ 白名单保护" : (IsInstalled ? "● 已安装" : "○ 未安装/已卸载");
-    public Brush StatusBrush => IsWhitelisted ? Brushes.DeepSkyBlue : (IsInstalled ? Brushes.Red : Brushes.DarkGreen);
+    public Brush StatusBrush => IsWhitelisted ? ThemeBrushes.Protected : (IsInstalled ? ThemeBrushes.Danger : ThemeBrushes.Success);
 }
 
 public class OemAppDisplayItem
@@ -33,7 +33,19 @@ public class OemAppDisplayItem
     public string DebloatAdvice { get; set; } = "";
     public bool IsDetected { get; set; }
     public string StatusText => IsDetected ? "⚠️ 正在运行" : "✓ 未检出";
-    public Brush StatusBrush => IsDetected ? Brushes.Red : Brushes.DarkGreen;
+    public Brush StatusBrush => IsDetected ? ThemeBrushes.Danger : ThemeBrushes.Success;
+}
+
+public class FodFeatureDisplayItem
+{
+    public string Key { get; set; } = "";
+    public string DisplayName { get; set; } = "";
+    public string CapabilityName { get; set; } = "";
+    public string Description { get; set; } = "";
+    public string DebloatAdvice { get; set; } = "";
+    public bool IsInstalled { get; set; }
+    public string StatusText => IsInstalled ? "● 已安装" : "○ 未启用/已卸载";
+    public Brush StatusBrush => IsInstalled ? ThemeBrushes.Danger : ThemeBrushes.Success;
 }
 
 public partial class DebloatView : UserControl
@@ -46,6 +58,7 @@ public partial class DebloatView : UserControl
 
     private readonly ObservableCollection<UwpAppDisplayItem> _uwpItems = new();
     private readonly ObservableCollection<OemAppDisplayItem> _oemItems = new();
+    private readonly ObservableCollection<FodFeatureDisplayItem> _fodItems = new();
     private readonly ObservableCollection<StartupItemInfo> _startupItems = new();
 
     public DebloatView()
@@ -54,10 +67,12 @@ public partial class DebloatView : UserControl
 
         GridUwpApps.ItemsSource = _uwpItems;
         GridOemApps.ItemsSource = _oemItems;
+        GridFodFeatures.ItemsSource = _fodItems;
         GridStartupItems.ItemsSource = _startupItems;
 
         _ = LoadUwpAppsAsync();
         LoadOemApps();
+        _ = LoadFodFeaturesAsync();
         LoadStartupItems();
         RefreshAdPoliciesStatus();
         RefreshTelemetryStatus();
@@ -152,36 +167,97 @@ public partial class DebloatView : UserControl
 
     #endregion
 
+    #region 2.1 系统历史可选功能 (FOD) 精简
+
+    private async Task LoadFodFeaturesAsync()
+    {
+        _fodItems.Clear();
+        var list = await _debloatExtraService.GetFodFeaturesAsync();
+        foreach (var item in list)
+        {
+            _fodItems.Add(new FodFeatureDisplayItem
+            {
+                Key = item.Key,
+                DisplayName = item.DisplayName,
+                CapabilityName = item.CapabilityName,
+                Description = item.Description,
+                DebloatAdvice = item.DebloatAdvice,
+                IsInstalled = item.IsInstalled
+            });
+        }
+    }
+
+    private async void BtnScanFod_Click(object sender, RoutedEventArgs e)
+    {
+        await LoadFodFeaturesAsync();
+        MessageBox.Show("可选功能 (FOD) 状态扫描完成！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private async void BtnUninstallFod_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string capName)
+        {
+            var target = _fodItems.FirstOrDefault(f => f.CapabilityName == capName);
+            string name = target?.DisplayName ?? capName;
+
+            var confirm = MessageBox.Show(
+                $"确定要卸载可选功能【{name}】吗？\n\n系统将调用原生 DISM 移除该功能组件，释放磁盘并减少遗留攻击面。",
+                "确认卸载",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            btn.IsEnabled = false;
+            var (ok, msg) = await _debloatExtraService.RemoveFodFeatureAsync(capName);
+
+            if (ok && target != null)
+            {
+                target.IsInstalled = false;
+                GridFodFeatures.Items.Refresh();
+            }
+
+            MessageBox.Show(msg, ok ? "成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+            btn.IsEnabled = true;
+        }
+    }
+
+    #endregion
+
     #region 3. 商业推广、遥测精简与后台策略控制
 
     private void RefreshAdPoliciesStatus()
     {
         bool silentDisabled = _debloatExtraService.IsSilentAppInstallDisabled();
         TxtSilentAppStatus.Text = silentDisabled ? "[已阻断静默安装]" : "[默认静默推广已开启]";
-        TxtSilentAppStatus.Foreground = silentDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtSilentAppStatus.Foreground = silentDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool startAdsDisabled = _debloatExtraService.IsStartMenuAdsDisabled();
         TxtStartAdsStatus.Text = startAdsDisabled ? "[已关闭推荐广告]" : "[默认显示推荐建议]";
-        TxtStartAdsStatus.Foreground = startAdsDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtStartAdsStatus.Foreground = startAdsDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool lockAdsDisabled = _debloatExtraService.IsLockScreenAdsDisabled();
         TxtLockAdsStatus.Text = lockAdsDisabled ? "[已关闭锁屏小贴士]" : "[默认展示提示与广告]";
-        TxtLockAdsStatus.Foreground = lockAdsDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtLockAdsStatus.Foreground = lockAdsDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool widgetsDisabled = _debloatExtraService.IsWidgetsNewsDisabled();
         TxtWidgetsStatus.Text = widgetsDisabled ? "[已禁用小组件资讯流]" : "[默认资讯流已开启]";
-        TxtWidgetsStatus.Foreground = widgetsDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtWidgetsStatus.Foreground = widgetsDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
+
+        bool bingDisabled = _debloatExtraService.IsBingSearchDisabled();
+        TxtBingSearchStatus.Text = bingDisabled ? "[已切断Bing联网搜索]" : "[默认联网建议已开启]";
+        TxtBingSearchStatus.Foreground = bingDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
     private void RefreshTelemetryStatus()
     {
         bool diagDisabled = _debloatExtraService.IsDiagTrackDisabled();
         TxtDiagTrackStatus.Text = diagDisabled ? "[已停用并禁用服务]" : "[默认自动运行与上报]";
-        TxtDiagTrackStatus.Foreground = diagDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtDiagTrackStatus.Foreground = diagDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
 
         bool ceipDisabled = _debloatExtraService.IsCeipTasksDisabled();
         TxtCeipStatus.Text = ceipDisabled ? "[已禁用周期性计划任务]" : "[默认按计划上报体验]";
-        TxtCeipStatus.Foreground = ceipDisabled ? Brushes.DarkGreen : Brushes.DarkOrange;
+        TxtCeipStatus.Foreground = ceipDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
     private void BtnToggleSilentApps_Click(object sender, RoutedEventArgs e)
@@ -212,6 +288,14 @@ public partial class DebloatView : UserControl
     {
         bool current = _debloatExtraService.IsWidgetsNewsDisabled();
         var (ok, msg) = _debloatExtraService.SetWidgetsNewsDisabled(!current);
+        RefreshAdPoliciesStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleBingSearch_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _debloatExtraService.IsBingSearchDisabled();
+        var (ok, msg) = _debloatExtraService.SetBingSearchDisabled(!current);
         RefreshAdPoliciesStatus();
         MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
@@ -334,7 +418,7 @@ public partial class DebloatView : UserControl
     {
         bool installed = _oneDriveDebloatService.IsOneDriveInstalled();
         TxtOneDriveStatus.Text = installed ? "● 正在后台运行 / 已安装" : "○ 未运行 / 已彻底清除";
-        TxtOneDriveStatus.Foreground = installed ? Brushes.Red : Brushes.DarkGreen;
+        TxtOneDriveStatus.Foreground = installed ? ThemeBrushes.Danger : ThemeBrushes.Success;
         BtnUninstallOneDrive.IsEnabled = installed;
     }
 

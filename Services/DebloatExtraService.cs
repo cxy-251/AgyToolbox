@@ -5,6 +5,7 @@ namespace AgyToolbox.Services;
 
 public record StartupItemInfo(string Name, string Command, string Scope);
 public record OemAppInfo(string Name, string Vendor, string Description, string DebloatAdvice, bool IsDetected);
+public record FodFeatureInfo(string Key, string DisplayName, string CapabilityName, string Description, string DebloatAdvice, bool IsInstalled);
 
 public class DebloatExtraService
 {
@@ -265,6 +266,47 @@ public class DebloatExtraService
         }
     }
 
+    /// <summary>
+    /// 检测 Windows 搜索面板 Bing 联网搜索建议与热搜是否已关闭
+    /// </summary>
+    public bool IsBingSearchDisabled()
+    {
+        try
+        {
+            using var searchKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Search");
+            var val = searchKey?.GetValue("BingSearchEnabled");
+            if (val is int intVal && intVal == 0) return true;
+
+            using var policyKey = Registry.CurrentUser.OpenSubKey(@"Software\Policies\Microsoft\Windows\Explorer");
+            var polVal = policyKey?.GetValue("DisableSearchBoxSuggestions");
+            return polVal is int polInt && polInt == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开关 Windows 搜索面板 Bing 联网搜索建议与热搜
+    /// </summary>
+    public (bool Success, string Message) SetBingSearchDisabled(bool disable)
+    {
+        try
+        {
+            using var searchKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Search");
+            searchKey.SetValue("BingSearchEnabled", disable ? 0 : 1, RegistryValueKind.DWord);
+
+            using var policyKey = Registry.CurrentUser.CreateSubKey(@"Software\Policies\Microsoft\Windows\Explorer");
+            policyKey.SetValue("DisableSearchBoxSuggestions", disable ? 1 : 0, RegistryValueKind.DWord);
+
+            return (true, disable
+                ? "已成功关闭 Windows 搜索面板必应联网热搜与广告推荐！"
+                : "已恢复必应联网搜索建议。");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"设置必应搜索策略异常: {ex.Message}");
+        }
+    }
+
     #endregion
 
     #region 遥测、隐私与后台无用服务精简 (DiagTrack / CEIP)
@@ -387,6 +429,125 @@ Enable-ScheduledTask -TaskPath '\Microsoft\Windows\Feedback\Siuf\' -TaskName 'Dm
         return (true, disable
             ? "已一键关闭所有后台推广静默安装、开始菜单广告、锁屏小贴士及小组件资讯流！"
             : "已一键恢复系统默认商业推广与应用推荐设置。");
+    }
+
+    #endregion
+
+    #region 系统历史可选功能 (Features On Demand / FOD) 精简
+
+    private static readonly (string Key, string DisplayName, string CapabilityName, string Description, string DebloatAdvice)[] KnownFodFeatures =
+    [
+        (
+            "WMP",
+            "Windows Media Player (旧版经典播放器)",
+            "Media.WindowsMediaPlayer~~~~0.0.1.0",
+            "早年 Windows 遗留的旧版经典多媒体播放组件，长期未维护且缺少现代硬件解码支持。",
+            "现代系统已有内置媒体播放器或更轻量开源工具 (如 VLC / PotPlayer)，可安全卸载以减少空间占用。"
+        ),
+        (
+            "IE_Mode",
+            "Internet Explorer 模式 (IE 兼容组件)",
+            "Browser.InternetExplorer~~~~0.0.1.0",
+            "用于向下兼容早期老旧政企 OA 及网银 Active-X 控件的 Trident 引擎遗留组件。",
+            "若日常工作不依赖古旧内网系统，建议移除以削减系统的老旧攻击面。"
+        ),
+        (
+            "Fax_Scan",
+            "Windows 传真和扫描 (Fax and Scan)",
+            "Print.Fax.Scan~~~~0.0.1.0",
+            "早期电话拨号调制解调器传真与老旧扫描仪控制工具，现代办公基本完全转向邮件与多功能一体机。",
+            "若无传统硬件传真卡，常驻无用，可彻底移除。"
+        ),
+        (
+            "WordPad",
+            "写字板 (WordPad)",
+            "Microsoft.Windows.WordPad~~~~0.0.1.0",
+            "微软已于 Win11 24H2 起正式废弃并计划移除写字板，旧系统版本中仍可手动卸载。",
+            "推荐使用 VS Code、记事本或 Office 替代，移除后无系统依赖副作用。"
+        ),
+        (
+            "MathRecognizer",
+            "数学识别器 (Math Recognizer)",
+            "MathRecognizer~~~~0.0.1.0",
+            "用于识别触控笔手写数学公式的辅助面板组件。",
+            "如果不使用手写板或触控屏书写数学公式，属于纯冗余组件。"
+        )
+    ];
+
+    public async Task<List<FodFeatureInfo>> GetFodFeaturesAsync()
+    {
+        return await Task.Run(() =>
+        {
+            var result = new List<FodFeatureInfo>();
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = "-NoProfile -ExecutionPolicy Bypass -Command \"Get-WindowsCapability -Online | Where-Object { $_.State -eq 'Installed' } | Select-Object -ExpandProperty Name\"",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                var installedCaps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                using var proc = Process.Start(psi);
+                if (proc != null)
+                {
+                    while (!proc.StandardOutput.EndOfStream)
+                    {
+                        var line = proc.StandardOutput.ReadLine();
+                        if (!string.IsNullOrWhiteSpace(line)) installedCaps.Add(line.Trim());
+                    }
+                    proc.WaitForExit(15000);
+                }
+
+                foreach (var item in KnownFodFeatures)
+                {
+                    bool installed = installedCaps.Any(c => c.Contains(item.Key, StringComparison.OrdinalIgnoreCase) || c.Contains(item.CapabilityName, StringComparison.OrdinalIgnoreCase));
+                    result.Add(new FodFeatureInfo(item.Key, item.DisplayName, item.CapabilityName, item.Description, item.DebloatAdvice, installed));
+                }
+            }
+            catch
+            {
+                foreach (var item in KnownFodFeatures)
+                {
+                    result.Add(new FodFeatureInfo(item.Key, item.DisplayName, item.CapabilityName, item.Description, item.DebloatAdvice, false));
+                }
+            }
+            return result;
+        });
+    }
+
+    public async Task<(bool Success, string Message)> RemoveFodFeatureAsync(string capabilityName)
+    {
+        return await Task.Run(() =>
+        {
+            try
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "dism.exe",
+                    Arguments = $"/Online /NoRestart /Remove-Capability /CapabilityName:{capabilityName}",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using var proc = Process.Start(psi);
+                string outStr = proc?.StandardOutput.ReadToEnd() ?? "";
+                proc?.WaitForExit(45000);
+
+                if (outStr.Contains("100.0%") || outStr.Contains("成功") || outStr.Contains("success", StringComparison.OrdinalIgnoreCase))
+                {
+                    return (true, $"已成功卸载可选功能 [{capabilityName}]！");
+                }
+                return (false, $"卸载返回: {outStr.Trim()}");
+            }
+            catch (Exception ex)
+            {
+                return (false, $"卸载可选功能异常: {ex.Message}");
+            }
+        });
     }
 
     #endregion

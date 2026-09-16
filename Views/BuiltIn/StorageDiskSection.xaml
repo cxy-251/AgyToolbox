@@ -322,6 +322,61 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 6: 卷影副本深度管理 (vssadmin) 与 SSD 原生 TRIM (Optimize-Volume) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
+                        <TextBlock Text="6. 卷影副本存储排查 (vssadmin) 与 SSD 闪存优化 (Optimize-Volume)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="NTFS 底层与闪存回收" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="排查系统还原点与 VSS 阴影副本占用的幽灵空间，以及针对现代 NVMe/SATA SSD 强制下发底层 TRIM 指令。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 1: vssadmin 卷影副本 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="🛡️ 卷影副本排查与释放 (vssadmin)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="C 盘空间神秘失踪常因系统还原点（Volume Shadow Copies）吞噬。使用 vssadmin 查询存储开销，并在必要时清除陈旧副本释放数十 GB 空间。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="vssadmin list shadowstorage" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="查询阴影空间" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="vssadmin list shadowstorage" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="清除非必要副本" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="vssadmin delete shadows /for=C: /all /quiet" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 2: Optimize-Volume SSD ReTrim -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="⚡ SSD 闪存 TRIM 回收 (Optimize-Volume)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="Windows 自动化维护可能延期执行 TRIM。使用 PowerShell 原生 Optimize-Volume 强制向固态硬盘主控下发 ReTrim，恢复写入性能与寿命。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="Optimize-Volume -DriveLetter C -ReTrim -Verbose" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="复制 C 盘 ReTrim" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="0,0,3,0" Tag="Optimize-Volume -DriveLetter C -ReTrim -Verbose" Click="BtnCopyCmd_Click"/>
+                                    <Button Grid.Column="1" Content="机械盘整理 (Defrag)" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="4,2" Margin="3,0,0,0" Tag="Optimize-Volume -DriveLetter D -Defrag -Verbose" Click="BtnCopyCmd_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

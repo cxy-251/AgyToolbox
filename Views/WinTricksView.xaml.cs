@@ -30,14 +30,14 @@ public partial class WinTricksView : UserControl
             if (occs.Count == 0)
             {
                 TxtPortResult.Text = $"✓ 端口 {port} 空闲未被占用";
-                TxtPortResult.Foreground = Brushes.Green;
+                TxtPortResult.Foreground = ThemeBrushes.Success;
                 PanelKillPort.Visibility = Visibility.Collapsed;
             }
             else
             {
                 var first = occs[0];
                 TxtPortResult.Text = $"✗ 端口正在被占用！";
-                TxtPortResult.Foreground = Brushes.Red;
+                TxtPortResult.Foreground = ThemeBrushes.Danger;
                 TxtPortOccupantDesc.Text = $"占用进程: {first.ProcessName} (PID: {first.Pid})";
                 PanelKillPort.Tag = first.Pid;
                 PanelKillPort.Visibility = Visibility.Visible;
