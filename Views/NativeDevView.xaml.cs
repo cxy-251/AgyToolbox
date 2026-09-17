@@ -94,7 +94,10 @@ public partial class NativeDevView : UserControl
         if (sender is Button btn && btn.Tag is string snippet && !string.IsNullOrWhiteSpace(snippet))
         {
             Clipboard.SetText(snippet);
-            MessageBox.Show($"已复制命令或代码至剪贴板：\n\n{snippet}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
+            string preview = snippet.Length > 160
+                ? snippet.Substring(0, 160).TrimEnd() + "...\n\n(完整脚本源码已成功复制到剪贴板，可直接粘贴使用)"
+                : snippet;
+            MessageBox.Show($"已复制至剪贴板：\n\n{preview}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
