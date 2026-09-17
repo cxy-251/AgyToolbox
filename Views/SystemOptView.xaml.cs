@@ -19,6 +19,7 @@ public partial class SystemOptView : UserControl
     private readonly WindowsUpdateService _windowsUpdateService = new();
     private readonly WinOptimizerService _winOptimizerService = new();
     private readonly EnvManagerService _envManagerService = new();
+    private readonly NativeDevService _nativeDevService = new();
     private readonly ObservableCollection<PathDisplayItem> _pathItems = new();
 
     public SystemOptView()
@@ -39,6 +40,7 @@ public partial class SystemOptView : UserControl
         RefreshExplorerSettings();
         RefreshAccountsAndLicenseStatus();
         RefreshDevIoStatus();
+        RefreshDevDriveStatus();
     }
 
     #region 1. Windows 自动更新彻底控制
@@ -1058,6 +1060,50 @@ public partial class SystemOptView : UserControl
         {
             Clipboard.SetText(text);
             MessageBox.Show($"已复制命令到剪贴板:\n{text}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    #endregion
+
+    #region Dev Drive (开发驱动器)
+
+    private void RefreshDevDriveStatus()
+    {
+        if (TxtDevDriveStatus == null) return;
+        var (supported, hasDevDrive, info) = _nativeDevService.GetDevDriveStatus();
+        if (hasDevDrive)
+        {
+            TxtDevDriveStatus.Text = "[已挂载 Dev Drive 开发驱动器]";
+            TxtDevDriveStatus.Foreground = ThemeBrushes.Success;
+        }
+        else if (supported)
+        {
+            TxtDevDriveStatus.Text = "[系统支持 Dev Drive (当前未创建)]";
+            TxtDevDriveStatus.Foreground = ThemeBrushes.Info;
+        }
+        else
+        {
+            TxtDevDriveStatus.Text = "[当前环境暂不支持 Dev Drive]";
+            TxtDevDriveStatus.Foreground = ThemeBrushes.Warning;
+        }
+    }
+
+    private void BtnRefreshDevDrive_Click(object sender, RoutedEventArgs e)
+    {
+        var (supported, hasDevDrive, info) = _nativeDevService.GetDevDriveStatus();
+        RefreshDevDriveStatus();
+        MessageBox.Show($"Dev Drive 状态检测结果：\n\n{info}", "Dev Drive 状态", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void BtnOpenDisksSettings_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("ms-settings:disksandvolumes") { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"打开磁盘与卷设置失败: {ex.Message}", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
     }
 

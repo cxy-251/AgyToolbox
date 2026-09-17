@@ -98,7 +98,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- 工具 3: shutdown 绝对冷重启 vs 快速启动机制 -->
+            <!-- 工具 3: shutdown 绝对冷重启 vs 快速启动机制 与 UEFI 固件引导 -->
             <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,16">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -112,21 +112,25 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
                             <WrapPanel VerticalAlignment="Center">
-                                <TextBlock Text="3. 绝对冷重启 (shutdown.exe) vs 快速启动陷阱" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="3. 绝对冷重启 (shutdown.exe) 与 UEFI/BIOS 固件引导" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                 <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="核心技术机制" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
+                                    <TextBlock Text="核心内核机制" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
                                 </Border>
                             </WrapPanel>
-                            <TextBlock Text="揭秘为什么点“关机”不能解决某些驱动异常与硬件卡死：Windows 10/11 默认的关机其实是混合休眠 (Fast Startup)！"
+                            <TextBlock Text="揭秘为什么点“关机”不能解决某些驱动异常与硬件卡死：Windows 默认关机是混合休眠！同时提供无需狂按 Del/F2 即可直达主板 BIOS 固件的优雅方案。"
                                        FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                         </StackPanel>
-                        <Button Grid.Column="1" Content="触发绝对冷重启" VerticalAlignment="Center" Click="BtnColdRestart_Click"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="触发绝对冷重启" Margin="0,0,6,0" Click="BtnColdRestart_Click"/>
+                            <Button Content="⚡ 重启进入 UEFI/BIOS" Style="{DynamicResource SecondaryButton}" Click="BtnRebootToBios_Click"/>
+                        </StackPanel>
                     </Grid>
                     <Border Grid.Row="1" Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,10,0,0">
                         <StackPanel>
-                            <TextBlock Text="⚠️ 工程决策：彻底冷重启 vs 混合关机：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,2"/>
+                            <TextBlock Text="⚠️ 工程决策：彻底冷重启 vs 混合关机 &amp; 固件引导：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,2"/>
                             <TextBlock Text="• 快速启动原理：点击开始菜单的「关机」时，系统会关闭所有用户应用程序，但把 Windows 内核与驱动状态整体打包写入 hiberfil.sys。若驱动已有内部死锁，关机再开机该死锁依然被原样还原！" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                             <TextBlock Text="• 真正重置内核的途径：① 菜单选择「重启」；② 按住 Shift 键点击关机；③ 执行命令行：shutdown /r /t 0（彻底冷重启）或 shutdown /s /f /t 0（彻底冷关机）。" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
+                            <TextBlock Text="• 一步直达 UEFI/BIOS：现代 NVMe 固态硬盘启动过快常导致来不及按 Del/F2 键。以管理员身份执行 shutdown /r /fw /t 0 可通知主板固件在下一次上电自检时直接停留在 BIOS 设置页（注：仅支持 UEFI 模式主板）。" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap" Margin="0,3,0,0"/>
                         </StackPanel>
                     </Border>
                 </Grid>

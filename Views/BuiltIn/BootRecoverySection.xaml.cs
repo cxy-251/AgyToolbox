@@ -35,6 +35,31 @@ public partial class BootRecoverySection : UserControl
         }
     }
 
+    private void BtnRebootToBios_Click(object sender, RoutedEventArgs e)
+    {
+        var res = MessageBox.Show(
+            "【重启至 UEFI/BIOS 固件确认】\n\n" +
+            "即将执行: shutdown /r /fw /t 0\n\n" +
+            "计算机将立即重启并自动进入主板 UEFI/BIOS 设置界面，无须在开机时疯狂按 Del/F2 键。\n" +
+            "注意：该功能要求主板支持 UEFI 固件接口并以管理员身份运行。\n\n" +
+            "请务必先保存所有工作内容！是否现在立即重启并进入 BIOS？",
+            "重启至 BIOS 确认",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (res == MessageBoxResult.Yes)
+        {
+            try
+            {
+                _service.TriggerRebootToBios();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"触发重启至 BIOS 失败: {ex.Message}\n请确保以管理员身份运行且主板支持 UEFI 固件引导。", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
     private void BtnMsConfig_Click(object sender, RoutedEventArgs e)
     {
         _service.OpenSystemConfiguration();

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="850">
+             d:DesignHeight="850" d:DesignWidth="950">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,184 +12,19 @@
         </Grid.RowDefinitions>
 
         <!-- 模块说明看板 (保留在 TabControl 外层，始终可见) -->
-        <!-- 模块说明看板 (保留在 TabControl 外层，始终可见) -->
         <Border Grid.Row="0" Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
             <StackPanel>
-                <TextBlock Text="💻 步骤四：原生开发环境与现代终端基建 (Native Dev &amp; Infrastructure)" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
-                <TextBlock Text="现代 Windows 内置了大量专业级开发与系统诊断工具：无需安装臃肿的第三方软件，即可获得 WSL2 虚拟机、Windows Sandbox 纯净沙箱、ReFS 开发驱动器 (Dev Drive)、原生 sudo 提权、PktMon 内核抓包、死锁句柄检索与 API 调试等全套生产力工具。"
+                <TextBlock Text="💻 步骤四：原生开发特权、CLI基建与免编译脚本全家谱" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
+                <TextBlock Text="坚持「纯血原生、零第三方依赖」：深度挖掘 Windows 内置解释器与命令行特权工具。从 sudo/开发者软链接特权、工业级多线程复制与系统服务部署，到 Shell 生态避坑及 .bat / .ps1 / .reg / .hta 免编译原生脚本实战，全面构建纯粹的 Windows 开发工作流。"
                            FontSize="12" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
 
-        <!-- 5 个功能横向子标签 -->
+        <!-- 4 个聚焦子标签 -->
         <TabControl Grid.Row="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1"
                     ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
-            <!-- Tab 1: 虚拟化与驱动基建 (WSL2 / Sandbox / Dev Drive / Dev Home) -->
-            <TabItem Header="🐧 虚拟化与驱动基建">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <!-- 第一排：WSL2 与 Windows Sandbox -->
-                        <Grid Margin="0,0,0,14">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <!-- WSL2 卡片 -->
-                            <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,7,0">
-                                <StackPanel>
-                                    <Grid Margin="0,0,0,6">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="🐧 1. WSL2 (Linux 子系统)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
-                                        <TextBlock x:Name="TxtWslStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                    </Grid>
-                                    <TextBlock Text="在 Windows 上以原生轻量级虚拟机方式运行完整 Linux 内核环境，支持 Docker Desktop 原生后端与 GPU 加速计算开发。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                    <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,10">
-                                        <TextBlock Text="💡 存储建议：WSL 虚拟磁盘默认保存在系统 C 盘。若需迁移，可在部署后使用 wsl --export 和 wsl --import 转移至大容量数据盘。" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
-                                    </Border>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckWsl_Click"/>
-                                        <Button Grid.Column="1" Content="安装 WSL2" Background="#0284C7" Margin="4,0,0,0" Click="BtnInstallWsl_Click"/>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-
-                            <!-- Windows Sandbox 沙箱卡片 -->
-                            <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="7,0,0,0">
-                                <StackPanel>
-                                    <Grid Margin="0,0,0,6">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="📦 2. Windows Sandbox (原生沙箱)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
-                                        <TextBlock x:Name="TxtSandboxStatus" Grid.Column="1" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                    </Grid>
-                                    <TextBlock Text="微软官方纯净轻量隔离运行环境。每次启动均为全新初始状态，测试完毕关闭窗口后自动彻底销毁所有数据，避免流氓软件污染宿主系统。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                    <Border Background="{DynamicResource BrushAlertGreenBg}" BorderBrush="{DynamicResource BrushAlertGreenBorder}" BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,10">
-                                        <TextBlock Text="💡 说明：仅限 Windows 专业版 / 企业版。启用后需重启系统一次，按 Win+S 搜 Windows Sandbox 即可随时启动。" FontSize="10" Foreground="{DynamicResource BrushAlertGreenText}" TextWrapping="Wrap"/>
-                                    </Border>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Content="检测状态" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnCheckSandbox_Click"/>
-                                        <Button Grid.Column="1" Content="启用原生沙箱" Background="#10B981" Margin="4,0,0,0" Click="BtnEnableSandbox_Click"/>
-                                    </Grid>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
-
-                        <!-- 第二排：Dev Drive 与 Dev Home -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🚀 3. Dev Drive (开发驱动器 / ReFS 文件系统) &amp; Dev Home" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <Border Background="{DynamicResource BrushAlertGreenBg}" BorderBrush="{DynamicResource BrushAlertGreenBorder}" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
-                                            <TextBlock Text="🔥 推荐配置 / Win11" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}"/>
-                                        </Border>
-                                        <TextBlock Text=" (写时复制 CoW 专治依赖项文件膨胀与编译 I/O 瓶颈)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
-                                    </WrapPanel>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock x:Name="TxtDevDriveStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                                        <Button Content="🔄 刷新" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnRefreshDevDrive_Click"/>
-                                        <Button Content="⚙️ 创建 Dev Drive 分区" Background="#0284C7" Margin="0,0,6,0" Click="BtnOpenDisksSettings_Click"/>
-                                        <Button Content="🏠 打开 Dev Home" Background="#10B981" Click="BtnLaunchDevHome_Click"/>
-                                    </StackPanel>
-                                </Grid>
-
-                                <Border Background="{DynamicResource BrushAlertPurpleBg}" BorderBrush="{DynamicResource BrushAlertPurpleBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <TextBlock Text="💡 Dev Drive 技术特性与性能优势说明：" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertPurpleText}" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 底层基于 ReFS (复原文件系统) 格式，原生开启【写时复制 (Copy-on-Write / CoW)】与虚拟化性能优化。&#x0a;• 核心价值：专门用于存放 node_modules、Git 仓库代码、Cargo/Maven 依赖缓存与中间编译产物。在大型工程构建、包管理器依赖安装和 Git checkout 操作中，磁盘 I/O 性能提升明显。&#x0a;• 安全模式：Dev Drive 采用性能模式防病毒扫描（避免传统杀毒软件对几十万个小文件逐个同步扫描产生阻塞）。"
-                                                   FontSize="11" Foreground="{DynamicResource BrushAlertPurpleText}" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                </Border>
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
-                                        <StackPanel>
-                                            <TextBlock Text="fsutil 查询 Dev Drive 驱动器状态与防病毒模式:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="fsutil devdrv query" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="fsutil devdrv query"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="通过 winget 一键安装微软官方 Dev Home 仪表盘:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="winget install --id Microsoft.DevHome --source winget" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="winget install --id Microsoft.DevHome --source winget"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 第三排：WSL 与沙箱进阶运维指令 -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
-                            <StackPanel>
-                                <TextBlock Text="🛠️ 4. WSL 与沙箱常用运维命令速查" FontWeight="Bold" FontSize="13" Foreground="#0078D4" Margin="0,0,0,8"/>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="彻底关停 WSL 虚拟机释放内存占用:" VerticalAlignment="Center" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,8,0"/>
-                                    <TextBox Grid.Column="1" Text="wsl --shutdown" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                    <Button Grid.Column="2" Content="📋" Style="{DynamicResource SecondaryButton}" Padding="8,2" Margin="6,0,0,0" Click="BtnCopySnippet_Click" Tag="wsl --shutdown"/>
-                                </Grid>
-                                <Grid Margin="0,0,0,6">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="查看已安装发行版及运行版本状态:" VerticalAlignment="Center" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,8,0"/>
-                                    <TextBox Grid.Column="1" Text="wsl -l -v" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                    <Button Grid.Column="2" Content="📋" Style="{DynamicResource SecondaryButton}" Padding="8,2" Margin="6,0,0,0" Click="BtnCopySnippet_Click" Tag="wsl -l -v"/>
-                                </Grid>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="迁移导出发行版归档 (以 Ubuntu 为例):" VerticalAlignment="Center" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,8,0"/>
-                                    <TextBox Grid.Column="1" Text="wsl --export Ubuntu-22.04 D:\wsl_backup\ubuntu.tar" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                    <Button Grid.Column="2" Content="📋" Style="{DynamicResource SecondaryButton}" Padding="8,2" Margin="6,0,0,0" Click="BtnCopySnippet_Click" Tag="wsl --export Ubuntu-22.04 D:\wsl_backup\ubuntu.tar"/>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 2: 权限特权与开发者模式 (Sudo / Developer Mode / SSH / icacls) -->
+            <!-- Tab 1: 权限特权与开发者模式 (Sudo / Developer Mode & Symlink / OpenSSH & ssh-agent) -->
             <TabItem Header="🔑 权限特权与开发者模式">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
@@ -202,7 +37,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="⚡ 1. Win11 24H2+ 原生 sudo 提权控制" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text="⚡ 1. Win11 24H2+ 原生 sudo 提权控制" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
                                         <Border Background="{DynamicResource BrushAlertPurpleBg}" BorderBrush="{DynamicResource BrushAlertPurpleBorder}" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
                                             <TextBlock Text="✨ 24H2 新特性 / 内联提权" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertPurpleText}"/>
                                         </Border>
@@ -220,7 +55,7 @@
                                 <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
                                     <StackPanel>
                                         <TextBlock Text="💡 原生 sudo 与传统 UAC 提权机制差异说明：" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 传统模式：通常需右键终端快捷方式选择“以管理员身份运行”，会新开一个初始工作目录的空白窗口。&#x0a;• 原生 sudo：直接在当前工作路径的 PowerShell 或 CMD 中执行 sudo &lt;命令&gt;。&#x0a;• 模式选项：normal 模式下标准输入输出完全内联在当前终端；forceNewWindow 模式下则调出独立的高权限执行窗口。"
+                                        <TextBlock Text="• 传统模式：通常需右键终端快捷方式选择“以管理员身份运行”，会新开一个初始工作目录在 C:\Windows\System32 的空白窗口。&#x0a;• 原生 sudo：直接在当前工作路径的 PowerShell 或 CMD 中执行 sudo &lt;命令&gt;，保持当前上下文。&#x0a;• 模式选项：normal 模式下标准输入输出完全内联在当前终端；forceNewWindow 模式下则调出独立的高权限执行窗口。"
                                                    FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                                     </StackPanel>
                                 </Border>
@@ -232,7 +67,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <TextBlock Text="命令行直接提权启动服务或修改注册表:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="命令行直接提权启动服务或修改配置:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
                                                 <TextBox Text="sudo net start wuauserv" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
@@ -263,18 +98,18 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🔗 2. Windows 开发者模式与免提权符号链接 (Developer Mode &amp; Symlink)" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text="🔗 2. Windows 开发者模式与免提权符号链接 (Developer Mode &amp; Symlink)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
                                         <TextBlock Text=" (允许非管理员普通权限直接创建软链接，pnpm 与 npm link 必备)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                         <TextBlock x:Name="TxtDevModeStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                         <Button x:Name="BtnToggleDevMode" Content="开启开发者模式" Background="#0284C7" Margin="0,0,6,0" Click="BtnToggleDevMode_Click"/>
-                                        <Button Content="打开设置页" Style="{DynamicResource SecondaryButton}" FontSize="11" Click="BtnOpenDevSettings_Click"/>
+                                        <Button Content="打开系统设置页" Style="{DynamicResource SecondaryButton}" FontSize="11" Click="BtnOpenDevSettings_Click"/>
                                     </StackPanel>
                                 </Grid>
 
                                 <Border Background="{DynamicResource BrushAlertPurpleBg}" BorderBrush="{DynamicResource BrushAlertPurpleBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <TextBlock Text="💡 开发者模式技术价值：标准模式下创建软链接需要管理员特权；开启开发者模式后，系统策略允许标准普通用户进程免提权直接创建软链接。这对于基于硬/软链接树状结构的现代包管理器（如 pnpm）、本地跨模块联调（npm link / yarn link）及 Git core.symlinks 支持至关重要。"
+                                    <TextBlock Text="💡 开发者模式技术价值：标准模式下创建软链接需要管理员特权；开启开发者模式后，系统安全策略允许普通用户直接创建符号链接（Symlink）。这对现代前端包管理器（如 pnpm 虚拟硬/软链接树）、模块联调（npm link / yarn link）及 Git core.symlinks 体验至关重要，彻底告别弹窗报错。"
                                                FontSize="11" Foreground="{DynamicResource BrushAlertPurpleText}" TextWrapping="Wrap"/>
                                 </Border>
 
@@ -285,9 +120,9 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <TextBlock Text="免提权创建目录软链接 (cmd 语法):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="CMD 原生语法创建目录软链接 (mklink /D):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="cmd /c mklink /D link_folder target_folder" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="cmd /c mklink /D &quot;link_folder&quot; &quot;target_folder&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
                                                         Click="BtnCopySnippet_Click" Tag="cmd /c mklink /D link_folder target_folder"/>
                                             </Grid>
@@ -295,7 +130,7 @@
                                     </Border>
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="PowerShell 原生创建软链接语法:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="PowerShell 原生创建软链接语法 (New-Item):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
                                                 <TextBox Text="New-Item -ItemType SymbolicLink -Path .\link -Target .\target" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
@@ -307,53 +142,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 第三块：icacls & takeown 权限手术刀 -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
-                            <StackPanel>
-                                <WrapPanel Margin="0,0,0,4">
-                                    <TextBlock Text="🪓 3. icacls &amp; takeown 权限分析与修复 (排查 Access is denied 拒绝访问)" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                    <Border Background="{DynamicResource BrushAlertRedBg}" BorderBrush="{DynamicResource BrushAlertRedBorder}" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
-                                        <TextBlock Text="🛡️ 进阶 / 权限修复" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertRedText}"/>
-                                    </Border>
-                                </WrapPanel>
-                                <TextBlock Text="在开发过程中遇到缓存文件锁定、Git 仓库目录拒绝访问或清理受限时，使用原生命令行工具进行所有权与 ACL 修复：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- takeown 夺取所有权 -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
-                                        <StackPanel>
-                                            <TextBlock Text="第 1 步：将目标目录所有权赋予当前用户 (takeown)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
-                                            <TextBlock Text="/r 递归所有子项，/d y 遇到确认提示自动选择 yes，解除所有者缺失限制：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="takeown /f &quot;C:\path\to\target&quot; /r /d y" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="takeown /f &quot;C:\path\to\target&quot; /r /d y"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <!-- icacls 赋权或重置 -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="第 2 步：递归授予管理员完全控制权限 (icacls)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
-                                            <TextBlock Text=":F 代表 Full control 完全控制，/t 遍历子树，/c 忽略单个文件错误继续执行：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="icacls &quot;C:\path\to\target&quot; /grant Administrators:F /t /c" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="icacls &quot;C:\path\to\target&quot; /grant Administrators:F /t /c"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 第四块：OpenSSH 认证与 Agent 自启 -->
+                        <!-- 第三块：OpenSSH 认证与 Agent 自启 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,10">
@@ -362,7 +151,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🔑 4. OpenSSH 密钥认证与 ssh-agent 开机自启服务" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
+                                        <TextBlock Text="🔑 3. OpenSSH 密钥认证与 ssh-agent 开机自启服务" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
                                         <TextBlock Text=" (解决每次终端交互与 Git 操作重复提示输入私钥口令的问题)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -371,7 +160,7 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Grid>
+                                <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
@@ -388,7 +177,7 @@
                                     </Border>
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="将私钥添加至代理并测试平台连通性:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="将私钥添加至代理并测试 GitHub 连通性:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
                                                 <TextBox Text="ssh-add ~\.ssh\id_ed25519 &amp;&amp; ssh -T git@github.com" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
@@ -397,37 +186,133 @@
                                         </StackPanel>
                                     </Border>
                                 </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <TextBlock Text="PowerShell 原生服务自启与启动指令 (备用手动执行):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                        <Grid>
+                                            <TextBox Text="Get-Service ssh-agent | Set-Service -StartupType Automatic -PassThru | Start-Service" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                            <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                    Click="BtnCopySnippet_Click" Tag="Get-Service ssh-agent | Set-Service -StartupType Automatic -PassThru | Start-Service"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
-            <!-- Tab 3: 原生网络与系统诊断 (pktmon / 路由 / resmon / 性能) -->
-            <TabItem Header="🩺 原生网络与系统诊断">
+            <!-- Tab 2: 原生 CLI 与服务部署 (fsutil / robocopy / sc.exe / schtasks / irm & curl) -->
+            <TabItem Header="📜 原生 CLI 与服务部署">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
-                        <!-- 第一部分：PktMon 内核抓包监视器 -->
+                        <!-- 第一块：fsutil 测试大文件 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
-                                <Grid Margin="0,0,0,10">
+                                <Grid Margin="0,0,0,6">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🦈 1. PktMon 内核级数据包监视器 (免装 Wireshark 抓包)" FontSize="14" FontWeight="Bold" Foreground="#0078D4"/>
-                                        <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
-                                            <TextBlock Text="⚡ 深度排障 / 内核级" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                                        <TextBlock Text="⚡ 1. fsutil 秒级创建测试虚构大文件 (免装任何假数据生成器)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                            <TextBlock Text="秒速占用" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}"/>
                                         </Border>
-                                        <TextBlock Text=" (Windows 内核自带抓包驱动，支持导出标准 .pcapng 格式)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
-                                    <Button Grid.Column="1" Content="🚀 在管理员终端启动抓包" Background="#0284C7" Click="BtnStartPktMon_Click"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                        <Button Content="⚡ 一键生成 100MB 文件" Background="#10B981" Padding="8,3" FontSize="11" Margin="0,0,6,0" Click="BtnCreateDummyFile100M_Click"/>
+                                        <Button Content="🚀 一键生成 1GB 文件" Background="#0284C7" Padding="8,3" FontSize="11" Click="BtnCreateDummyFile1G_Click"/>
+                                    </StackPanel>
                                 </Grid>
+                                <TextBlock Text="用于局域网带宽测速、磁盘 I/O 极限读写压测、分块上传验证。fsutil 在 NTFS 文件系统上直接分配元数据簇空间，秒级生成任意大小的空内容数据文件：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
-                                <Border Background="{DynamicResource BrushAlertGreenBg}" BorderBrush="{DynamicResource BrushAlertGreenBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <TextBlock Text="💡 技术说明：Windows 10 1809+ 与 Windows 11 原生内置了 pktmon.exe，运行于操作系统网络协议栈内核驱动层，无需预装第三方 WinPcap/Npcap 驱动。抓包完成后可通过 etl2pcap 命令无损转换为标准 pcapng 文件，供各类网络分析工具解析。"
-                                               FontSize="11" Foreground="{DynamicResource BrushAlertGreenText}" TextWrapping="Wrap"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="生成 100MB 测试文件 (104,857,600 字节):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="fsutil file createnew dummy_100M.bin 104857600" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="fsutil file createnew dummy_100M.bin 104857600"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="生成 1GB 测试文件 (1,073,741,824 字节):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="fsutil file createnew dummy_1G.bin 1073741824" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="fsutil file createnew dummy_1G.bin 1073741824"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第二块：robocopy 工业级多线程文件同步 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="🚀 2. robocopy 工业级多线程文件同步 (坚如磐石的文件传输基石)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="原生多线程同步" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="微软官方 Robust File Copy。比普通 copy/xcopy 强悍数倍：支持高达 128 线程并发、网络闪断自动重试、保留 NTFS 权限、跳过未改动文件与断点续传。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="📦 增量多线程同步 (/E /MT:16 /R:2 /W:1 /NP):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="包含所有子目录，16线程并发，失败重试2次等1秒，无干扰进度：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /E /MT:16 /R:2 /W:1 /NP" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /E /MT:16 /R:2 /W:1 /NP"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🪞 镜像克隆同步 (/MIR /MT:16 /R:1 /W:1):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="⚠️ 镜像模式会同时在目标目录中删除源端不存在的多余文件：" FontSize="10" Foreground="{DynamicResource BrushAlertErrorText}" Margin="0,0,0,4"/>
+                                            <Grid>
+                                                <TextBox Text="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /MIR /MT:16 /R:1 /W:1" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                        Click="BtnCopySnippet_Click" Tag="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /MIR /MT:16 /R:1 /W:1"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第三块：sc.exe 服务部署与管理 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="⚙️ 3. sc.exe 原生系统服务部署与生命周期 (Windows 版 systemctl)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="免装 NSSM" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="Windows 原生 Service Controller 命令行。将后台常驻程序直接注册为跟随系统开机自启的 Windows 服务，无需借助第三方守护工具：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                                <Border Background="{DynamicResource BrushAlertWarningBg}" BorderBrush="{DynamicResource BrushAlertWarningBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <TextBlock Text="⚠️ sc.exe 经典避坑法则：binPath=、start=、DisplayName= 等参数的「等号与参数值之间必须有且仅有一个空格」！例如 binPath= &quot;C:\App.exe&quot;（若写成 binPath=&quot;...&quot; 将直接报语法错误）。"
+                                               FontSize="10" Foreground="{DynamicResource BrushAlertWarningText}" FontWeight="SemiBold" TextWrapping="Wrap"/>
                                 </Border>
 
                                 <Grid Margin="0,0,0,8">
@@ -437,21 +322,21 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <TextBlock Text="步骤 1：添加端口过滤规则 (例如过滤 8080 端口避免噪音干扰):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="创建并注册自启后台服务 (sc.exe create):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="pktmon filter add -p 8080" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="sc.exe create MyBackendService binPath= &quot;C:\App\backend.exe --service&quot; start= auto DisplayName= &quot;My Backend Service&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="pktmon filter add -p 8080"/>
+                                                        Click="BtnCopySnippet_Click" Tag="sc.exe create MyBackendService binPath= &quot;C:\App\backend.exe --service&quot; start= auto DisplayName= &quot;My Backend Service&quot;"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="步骤 2：启动完整捕获 (设置 packet-size 为 0 保留完整载荷):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="配置服务崩溃自动重启恢复机制 (sc.exe failure):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="pktmon start --capture --pkt-size 0" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="sc.exe failure MyBackendService reset= 86400 actions= restart/60000/restart/60000/&quot;&quot;/60000" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="pktmon start --capture --pkt-size 0"/>
+                                                        Click="BtnCopySnippet_Click" Tag="sc.exe failure MyBackendService reset= 86400 actions= restart/60000/restart/60000/&quot;&quot;/60000"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
@@ -464,21 +349,21 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <TextBlock Text="步骤 3：停止抓包并重置过滤条件:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="启动 / 停止 / 查询服务状态 (start / stop / query):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="pktmon stop &amp;&amp; pktmon filter remove" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="sc.exe start MyBackendService &amp;&amp; sc.exe query MyBackendService" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="pktmon stop &amp;&amp; pktmon filter remove"/>
+                                                        Click="BtnCopySnippet_Click" Tag="sc.exe start MyBackendService &amp;&amp; sc.exe query MyBackendService"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="步骤 4：无损转为通用标准 pcapng 格式:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="彻底删除已注册服务 (sc.exe delete):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="pktmon etl2pcap PktMon.etl --out trace.pcapng" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="sc.exe stop MyBackendService &amp;&amp; sc.exe delete MyBackendService" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="pktmon etl2pcap PktMon.etl --out trace.pcapng"/>
+                                                        Click="BtnCopySnippet_Click" Tag="sc.exe stop MyBackendService &amp;&amp; sc.exe delete MyBackendService"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
@@ -486,192 +371,39 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 第二部分：网络路由跳数与链路实时诊断 -->
+                        <!-- 第四块：schtasks.exe 原生计划任务调度 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
-                                <TextBlock Text="🌐 2. 网络路由跳数追踪与链路诊断 (Route &amp; Trace)" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
-                                <TextBlock Text="排查网络在哪个网关节点中断、高延迟节点定位、以及局域网物理设备发现：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
-
-                                <!-- 控制区 -->
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="180"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="目标主机 / IP：" VerticalAlignment="Center" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,8,0"/>
-                                    <TextBox x:Name="TxtRouteHost" Grid.Column="1" Text="1.1.1.1" Height="30" VerticalContentAlignment="Center" Background="{DynamicResource BrushInputBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushInputBorder}" Padding="8,0" Margin="0,0,10,0"/>
-
-                                    <WrapPanel Grid.Column="2" VerticalAlignment="Center">
-                                        <Button Content="⚡ tracert -d (快速跳数)" Margin="0,0,6,4" Click="BtnTracertFast_Click"/>
-                                        <Button Content="📊 pathping (链路丢包)" Margin="0,0,6,4" Click="BtnPathping_Click"/>
-                                        <Button Content="🗺️ route print (路由表)" Margin="0,0,6,4" Click="BtnRoutePrint_Click"/>
-                                        <Button Content="🔎 arp -a (局域网设备)" Margin="0,0,6,4" Click="BtnArp_Click"/>
-                                        <Button x:Name="BtnStopDiag" Content="⏹️ 停止" Background="#EF4444" Margin="0,0,6,4" Click="BtnStopDiag_Click" IsEnabled="False"/>
-                                        <Button Content="🧹 清空" Style="{DynamicResource SecondaryButton}" Margin="0,0,0,4" Click="BtnClearDiagLog_Click"/>
-                                    </WrapPanel>
-                                </Grid>
-
-                                <!-- 实时黑色控制台输出框 -->
-                                <TextBox x:Name="TxtDiagConsole" Height="150" IsReadOnly="True" VerticalScrollBarVisibility="Auto"
-                                         Background="#0F172A" Foreground="#38BDF8" FontFamily="Consolas, Courier New" FontSize="11"
-                                         Padding="8" TextWrapping="Wrap"
-                                         Text="[网络诊断控制台已就绪] 请输入目标主机（如 1.1.1.1、baidu.com、github.com），并点击上方诊断命令开始执行...&#x0a;"/>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 第三部分：原生系统诊断矩阵 (resmon / perfmon / Test-NetConnection / eventvwr / wpr) -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
-                            <StackPanel>
-                                <TextBlock Text="🩺 3. Windows 原生系统诊断、死锁句柄与性能剖析矩阵" FontSize="14" FontWeight="Bold" Foreground="#0078D4" Margin="0,0,0,4"/>
-                                <TextBlock Text="操作系统内核内置诊断工具，快速排查文件占用死锁、IOPS 瓶颈、TCP 端口连通性、程序异常崩溃与 ETW 性能剖析：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- 左侧：死锁句柄与性能剖析 -->
-                                    <StackPanel Grid.Column="0" Margin="0,0,7,0">
-                                        <!-- 资源监视器 resmon -->
-                                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                            <StackPanel>
-                                                <Grid Margin="0,0,0,4">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="🔒 资源监视器 (resmon) · 检索占用文件句柄" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                                    <Button Grid.Column="1" Content="🚀 打开 resmon" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
-                                                            Click="BtnLaunchTool_Click" Tag="resmon.exe"/>
-                                                </Grid>
-                                                <TextBlock Text="【典型场景】编译报错 'locked by another process' 或删除文件夹提示被另一程序占用。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,4"/>
-                                                <TextBlock Text="【排错步骤】启动 resmon -> 切换至【CPU】选项卡 -> 展开【关联的句柄】面板 -> 搜索文件名 -> 界面即刻列出占用进程名称与 PID，支持直接终止锁定进程。" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </Border>
-
-                                        <!-- 性能监视器 perfmon -->
-                                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                            <StackPanel>
-                                                <Grid Margin="0,0,0,4">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="📊 性能监视器 (perfmon) · 深度瓶颈剖析" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                                    <Button Grid.Column="1" Content="🚀 打开 perfmon" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
-                                                            Click="BtnLaunchTool_Click" Tag="perfmon.exe"/>
-                                                </Grid>
-                                                <TextBlock Text="【典型场景】磁盘 IOPS 饱和排查、内核硬件中断 (DPC/ISR)、多线程争抢瓶颈定位。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,4"/>
-                                                <TextBlock Text="【排错步骤】添加自定义计数器（如 PhysicalDisk\% Disk Time、Avg. Disk Queue Length），实时监控硬件极限与系统吞吐。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </Border>
-
-                                        <!-- wpr 性能记录器 -->
-                                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
-                                            <StackPanel>
-                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                                <TextBlock Text="📈 wpr.exe (Windows 性能记录器)" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                                <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="6,0,0,0" VerticalAlignment="Center">
-                                                    <TextBlock Text="⚡ 进阶 / ETW 跟踪" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}"/>
-                                                </Border>
-                                            </StackPanel>
-                                                <TextBlock Text="【典型场景】极度精确抓取 CPU 锁竞争 (Lock Contention)、线程挂起与内核调度瓶颈，配合 WPA 工具深度剖析。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-                                                <Grid>
-                                                    <TextBox Text="wpr -start GeneralProfile &amp;&amp; echo 复现后执行: wpr -stop trace.etl" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                            Click="BtnCopySnippet_Click" Tag="wpr -start GeneralProfile"/>
-                                                </Grid>
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
-
-                                    <!-- 右侧：端口探测与崩溃排错 -->
-                                    <StackPanel Grid.Column="1" Margin="7,0,0,0">
-                                        <!-- Test-NetConnection -->
-                                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                            <StackPanel>
-                                                <TextBlock Text="📡 Test-NetConnection · 原生 TCP 端口测试 (免 telnet)" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                                <TextBlock Text="【典型场景】测试数据库 3306/5432、Redis 6379 或 Web 443 端口在远程服务器是否开放：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-                                                <Grid Margin="0,0,0,4">
-                                                    <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                    <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                            Click="BtnCopySnippet_Click" Tag="Test-NetConnection github.com -Port 443"/>
-                                                </Grid>
-                                                <TextBlock Text="简写命令：tnc 192.168.1.1 -p 8080 -TraceRoute (自动探测端口并跟踪路由)" FontSize="10" Foreground="{DynamicResource BrushAlertGreenText}"/>
-                                            </StackPanel>
-                                        </Border>
-
-                                        <!-- 事件查看器 eventvwr -->
-                                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
-                                            <StackPanel>
-                                                <Grid Margin="0,0,0,4">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="💥 事件查看器 (eventvwr) · 程序闪退崩溃排查" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                                    <Button Grid.Column="1" Content="🚀 打开 eventvwr" Style="{DynamicResource SecondaryButton}" Padding="8,2" FontSize="11"
-                                                            Click="BtnLaunchTool_Click" Tag="eventvwr.msc"/>
-                                                </Grid>
-                                                <TextBlock Text="【典型场景】程序或后台服务静默闪退、没有任何弹窗报错，需要定位抛出异常的具体模块。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,4"/>
-                                                <TextBlock Text="【排错步骤】打开 eventvwr -> 导航至【Windows 日志】->【应用程序】-> 筛选日志级别为【错误】-> 查看来源为 .NET Runtime 或 Application Error 的崩溃调用栈。" FontSize="10" Foreground="{DynamicResource BrushAlertPurpleText}" TextWrapping="Wrap"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </StackPanel>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 4: 原生 CLI、服务与 API 调试器 (certutil / fsutil / sc / irm) -->
-            <TabItem Header="📜 原生 CLI、服务与 API 调试器">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-                        <!-- 第一块：certutil 与 fsutil 原生利器 -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
-                            <StackPanel>
-                                <TextBlock Text="🛡️ 1. 高频文件、哈希与加密实用工具 (certutil &amp; fsutil)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
-                                <TextBlock Text="无需安装 HashCalc、WinRAR 或其它测试生成工具，系统原生具备密码学与文件系统操作能力：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="⏰ 4. schtasks.exe 原生计划任务调度 (Windows 版 crontab)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertInfoBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="定时自动化" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertInfoText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="无需常驻进程，依靠 Windows 内置任务计划服务精准触发脚本执行，支持每日定时、用户登录触发或系统空闲启动：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <!-- certutil 计算哈希 -->
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <Grid Margin="0,0,0,4">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="🔐 certutil -hashfile (秒验 SHA256/MD5 哈希)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                                <Button Grid.Column="1" Content="📁 选文件测哈希" Background="#0284C7" Padding="6,2" FontSize="10" Click="BtnPickFileHash_Click"/>
-                                            </Grid>
-                                            <TextBlock Text="快速核对官方安装包哈希防篡改，无需任何校验小工具：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="创建每日凌晨 02:00 定时执行任务 (/sc daily):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="certutil -hashfile .\app.zip SHA256" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="schtasks /create /tn &quot;DailyCleanTask&quot; /tr &quot;powershell.exe -ExecutionPolicy Bypass -File C:\Scripts\clean.ps1&quot; /sc daily /st 02:00 /ru SYSTEM" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="certutil -hashfile .\app.zip SHA256"/>
+                                                        Click="BtnCopySnippet_Click" Tag="schtasks /create /tn &quot;DailyCleanTask&quot; /tr &quot;powershell.exe -ExecutionPolicy Bypass -File C:\Scripts\clean.ps1&quot; /sc daily /st 02:00 /ru SYSTEM"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
-
-                                    <!-- certutil Base64 编解码 -->
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="🔤 certutil Base64 编解码 (免开外部网页泄密)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                            <TextBlock Text="敏感密钥、证书或文本快速进行 Base64 编码与还原：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="创建用户登录时自动触发的自启任务 (/sc onlogon):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="certutil -encode input.txt out.b64 &amp;&amp; certutil -decode out.b64 res.txt" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="schtasks /create /tn &quot;DevEnvInit&quot; /tr &quot;C:\Tools\init_env.bat&quot; /sc onlogon /rl HIGHEST" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="certutil -encode input.txt out.b64 &amp;&amp; certutil -decode out.b64 res.txt"/>
+                                                        Click="BtnCopySnippet_Click" Tag="schtasks /create /tn &quot;DevEnvInit&quot; /tr &quot;C:\Tools\init_env.bat&quot; /sc onlogon /rl HIGHEST"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
@@ -682,39 +414,23 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <!-- fsutil 秒建大文件 -->
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <Grid Margin="0,0,0,4">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Text="⚡ fsutil 秒级创建测试大文件" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" VerticalAlignment="Center"/>
-                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                                    <Button Content="⚡ 100MB" Background="#10B981" Padding="6,2" FontSize="10" Margin="0,0,4,0" Click="BtnCreateDummyFile100M_Click"/>
-                                                    <Button Content="🚀 1GB" Background="#0284C7" Padding="6,2" FontSize="10" Click="BtnCreateDummyFile1G_Click"/>
-                                                </StackPanel>
-                                            </Grid>
-                                            <TextBlock Text="瞬时分配簇空间（100MB=104857600，1GB=1073741824，10GB=10737418240），测试网络与 I/O 实用工具：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="立刻手动触发任务运行 (schtasks /run):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="fsutil file createnew test_100m.dat 104857600" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="schtasks /run /tn &quot;DailyCleanTask&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="fsutil file createnew test_100m.dat 104857600"/>
+                                                        Click="BtnCopySnippet_Click" Tag="schtasks /run /tn &quot;DailyCleanTask&quot;"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
-
-                                    <!-- robocopy 多线程镜像 -->
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="🚀 robocopy 32 线程断点镜像同步 (优于普通 copy)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                            <TextBlock Text="支持多线程并发、断点续传、保留所有 NTFS 权限与时间戳：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="查询任务执行状态或强制删除任务 (/query /delete):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="robocopy C:\Src D:\Dst /E /MT:32 /R:1 /W:1" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="schtasks /query /tn &quot;DailyCleanTask&quot; /fo LIST &amp;&amp; schtasks /delete /tn &quot;DailyCleanTask&quot; /f" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="robocopy C:\Src D:\Dst /E /MT:32 /R:1 /W:1"/>
+                                                        Click="BtnCopySnippet_Click" Tag="schtasks /query /tn &quot;DailyCleanTask&quot; /fo LIST &amp;&amp; schtasks /delete /tn &quot;DailyCleanTask&quot; /f"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
@@ -722,129 +438,66 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 第二块：服务管理与自动化调度 (sc & schtasks) -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
-                            <StackPanel>
-                                <TextBlock Text="⚙️ 2. 服务注册与自动化调度 (Windows 版 systemctl 与 crontab)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
-                                <TextBlock Text="将编译完成的 Go / Rust / Python / Node 守护进程直接注册为系统后台服务，无需保持控制台前台驻留：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- sc.exe -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
-                                        <StackPanel>
-                                            <TextBlock Text="📦 sc.exe (Windows 服务控制器 · 类似 systemctl)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="⚠️ 重要避坑：binPath= 和 start= 等号后面必须有且仅有一个空格！" FontSize="10" Foreground="{DynamicResource BrushAlertWarningText}" Margin="0,2,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="sc.exe create MyService binPath= &quot;C:\path\app.exe&quot; start= auto" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="sc.exe create MyService binPath= &quot;C:\path\app.exe&quot; start= auto"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <!-- schtasks.exe -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="⏰ schtasks.exe (计划任务 CLI · 类似 crontab)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="命令行创建定时任务，支持基于时间、开机或特定系统事件触发：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="schtasks /create /tn &quot;AutoBackup&quot; /tr &quot;D:\job.bat&quot; /sc daily /st 02:00" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="schtasks /create /tn &quot;AutoBackup&quot; /tr &quot;D:\job.bat&quot; /sc daily /st 02:00"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 第三块：PowerShell 原生 API 调试器 (irm) 与现代 CLI 速查 -->
+                        <!-- 第五块：原生轻量网络请求与 REST API 调试 (irm 与 curl.exe) -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="💻 3. PowerShell 原生 API 调试器与高频 CLI 工具速查" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
-                                <TextBlock Text="无需打开 Postman，PowerShell 自带强大的 HTTP 请求与强类型对象 JSON 序列化能力：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="🌐 5. 原生轻量网络请求与 REST API 调试 (irm 与 curl.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertSuccessBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="免装 Postman" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertSuccessText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="无需启动庞大的 Electron 工具，PowerShell 原生内置 JSON 对象反序列化管道，Win10 1803+ 亦默认集成原生 curl.exe：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <!-- irm 调试 API -->
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <TextBlock Text="🌐 Invoke-RestMethod (别名 irm) 极速 API 调试" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="自动把返回的 JSON 序列化为对象，可直接点属性访问（免装 Postman）：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                            <TextBlock Text="PowerShell irm 自动反序列化 JSON 为强类型对象:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="可直接像对象一样 .tag_name 访问属性：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="$d = irm https://api.github.com/repos/microsoft/terminal; $d.stargazers_count" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                                <TextBox Text="$release = irm https://api.github.com/repos/cli/cli/releases/latest; $release.tag_name" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="$d = irm https://api.github.com/repos/microsoft/terminal; $d.stargazers_count"/>
+                                                        Click="BtnCopySnippet_Click" Tag="$release = irm https://api.github.com/repos/cli/cli/releases/latest; $release.tag_name"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
-
-                                    <!-- 原生 curl.exe 避坑 -->
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="🌐 原生 HTTP 请求与测速 (curl.exe)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="⚠️ 重要避坑：PowerShell 5.1 默认将 curl 别名给 Invoke-WebRequest，务必打 curl.exe：" FontSize="10" Foreground="{DynamicResource BrushAlertWarningText}" Margin="0,2,0,4"/>
+                                            <TextBlock Text="PowerShell 原生发送 POST 请求传递 JSON 载荷:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="使用 -Method Post -ContentType 'application/json'：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
                                             <Grid>
-                                                <TextBox Text="curl.exe -I https://github.com" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
+                                                <TextBox Text="irm -Method Post -Uri &quot;http://127.0.0.1:8080/api/echo&quot; -Body '{\&quot;msg\&quot;:\&quot;ping\&quot;}' -ContentType &quot;application/json&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
                                                 <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="curl.exe -I https://github.com"/>
+                                                        Click="BtnCopySnippet_Click" Tag="irm -Method Post -Uri &quot;http://127.0.0.1:8080/api/echo&quot; -Body '{\&quot;msg\&quot;:\&quot;ping\&quot;}' -ContentType &quot;application/json&quot;"/>
                                             </Grid>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- 一步进 BIOS -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
-                                        <StackPanel>
-                                            <TextBlock Text="⚡ 一步重启进入 BIOS 固件 (shutdown /r /fw)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="开机速度太快来不及按 Del/F2 时，以管理员身份执行直接重启进主板 BIOS：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="shutdown /r /fw /t 0" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="shutdown /r /fw /t 0"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <!-- netstat 端口定位 -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="🔍 端口占用快速定位与强制终止 (netstat + taskkill)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="查询端口 PID，再用 taskkill /f /pid 强杀进程释放端口：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="netstat -ano | findstr :8080 &amp;&amp; taskkill /f /pid &lt;PID&gt;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="netstat -ano | findstr :8080"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <TextBlock Text="Windows 原生 curl.exe 调试带 Header 与 POST 载荷 (⚠️ PS5.1 下务必加 .exe 扩展名):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                        <Grid>
+                                            <TextBox Text="curl.exe -i -X POST &quot;http://127.0.0.1:8080/api&quot; -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;:\&quot;agy\&quot;}&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
+                                            <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
+                                                    Click="BtnCopySnippet_Click" Tag="curl.exe -i -X POST &quot;http://127.0.0.1:8080/api&quot; -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;:\&quot;agy\&quot;}&quot;"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
 
-            <!-- Tab 5: Shell 生态与脚本编程 (CMD / PowerShell / pwsh / ExecutionPolicy / $PROFILE) -->
-            <TabItem Header="🐚 Shell 生态与脚本编程">
+            <!-- Tab 3: Shell 生态与差异对比 (保留并优化原有 Tab 5 内容) -->
+            <TabItem Header="🐚 Shell 生态与差异对比">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
-
                         <!-- 第一块：Shell 家族族谱与原生真值表 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
@@ -863,7 +516,7 @@
                                 <TextBlock Text="Windows 体系下多种命令行工具与 Shell 宿主并存，以下为官方底层的代际脉络、原生属性与技术本质真值表："
                                            FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,10"/>
 
-                                <!-- 5 大成员对照卡片矩阵 (2 列排布) -->
+                                <!-- 4 大成员对照卡片矩阵 (2 列排布) -->
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -930,21 +583,6 @@
                                     </Border>
                                 </Grid>
 
-                                <!-- 5. VBScript 弃用卡片 -->
-                                <Border Background="{DynamicResource BrushAlertWarningBg}" BorderBrush="{DynamicResource BrushAlertWarningBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <StackPanel Grid.Column="0">
-                                            <TextBlock Text="⚠️ VBScript (.vbs / cscript / wscript) 微软官方淘汰声明" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertWarningText}"/>
-                                            <TextBlock Text="• 现状：微软官方已正式宣布弃用 VBScript。Windows 11 24H2+ 起已将其移为【按需可选功能 (FOD)】，未来更新中将默认关闭并彻底剥离！" FontSize="10" Foreground="{DynamicResource BrushAlertWarningText}" TextWrapping="Wrap"/>
-                                            <TextBlock Text="• 警示：严禁在新项目中使用 .vbs；历史后台静默运行脚本应尽快迁移至现代 PowerShell (.ps1)。" FontSize="10" Foreground="{DynamicResource BrushAlertErrorText}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,2,0,0"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-
                                 <!-- 高效技巧：资源管理器地址栏直接启动终端 -->
                                 <Border Background="{DynamicResource BrushAlertSuccessBg}" BorderBrush="{DynamicResource BrushAlertSuccessBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
                                     <Grid>
@@ -975,7 +613,7 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 第二块：脚本编写避坑指南 (ExecutionPolicy + 语法陷阱 + 编码陷阱) -->
+                        <!-- 第二块：ExecutionPolicy 策略与避坑 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,8">
@@ -984,7 +622,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🛡️ 2. PowerShell 脚本执行策略 (ExecutionPolicy) 与编写避坑" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        <TextBlock Text="🛡️ 2. PowerShell 脚本执行策略 (ExecutionPolicy) 与环境治理" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                         <Border Background="{DynamicResource BrushAlertWarningBg}" BorderBrush="{DynamicResource BrushAlertWarningBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
                                             <TextBlock Text="⚡ 避坑要点" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource BrushAlertWarningText}"/>
                                         </Border>
@@ -1004,7 +642,7 @@
                                         </Grid>
                                         <TextBlock Text="• 权限认知误区：遇到【在此系统上禁止运行脚本】报错，绝非权限不够，而是触发了 Windows 默认的执行策略（安全护栏而非安全边界）。"
                                                    FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        <TextBlock Text="• 策略等级对比：Restricted (默认禁止运行所有脚本) | RemoteSigned (⭐最佳推荐：本地编写自由跑，网上下载需签名) | AllSigned (必须全签名) | Bypass (无视任何策略，仅供批处理自动化临时传参)。"
+                                        <TextBlock Text="• 策略等级对比：Restricted (默认禁止运行所有脚本) | RemoteSigned (⭐最佳推荐：本地编写自由跑，网上下载需签名) | AllSigned (必须全签名) | Bypass (无视任何策略，仅供自动化临时传参)。"
                                                    FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,4"/>
                                         <TextBlock Text="• 为什么无需提权：使用 -Scope CurrentUser 仅修改当前用户配置，无需管理员身份即可生效，安全纯净无弹窗！"
                                                    FontSize="10" Foreground="{DynamicResource BrushSuccess}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,8"/>
@@ -1034,14 +672,12 @@
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
                                         <StackPanel>
                                             <TextBlock Text="⚠️ 变量与退出码注意点 (.bat vs .ps1)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertErrorText}" Margin="0,0,0,4"/>
-                                            
                                             <TextBlock Text="1. 变量提取机制：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                             <TextBlock Text="• CMD 批处理：%VAR%（静态只读），循环内需 setlocal enabledelayedexpansion 并用 !VAR!。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                             <TextBlock Text="• PowerShell：$env:VAR（读写系统环境变量），$var（内部脚本变量）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-
                                             <TextBlock Text="2. 退出码与错误中断：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                             <TextBlock Text="• CMD：%ERRORLEVEL% 表示上一程序退出码 (0 为成功)。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                            <TextBlock Text="• PowerShell：$LASTEXITCODE 表示外部 .exe 退出码；$? 表示上一条 cmdlet 成功状态；遇错即停需首行声明 $ErrorActionPreference = 'Stop'。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                            <TextBlock Text="• PowerShell：$LASTEXITCODE 表示外部程序退出码；$? 表示上一条 cmdlet 成功状态；遇错即停声明 $ErrorActionPreference = 'Stop'。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>
 
@@ -1049,11 +685,9 @@
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="🔤 脚本编码规范（编码选择与乱码预防）" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertWarningText}" Margin="0,0,0,4"/>
-                                            
                                             <TextBlock Text="1. CMD 批处理 (.bat) 编码法则：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                             <TextBlock Text="• 中文 Windows CMD 默认代码页为 CP936 (GBK)。若保存为纯 UTF-8，中文注释极易导致语法解析截断！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                             <TextBlock Text="• 对策：保存为 ANSI / GBK 编码，或在首行声明 chcp 65001 >nul 强制切 UTF-8。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-
                                             <TextBlock Text="2. PowerShell 5.1 (.ps1) 编码法则：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                             <TextBlock Text="• PowerShell 5.1 默认编码要求带 BOM 的 UTF-8（UTF-8 with BOM）。保存为无 BOM 的纯 UTF-8 时，中文极易被吞乱码！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                             <TextBlock Text="• 对策：在 VS Code 状态栏右下角切换为【UTF-8 with BOM】保存；PowerShell 7+ 则全面支持无 BOM 纯 UTF-8。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
@@ -1087,7 +721,6 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <!-- CMD -->
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
                                         <StackPanel>
                                             <TextBlock Text="⬛ CMD：按字符搜索进程" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
@@ -1099,7 +732,6 @@
                                             </Grid>
                                         </StackPanel>
                                     </Border>
-                                    <!-- PS -->
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="🟦 PowerShell：按属性降序取内存前 5 进程" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
@@ -1113,45 +745,12 @@
                                     </Border>
                                 </Grid>
 
-                                <!-- 矩阵卡片 2: 端口占用与反查进程 -->
+                                <!-- 矩阵卡片 2: 文件递归查找与时间排序 -->
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <!-- CMD -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
-                                        <StackPanel>
-                                            <TextBlock Text="⬛ CMD：netstat 文本过滤端口" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="只给出数字 PID，需人眼记下再手动敲 tasklist 查名字：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="netstat -ano | findstr :8080" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="11" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="netstat -ano | findstr :8080"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                    <!-- PS -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="🟦 PowerShell：原生 TCP 强类型连接对象查询" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
-                                            <TextBlock Text="原生 TCP 连接结构化对象直接过滤本地端口与归属 PID：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid>
-                                                <TextBox Text="Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, State, OwningProcess" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, State, OwningProcess"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-
-                                <!-- 矩阵卡片 3: 文件递归查找与时间排序 -->
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <!-- CMD -->
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
                                         <StackPanel>
                                             <TextBlock Text="⬛ CMD：dir 递归查找文件" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
@@ -1163,7 +762,6 @@
                                             </Grid>
                                         </StackPanel>
                                     </Border>
-                                    <!-- PS -->
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="🟦 PowerShell：对象管道按修改时间取最新 10 个" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
@@ -1177,13 +775,12 @@
                                     </Border>
                                 </Grid>
 
-                                <!-- 矩阵卡片 4: 文件内容搜索 (Grep) -->
-                                <Grid Margin="0,0,0,8">
+                                <!-- 矩阵卡片 3: 文件内容搜索 (Grep) -->
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <!-- CMD -->
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
                                         <StackPanel>
                                             <TextBlock Text="⬛ CMD：findstr 全局搜索文件内容" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
@@ -1195,7 +792,6 @@
                                             </Grid>
                                         </StackPanel>
                                     </Border>
-                                    <!-- PS -->
                                     <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="🟦 PowerShell：Select-String 对象级模式匹配" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
@@ -1208,94 +804,10 @@
                                         </StackPanel>
                                     </Border>
                                 </Grid>
-
-                                <!-- 矩阵卡片 5: 网络探测与哈希校验 -->
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <!-- CMD -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
-                                        <StackPanel>
-                                            <TextBlock Text="⬛ CMD：ping 与 certutil 哈希校验" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="ping 仅测 ICMP，certutil 测哈希需剔除多余文案：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid Margin="0,0,0,4">
-                                                <TextBox Text="ping -n 4 github.com" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="ping -n 4 github.com"/>
-                                            </Grid>
-                                            <Grid>
-                                                <TextBox Text="certutil -hashfile target.zip SHA256" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="certutil -hashfile target.zip SHA256"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                    <!-- PS -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="🟦 PowerShell：Test-NetConnection 与 Get-FileHash" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
-                                            <TextBlock Text="原生支持 TCP 端口三次握手探测，直接获得精准 Hash 字段：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid Margin="0,0,0,4">
-                                                <TextBox Text="Test-NetConnection github.com -Port 443" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="Test-NetConnection github.com -Port 443"/>
-                                            </Grid>
-                                            <Grid>
-                                                <TextBox Text="Get-FileHash ./target.zip -Algorithm SHA256 | Format-List" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="Get-FileHash ./target.zip -Algorithm SHA256 | Format-List"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-
-                                <!-- 矩阵卡片 6: 环境变量 PATH 拆分与多线程复制 -->
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <!-- CMD -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
-                                        <StackPanel>
-                                            <TextBlock Text="⬛ CMD：robocopy 16 线程镜像与 clip 注入剪贴板" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="CMD 经典多线程断点传输与输出管道转剪贴板：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid Margin="0,0,0,4">
-                                                <TextBox Text="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1"/>
-                                            </Grid>
-                                            <Grid>
-                                                <TextBox Text="ipconfig /all | clip" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="ipconfig /all | clip"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                    <!-- PS -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="🟦 PowerShell：PATH 智能拆分与网络一键执行" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
-                                            <TextBlock Text="将粘连的 PATH 按分号逐行输出，以及现代 irm 管道执行：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
-                                            <Grid Margin="0,0,0,4">
-                                                <TextBox Text="$env:PATH -split ';'" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="$env:PATH -split ';'"/>
-                                            </Grid>
-                                            <Grid>
-                                                <TextBox Text="irm https://get.scoop.sh | iex" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="irm https://get.scoop.sh | iex"/>
-                                            </Grid>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
                             </StackPanel>
                         </Border>
 
-                        <!-- 第四块：个人配置与现代演进 ($PROFILE / pwsh 7 / VBS 迁移) -->
+                        <!-- 第四块：个人配置与现代演进 ($PROFILE) -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
                                 <Grid Margin="0,0,0,8">
@@ -1304,14 +816,13 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🚀 4. PowerShell $PROFILE 个人配置文件与现代演进" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        <TextBlock Text="🚀 4. PowerShell $PROFILE 个人配置文件初始化" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                                         <Border Background="{DynamicResource BrushAlertSuccessBg}" BorderBrush="{DynamicResource BrushAlertSuccessBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
                                             <TextBlock Text="⚡ 效率工具" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource BrushAlertSuccessText}"/>
                                         </Border>
                                     </WrapPanel>
                                 </Grid>
 
-                                <!-- 卡片 1: $PROFILE 个人别名与函数配置 -->
                                 <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
                                     <StackPanel>
                                         <TextBlock Text="📝 PowerShell $PROFILE 个人配置文件（规范化别名与函数配置）" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
@@ -1323,48 +834,341 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <Button Grid.Column="0" Content="📝 配置 PS 5.1 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnOpenProfilePs5_Click"/>
-                                            <Button Grid.Column="1" Content="📝 配置 pwsh 7 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="4,0,4,0" Click="BtnOpenProfilePwsh7_Click"/>
+                                            <Button Grid.Column="0" Content="📝 打开 PS 5.1 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnOpenProfilePs5_Click"/>
+                                            <Button Grid.Column="1" Content="📝 打开 pwsh 7 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="4,0,4,0" Click="BtnOpenProfilePwsh7_Click"/>
                                             <Button Grid.Column="2" Content="📋 复制推荐模板脚本" Background="#16A34A" Margin="4,0,0,0" Click="BtnCopyProfileTemplate_Click"/>
                                         </Grid>
                                     </StackPanel>
                                 </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                                <!-- 卡片 2 与 卡片 3: pwsh 7 升级 与 VBS 迁移 (双栏排布) -->
-                                <Grid>
+            <!-- Tab 4: 📝 原生脚本与免编译开发全家谱 -->
+            <TabItem Header="📝 原生脚本与免编译开发全家谱">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+
+                        <!-- 板块 1: 认知地图——Windows 原生免编译全家谱总览表 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <WrapPanel Margin="0,0,0,6">
+                                    <TextBlock Text="🗺️ 板块 1: 认知地图 —— Windows 原生免编译开发全家谱总览" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="底层执行引擎对照" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="Windows 体系无需安装任何编译工具链或外部 Runtime，靠内置解释器就能双击或命令行直接执行的一整套纯血文件格式："
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                                <!-- 全家谱表格矩阵 -->
+                                <Border BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="1" CornerRadius="4">
+                                    <Grid Background="{DynamicResource BrushCardBg}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="130"/>
+                                            <ColumnDefinition Width="160"/>
+                                            <ColumnDefinition Width="110"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- 表头 -->
+                                        <Border Grid.Row="0" Grid.ColumnSpan="4" Background="{DynamicResource BrushTableHeaderBg}" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1" Padding="8,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="130"/>
+                                                    <ColumnDefinition Width="160"/>
+                                                    <ColumnDefinition Width="110"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="扩展名" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                                <TextBlock Grid.Column="1" Text="默认解释引擎" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                                <TextBlock Grid.Column="2" Text="生命周期现状" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                                <TextBlock Grid.Column="3" Text="核心定位与使用建议" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 行 1: .bat / .cmd -->
+                                        <Border Grid.Row="1" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text=".bat / .cmd" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+                                        <Border Grid.Row="1" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="cmd.exe" FontFamily="Consolas" FontSize="11" Foreground="#0284C7"/>
+                                        </Border>
+                                        <Border Grid.Row="1" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="🟢 现役主力" FontSize="10" FontWeight="Bold" Foreground="#10B981"/>
+                                        </Border>
+                                        <Border Grid.Row="1" Grid.Column="3" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1">
+                                            <TextBlock Text="轻量极速启动胶水脚本、开机引导包装、全 Windows 历史版本 100% 绝对兼容。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+
+                                        <!-- 行 2: .ps1 -->
+                                        <Border Grid.Row="2" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text=".ps1" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+                                        <Border Grid.Row="2" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="powershell.exe / pwsh" FontFamily="Consolas" FontSize="11" Foreground="#0284C7"/>
+                                        </Border>
+                                        <Border Grid.Row="2" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="⭐ 现代主力" FontSize="10" FontWeight="Bold" Foreground="#0284C7"/>
+                                        </Border>
+                                        <Border Grid.Row="2" Grid.Column="3" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1">
+                                            <TextBlock Text="工程级系统管理、强类型对象管道、.NET 生态无缝调用、现代化复杂业务自动化运维。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+
+                                        <!-- 行 3: .reg -->
+                                        <Border Grid.Row="3" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text=".reg" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+                                        <Border Grid.Row="3" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="regedit.exe" FontFamily="Consolas" FontSize="11" Foreground="#0284C7"/>
+                                        </Border>
+                                        <Border Grid.Row="3" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="🟢 现役配置" FontSize="10" FontWeight="Bold" Foreground="#10B981"/>
+                                        </Border>
+                                        <Border Grid.Row="3" Grid.Column="3" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1">
+                                            <TextBlock Text="底层注册表结构化声明脚本。用于系统优化注入、软件免安装便携化配置备份与分发。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+
+                                        <!-- 行 4: .hta -->
+                                        <Border Grid.Row="4" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text=".hta" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+                                        <Border Grid.Row="4" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="mshta.exe" FontFamily="Consolas" FontSize="11" Foreground="#0284C7"/>
+                                        </Border>
+                                        <Border Grid.Row="4" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,1">
+                                            <TextBlock Text="🟡 极简GUI" FontSize="10" FontWeight="Bold" Foreground="#D97706"/>
+                                        </Border>
+                                        <Border Grid.Row="4" Grid.Column="3" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,0,1">
+                                            <TextBlock Text="HTML Application 原生无依赖前端微应用。无需 Electron / WebView2 即可弹出完整 Win32 权限窗口。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                        </Border>
+
+                                        <!-- 行 5: .vbs / .js / .wsf -->
+                                        <Border Grid.Row="5" Grid.Column="0" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                            <TextBlock Text=".vbs / .js / .wsf" FontFamily="Consolas" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                        </Border>
+                                        <Border Grid.Row="5" Grid.Column="1" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                            <TextBlock Text="wscript / cscript (WSH)" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}"/>
+                                        </Border>
+                                        <Border Grid.Row="5" Grid.Column="2" Padding="8,6" BorderBrush="{DynamicResource BrushTableBorder}" BorderThickness="0,0,1,0">
+                                            <TextBlock Text="🔴 逐步弃用" FontSize="10" FontWeight="Bold" Foreground="#EF4444"/>
+                                        </Border>
+                                        <Border Grid.Row="5" Grid.Column="3" Padding="8,6">
+                                            <TextBlock Text="历史 COM 脚本宿主。24H2 起已移为按需可选功能，未来将被彻底剥离，严禁在新项目中采用。" FontSize="10" TextWrapping="Wrap" Foreground="{DynamicResource BrushAlertErrorText}"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: .bat 批处理从零写起 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="🔨 板块 2: .bat 批处理从零写起 —— 核心语法与高可用实战" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="经典批处理精要" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="虽然批处理语法古老，但在极客开箱、制作免依赖自解压安装包与双击启动器中依然不可替代。掌握以下 5 大核心机制即可写出稳健脚本："
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                                <!-- 语法 5 大关键卡片 (双栏排布) -->
+                                <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-
-                                    <!-- pwsh 7 升级 -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
                                         <StackPanel>
-                                            <TextBlock Text="⚡ 升级到 PowerShell 7+ (pwsh) 官方推荐命令" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
-                                            <TextBlock Text="现代化开发建议将主力 Shell 升级至 pwsh 7：启动速度大幅提升，原生并发流水线，三元表达式等现代化语法，并与 Windows Terminal 深度集成："
-                                                       FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                            <Grid>
-                                                <TextBox Text="winget install --id Microsoft.PowerShell --source winget" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="winget install --id Microsoft.PowerShell --source winget"/>
-                                            </Grid>
+                                            <TextBlock Text="1. 变量与延迟变量扩展 (!VAR! vs %VAR%):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="在 for 循环或 if 代码块中，%VAR% 在预解析时就已被替换导致读不到循环内的实时值！必须使用 SetLocal EnableDelayedExpansion 并在代码块内使用 !VAR! 取值。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                            <TextBlock Text="2. 传参机制与特殊修饰符:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="%0 (当前脚本文件名) | %1~%9 (位置参数) | %* (所有参数) | %~dp0 (极其重要：当前脚本所在目录的绝对驱动器+路径，带反斜杠结尾，防 cd 路径漂移！)" FontSize="10" Foreground="{DynamicResource BrushSuccess}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>
-
-                                    <!-- VBS 迁移 -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="🔄 VBScript 静默启动迁移至现代 PowerShell" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertWarningText}" Margin="0,0,0,4"/>
-                                            <TextBlock Text="VBScript 即将被 Windows 彻底剥离，历史通过 WshShell.Run 静默运行程序的脚本，请全面迁移至 PowerShell 的 Start-Process："
-                                                       FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                            <Grid>
-                                                <TextBox Text="Start-Process -FilePath &quot;app.exe&quot; -ArgumentList &quot;--silent&quot; -WindowStyle Hidden" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4"/>
-                                                <Button Content="📋" HorizontalAlignment="Right" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10"
-                                                        Click="BtnCopySnippet_Click" Tag="Start-Process -FilePath &quot;app.exe&quot; -ArgumentList &quot;--silent&quot; -WindowStyle Hidden"/>
-                                            </Grid>
+                                            <TextBlock Text="3. 退出状态码与错误跳转 (%ERRORLEVEL%):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="上一条命令执行失败时 %ERRORLEVEL% 通常非 0。使用 if %ERRORLEVEL% neq 0 (goto :err) 拦截错误；脚本结束务必用 exit /b %CODE% 退出，切忌裸写 exit 导致宿主终端直接被关掉。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                            <TextBlock Text="4. for 循环与文本解析 (for /f):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="遍历文件: for %%f in (*.log) do del &quot;%%f&quot;&#x0a;遍历命令输出: for /f &quot;tokens=1,2&quot; %%a in ('tasklist') do echo %%a %%b" FontSize="10" FontFamily="Consolas" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
+
+                                <!-- 实战完整脚本 clean_temp.bat -->
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="📄 工业级范例脚本：clean_temp.bat (包含 %~dp0、延迟扩展与错误治理)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 一键复制 clean_temp.bat 源码" Background="#16A34A" FontSize="10" Padding="8,2"
+                                                    Click="BtnCopySnippet_Click" Tag="@echo off&#x0d;&#x0a;setlocal EnableExtensions EnableDelayedExpansion&#x0d;&#x0a;title Windows 原生临时文件安全清理工具&#x0d;&#x0a;cd /d &quot;%~dp0&quot;&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在初始化环境，工作根目录：%cd%&#x0d;&#x0a;set /a deleted_count=0&#x0d;&#x0a;set &quot;TARGET_DIR=%TEMP%&quot;&#x0d;&#x0a;&#x0d;&#x0a;if not exist &quot;!TARGET_DIR!&quot; (&#x0d;&#x0a;    echo [ERROR] 目标临时目录不存在: !TARGET_DIR!&#x0d;&#x0a;    exit /b 1&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在扫描并清理临时垃圾文件...&#x0d;&#x0a;for /r &quot;!TARGET_DIR!&quot; %%i in (*.tmp *.log) do (&#x0d;&#x0a;    del /f /q &quot;%%i&quot; >nul 2>&amp;1&#x0d;&#x0a;    if not exist &quot;%%i&quot; (&#x0d;&#x0a;        set /a deleted_count+=1&#x0d;&#x0a;    )&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [SUCCESS] 清理完成！共释放 !deleted_count! 个无用临时文件。&#x0d;&#x0a;endlocal&#x0d;&#x0a;exit /b 0"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="180" VerticalScrollBarVisibility="Auto"
+                                                 Text="@echo off&#x0d;&#x0a;setlocal EnableExtensions EnableDelayedExpansion&#x0d;&#x0a;title Windows 原生临时文件安全清理工具&#x0d;&#x0a;cd /d &quot;%~dp0&quot;&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在初始化环境，工作根目录：%cd%&#x0d;&#x0a;set /a deleted_count=0&#x0d;&#x0a;set &quot;TARGET_DIR=%TEMP%&quot;&#x0d;&#x0a;&#x0d;&#x0a;if not exist &quot;!TARGET_DIR!&quot; (&#x0d;&#x0a;    echo [ERROR] 目标临时目录不存在: !TARGET_DIR!&#x0d;&#x0a;    exit /b 1&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在扫描并清理临时垃圾文件...&#x0d;&#x0a;for /r &quot;!TARGET_DIR!&quot; %%i in (*.tmp *.log) do (&#x0d;&#x0a;    del /f /q &quot;%%i&quot; >nul 2>&amp;1&#x0d;&#x0a;    if not exist &quot;%%i&quot; (&#x0d;&#x0a;        set /a deleted_count+=1&#x0d;&#x0a;    )&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [SUCCESS] 清理完成！共释放 !deleted_count! 个无用临时文件。&#x0d;&#x0a;endlocal&#x0d;&#x0a;exit /b 0"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: .ps1 PowerShell 脚本工程实战 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="⚡ 板块 3: .ps1 PowerShell 脚本工程实战 —— 强类型与管道架构" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="现代工程化标准" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="告别随手乱写的散装命令，规范的 PowerShell 脚本必须具备：高级参数声明 (param)、管道流处理、结构化异常拦截 (try/catch) 与现代日志输出："
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                                <!-- 4 个核心要素说明 -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="1. [CmdletBinding()] 与 param() 参数声明:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="声明参数的类型约束 [string]、[int]、必填项 [Parameter(Mandatory=$true)] 与默认值，自动获得 -Verbose / -WhatIf / -Debug 等官方高阶特性支持。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                            <TextBlock Text="2. 管道流式的过滤与计算:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="通过 Where-Object { $_.Length -gt 10MB } 进行内存中瞬时筛选，避免写笨拙的多层嵌套循环，代码极简且性能极佳。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="3. 结构化 try / catch / finally 异常捕获:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="配合 -ErrorAction Stop 确保抛出终止型异常，catch [System.IO.IOException] 精确捕获磁盘/句柄占用冲突，并在 finally 中优雅释放流资源。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                            <TextBlock Text="4. 退出状态控制 ($LASTEXITCODE 与 return):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="外部程序调用关注 $LASTEXITCODE；供 CI/CD 识别失败时，在脚本末尾使用 exit 1 传递给调用方 Runner。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 实战完整脚本 backup_artifacts.ps1 -->
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="📄 现代工程范例脚本：backup_artifacts.ps1 (参数校验、异常拦截与 ZIP 归档)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 一键复制 backup_artifacts.ps1 源码" Background="#16A34A" FontSize="10" Padding="8,2"
+                                                    Click="BtnCopySnippet_Click" Tag="[CmdletBinding()]&#x0d;&#x0a;param(&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$SourceFolder = &quot;.\dist&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$BackupRoot = &quot;C:\Backups&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [int]$RetainDays = 7&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;$ErrorActionPreference = 'Stop'&#x0d;&#x0a;Write-Host &quot;=== 🚀 原生构建产物备份归档任务启动 ===&quot; -ForegroundColor Cyan&#x0d;&#x0a;&#x0d;&#x0a;try {&#x0d;&#x0a;    if (-not (Test-Path $SourceFolder)) {&#x0d;&#x0a;        throw [System.IO.DirectoryNotFoundException]&quot;源目录不存在: $SourceFolder&quot;&#x0d;&#x0a;    }&#x0d;&#x0a;    if (-not (Test-Path $BackupRoot)) {&#x0d;&#x0a;        New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    $timestamp = Get-Date -Format &quot;yyyyMMdd_HHmmss&quot;&#x0d;&#x0a;    $zipName = &quot;Artifacts_$timestamp.zip&quot;&#x0d;&#x0a;    $zipPath = Join-Path $BackupRoot $zipName&#x0d;&#x0a;&#x0d;&#x0a;    Write-Host &quot;正在压缩打包: $SourceFolder -> $zipPath&quot; -ForegroundColor Yellow&#x0d;&#x0a;    Compress-Archive -Path &quot;$SourceFolder\*&quot; -DestinationPath $zipPath -CompressionLevel Optimal -Force&#x0d;&#x0a;&#x0d;&#x0a;    $archiveSizeMb = [math]::Round(((Get-Item $zipPath).Length / 1MB), 2)&#x0d;&#x0a;    Write-Host &quot;归档打包完成！包大小: $archiveSizeMb MB&quot; -ForegroundColor Green&#x0d;&#x0a;&#x0d;&#x0a;    # 清理过期旧备份&#x0d;&#x0a;    $cutoffDate = (Get-Date).AddDays(-$RetainDays)&#x0d;&#x0a;    Get-ChildItem -Path $BackupRoot -Filter &quot;Artifacts_*.zip&quot; |&#x0d;&#x0a;        Where-Object { $_.LastWriteTime -lt $cutoffDate } |&#x0d;&#x0a;        ForEach-Object {&#x0d;&#x0a;            Write-Host &quot;正在清除过期备份: $($_.Name)&quot; -ForegroundColor Gray&#x0d;&#x0a;            Remove-Item $_.FullName -Force&#x0d;&#x0a;        }&#x0d;&#x0a;&#x0d;&#x0a;    Write-Host &quot;=== ✅ 任务全部圆满完成 ===&quot; -ForegroundColor Green&#x0d;&#x0a;}&#x0d;&#x0a;catch {&#x0d;&#x0a;    Write-Error &quot;备份任务异常失败: $($_.Exception.Message)&quot;&#x0d;&#x0a;    exit 1&#x0d;&#x0a;}"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="220" VerticalScrollBarVisibility="Auto"
+                                                 Text="[CmdletBinding()]&#x0d;&#x0a;param(&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$SourceFolder = &quot;.\dist&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$BackupRoot = &quot;C:\Backups&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [int]$RetainDays = 7&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;$ErrorActionPreference = 'Stop'&#x0d;&#x0a;Write-Host &quot;=== 🚀 原生构建产物备份归档任务启动 ===&quot; -ForegroundColor Cyan&#x0d;&#x0a;&#x0d;&#x0a;try {&#x0d;&#x0a;    if (-not (Test-Path $SourceFolder)) {&#x0d;&#x0a;        throw [System.IO.DirectoryNotFoundException]&quot;源目录不存在: $SourceFolder&quot;&#x0d;&#x0a;    }&#x0d;&#x0a;    if (-not (Test-Path $BackupRoot)) {&#x0d;&#x0a;        New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    $timestamp = Get-Date -Format &quot;yyyyMMdd_HHmmss&quot;&#x0d;&#x0a;    $zipName = &quot;Artifacts_$timestamp.zip&quot;&#x0d;&#x0a;    $zipPath = Join-Path $BackupRoot $zipName&#x0d;&#x0a;&#x0d;&#x0a;    Write-Host &quot;正在压缩打包: $SourceFolder -> $zipPath&quot; -ForegroundColor Yellow&#x0d;&#x0a;    Compress-Archive -Path &quot;$SourceFolder\*&quot; -DestinationPath $zipPath -CompressionLevel Optimal -Force&#x0d;&#x0a;&#x0d;&#x0a;    $archiveSizeMb = [math]::Round(((Get-Item $zipPath).Length / 1MB), 2)&#x0d;&#x0a;    Write-Host &quot;归档打包完成！包大小: $archiveSizeMb MB&quot; -ForegroundColor Green&#x0d;&#x0a;&#x0d;&#x0a;    # 清理过期旧备份&#x0d;&#x0a;    $cutoffDate = (Get-Date).AddDays(-$RetainDays)&#x0d;&#x0a;    Get-ChildItem -Path $BackupRoot -Filter &quot;Artifacts_*.zip&quot; |&#x0d;&#x0a;        Where-Object { $_.LastWriteTime -lt $cutoffDate } |&#x0d;&#x0a;        ForEach-Object {&#x0d;&#x0a;            Write-Host &quot;正在清除过期备份: $($_.Name)&quot; -ForegroundColor Gray&#x0d;&#x0a;            Remove-Item $_.FullName -Force&#x0d;&#x0a;        }&#x0d;&#x0a;&#x0d;&#x0a;    Write-Host &quot;=== ✅ 任务全部圆满完成 ===&quot; -ForegroundColor Green&#x0d;&#x0a;}&#x0d;&#x0a;catch {&#x0d;&#x0a;    Write-Error &quot;备份任务异常失败: $($_.Exception.Message)&quot;&#x0d;&#x0a;    exit 1&#x0d;&#x0a;}"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 4: .reg 注册表文件手写全解 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="📜 板块 4: .reg 注册表文件手写全解 —— 纯文本配置声明的艺术" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="高阶配置发放下发" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertPurpleText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="注册表是 Windows NT 体系的中央神经系统。掌握手写 .reg 文件，可在无需图形界面交互的情况下完成系统调优批量注入、软件便携化设置与全自动开荒配置："
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                                <!-- 安全预警看板 -->
+                                <Border Background="{DynamicResource BrushAlertRedBg}" BorderBrush="{DynamicResource BrushAlertRedBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <TextBlock Text="🛑 核心安全警示：绝对不要双击来历不明的 .reg 文件！双击会静默或通过 UAC 弹窗将全部配置直接写入系统底层，无「撤回」按钮。收到陌生 .reg 时，务必先【右键 -&gt; 编辑 (记事本)】逐行审阅注册表主键路径与键值！"
+                                               FontSize="10" Foreground="{DynamicResource BrushAlertRedText}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                </Border>
+
+                                <!-- 语法 4 大关键要素 (双栏排布) -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                        <StackPanel>
+                                            <TextBlock Text="1. 头部声明规范与主键路径:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="第一行必须精确书写：Windows Registry Editor Version 5.00，后跟一个空行。主键路径使用方括号括起，例如：[HKEY_CURRENT_USER\Software\MyApp]。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                            <TextBlock Text="2. 常见数据类型字面量写法:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="• 字符串 (REG_SZ): &quot;Key&quot;=&quot;Value&quot; (注意路径反斜杠必须写双反斜杠 \\ 转义!)&#x0a;• 32位整型 (REG_DWORD): &quot;Enabled&quot;=dword:00000001 (十六进制8位)&#x0a;• 默认项 (Default): @=&quot;MyDefaultValue&quot;" FontSize="10" FontFamily="Consolas" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="3. 核心删除机制 (减号符号 - 的妙用):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertErrorText}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="• 删除整项 (Key): 在路径方括号最前端加减号：[-HKEY_CURRENT_USER\Software\MyApp]&#x0a;• 删除单个键值 (Value): 将键值设为减号：&quot;OldSetting&quot;=-&#x0a;新手最常犯的错误是用空字符串替换，那只会置空而不是从注册表物理移除！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                            <TextBlock Text="4. 导出与静默导入指令:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="导出: regedit.exe /e backup.reg &quot;HKEY_CURRENT_USER\Software\MyApp&quot;&#x0a;静默无弹窗导入: regedit.exe /s config.reg" FontSize="10" FontFamily="Consolas" Foreground="{DynamicResource BrushSuccess}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 手写 .reg 范例模板 -->
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="📄 标准规范范例：app_settings.reg (含字符串、DWORD、键值删除与整项清理)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 一键复制 .reg 完整模板" Background="#16A34A" FontSize="10" Padding="8,2"
+                                                    Click="BtnCopySnippet_Click" Tag="Windows Registry Editor Version 5.00&#x0d;&#x0a;&#x0d;&#x0a;; 示例 1: 新增或修改配置项 (字符串、DWORD 与双反斜杠转义)&#x0d;&#x0a;[HKEY_CURRENT_USER\Software\AgyDemoTool]&#x0d;&#x0a;@=&quot;Agy Registry Configuration Demo&quot;&#x0d;&#x0a;&quot;AppVersion&quot;=&quot;1.0.0&quot;&#x0d;&#x0a;&quot;InstallDir&quot;=&quot;C:\\Program Files\\AgyTool&quot;&#x0d;&#x0a;&quot;EnableHardwareAcceleration&quot;=dword:00000001&#x0d;&#x0a;&quot;TelemetryLevel&quot;=dword:00000000&#x0d;&#x0a;&#x0d;&#x0a;; 示例 2: 删除已废弃的旧键值 (设置等于负号)&#x0d;&#x0a;&quot;ObsoleteLegacySetting&quot;=-&#x0d;&#x0a;&#x0d;&#x0a;; 示例 3: 物理删除整个废弃子项 (在括号开头加负号)&#x0d;&#x0a;[-HKEY_CURRENT_USER\Software\AgyDemoTool\DeprecatedCache]&#x0d;&#x0a;"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="160" VerticalScrollBarVisibility="Auto"
+                                                 Text="Windows Registry Editor Version 5.00&#x0d;&#x0a;&#x0d;&#x0a;; 示例 1: 新增或修改配置项 (字符串、DWORD 与双反斜杠转义)&#x0d;&#x0a;[HKEY_CURRENT_USER\Software\AgyDemoTool]&#x0d;&#x0a;@=&quot;Agy Registry Configuration Demo&quot;&#x0d;&#x0a;&quot;AppVersion&quot;=&quot;1.0.0&quot;&#x0d;&#x0a;&quot;InstallDir&quot;=&quot;C:\\Program Files\\AgyTool&quot;&#x0d;&#x0a;&quot;EnableHardwareAcceleration&quot;=dword:00000001&#x0d;&#x0a;&quot;TelemetryLevel&quot;=dword:00000000&#x0d;&#x0a;&#x0d;&#x0a;; 示例 2: 删除已废弃的旧键值 (设置等于负号)&#x0d;&#x0a;&quot;ObsoleteLegacySetting&quot;=-&#x0d;&#x0a;&#x0d;&#x0a;; 示例 3: 物理删除整个废弃子项 (在括号开头加负号)&#x0d;&#x0a;[-HKEY_CURRENT_USER\Software\AgyDemoTool\DeprecatedCache]"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 5: 冷门但真实存在的 .hta -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <WrapPanel Margin="0,0,0,4">
+                                    <TextBlock Text="🌐 板块 5: 冷门但真实存在的 .hta (HTML Application 原生微型前端应用)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                        <TextBlock Text="免装 Electron" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                                    </Border>
+                                </WrapPanel>
+                                <TextBlock Text="Windows 深度内置的 mshta.exe。无需安装 Node.js、Electron 或 WebView2，纯靠系统自带解释器就能渲染 HTML+CSS+JavaScript，且天然拥有与 Win32 进程同等的完全系统特权（无浏览器沙箱阻隔，可自由调用 shell 与剪贴板）："
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,6">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="📄 极简免编译微型 GUI 范例：popup.hta (双击即可原生弹窗运行)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 一键复制 popup.hta 源码" Background="#16A34A" FontSize="10" Padding="8,2"
+                                                    Click="BtnCopySnippet_Click" Tag="&lt;!DOCTYPE html&gt;&#x0d;&#x0a;&lt;html&gt;&#x0d;&#x0a;&lt;head&gt;&#x0d;&#x0a;  &lt;meta charset=&quot;UTF-8&quot;&gt;&#x0d;&#x0a;  &lt;title&gt;Windows 原生微型工具弹窗&lt;/title&gt;&#x0d;&#x0a;  &lt;HTA:APPLICATION ID=&quot;oHTA&quot; APPLICATIONNAME=&quot;MiniApp&quot; BORDER=&quot;thin&quot; SCROLL=&quot;no&quot; SINGLEINSTANCE=&quot;yes&quot; WINDOWSTATE=&quot;normal&quot; /&gt;&#x0d;&#x0a;  &lt;style&gt;&#x0d;&#x0a;    body { font-family: 'Segoe UI', sans-serif; background: #1e1e1e; color: #fff; padding: 20px; margin: 0; }&#x0d;&#x0a;    button { background: #0078d4; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-right: 8px; }&#x0d;&#x0a;    button:hover { background: #106ebe; }&#x0d;&#x0a;    .output { margin-top: 15px; padding: 10px; background: #2d2d2d; border-radius: 4px; font-family: Consolas; font-size: 12px; }&#x0d;&#x0a;  &lt;/style&gt;&#x0d;&#x0a;&lt;/head&gt;&#x0d;&#x0a;&lt;body&gt;&#x0d;&#x0a;  &lt;h3&gt;⚡ 免编译原生 HTA 微型控制台&lt;/h3&gt;&#x0d;&#x0a;  &lt;p&gt;当前环境基于 mshta.exe 原生运行，支持无沙箱特权调用：&lt;/p&gt;&#x0d;&#x0a;  &lt;button onclick=&quot;runCmd('calc.exe')&quot;&gt;唤醒计算器&lt;/button&gt;&#x0d;&#x0a;  &lt;button onclick=&quot;runCmd('explorer.exe .')&quot;&gt;打开当前目录&lt;/button&gt;&#x0d;&#x0a;  &lt;div class=&quot;output&quot; id=&quot;log&quot;&gt;等待操作...&lt;/div&gt;&#x0d;&#x0a;  &lt;script&gt;&#x0d;&#x0a;    window.resizeTo(480, 320);&#x0d;&#x0a;    function runCmd(cmd) {&#x0d;&#x0a;      try {&#x0d;&#x0a;        var wsh = new ActiveXObject('WScript.Shell');&#x0d;&#x0a;        wsh.Run(cmd, 1, false);&#x0d;&#x0a;        document.getElementById('log').innerText = '已通过 WScript.Shell 成功调用: ' + cmd;&#x0d;&#x0a;      } catch(e) {&#x0d;&#x0a;        document.getElementById('log').innerText = '调用失败: ' + e.message;&#x0d;&#x0a;      }&#x0d;&#x0a;    }&#x0d;&#x0a;  &lt;/script&gt;&#x0d;&#x0a;&lt;/body&gt;&#x0d;&#x0a;&lt;/html&gt;"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="160" VerticalScrollBarVisibility="Auto"
+                                                 Text="&lt;!DOCTYPE html&gt;&#x0d;&#x0a;&lt;html&gt;&#x0d;&#x0a;&lt;head&gt;&#x0d;&#x0a;  &lt;meta charset=&quot;UTF-8&quot;&gt;&#x0d;&#x0a;  &lt;title&gt;Windows 原生微型工具弹窗&lt;/title&gt;&#x0d;&#x0a;  &lt;HTA:APPLICATION ID=&quot;oHTA&quot; APPLICATIONNAME=&quot;MiniApp&quot; BORDER=&quot;thin&quot; SCROLL=&quot;no&quot; SINGLEINSTANCE=&quot;yes&quot; /&gt;&#x0d;&#x0a;  &lt;style&gt;&#x0d;&#x0a;    body { font-family: 'Segoe UI', sans-serif; background: #1e1e1e; color: #fff; padding: 16px; margin: 0; }&#x0d;&#x0a;    button { background: #0078d4; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-right: 6px; }&#x0d;&#x0a;    .output { margin-top: 10px; padding: 8px; background: #2d2d2d; border-radius: 4px; font-family: Consolas; font-size: 11px; }&#x0d;&#x0a;  &lt;/style&gt;&#x0d;&#x0a;&lt;/head&gt;&#x0d;&#x0a;&lt;body&gt;&#x0d;&#x0a;  &lt;h3&gt;⚡ 免编译原生 HTA 微型控制台&lt;/h3&gt;&#x0d;&#x0a;  &lt;button onclick=&quot;runCmd('calc.exe')&quot;&gt;唤醒计算器&lt;/button&gt;&#x0d;&#x0a;  &lt;button onclick=&quot;runCmd('explorer.exe .')&quot;&gt;打开当前目录&lt;/button&gt;&#x0d;&#x0a;  &lt;div class=&quot;output&quot; id=&quot;log&quot;&gt;等待操作...&lt;/div&gt;&#x0d;&#x0a;  &lt;script&gt;&#x0d;&#x0a;    window.resizeTo(480, 260);&#x0d;&#x0a;    function runCmd(cmd) {&#x0d;&#x0a;      try {&#x0d;&#x0a;        var wsh = new ActiveXObject('WScript.Shell');&#x0d;&#x0a;        wsh.Run(cmd, 1, false);&#x0d;&#x0a;        document.getElementById('log').innerText = '成功调用: ' + cmd;&#x0d;&#x0a;      } catch(e) {&#x0d;&#x0a;        document.getElementById('log').innerText = '错误: ' + e.message;&#x0d;&#x0a;      }&#x0d;&#x0a;    }&#x0d;&#x0a;  &lt;/script&gt;&#x0d;&#x0a;&lt;/body&gt;&#x0d;&#x0a;&lt;/html&gt;"/>
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </Border>
 

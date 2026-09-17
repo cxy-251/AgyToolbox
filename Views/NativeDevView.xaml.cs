@@ -1,6 +1,6 @@
 using System;
+using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,105 +12,18 @@ namespace AgyToolbox.Views;
 public partial class NativeDevView : UserControl
 {
     private readonly NativeDevService _nativeDevService = new();
-    private readonly WinTricksService _winTricksService = new();
-    private CancellationTokenSource? _diagCts;
 
     public NativeDevView()
     {
         InitializeComponent();
 
-        RefreshWslStatus();
-        RefreshSandboxStatus();
-        RefreshDevDriveStatus();
-        RefreshSshAgentStatus();
-        RefreshDevModeStatus();
         RefreshSudoStatus();
+        RefreshDevModeStatus();
+        RefreshSshAgentStatus();
         RefreshExecPolicyStatus();
     }
 
-    #region 1. 虚拟化与驱动基建 (WSL2 / Sandbox / Dev Drive / Dev Home)
-
-    private void RefreshWslStatus()
-    {
-        var (installed, info) = _nativeDevService.GetWslStatus();
-        TxtWslStatus.Text = installed ? "[已安装就绪]" : "[尚未安装]";
-        TxtWslStatus.Foreground = installed ? ThemeBrushes.Success : ThemeBrushes.Warning;
-    }
-
-    private void BtnCheckWsl_Click(object sender, RoutedEventArgs e)
-    {
-        var (installed, info) = _nativeDevService.GetWslStatus();
-        RefreshWslStatus();
-        MessageBox.Show($"WSL 状态检测结果：\n\n{info}", "WSL 状态", MessageBoxButton.OK, MessageBoxImage.Information);
-    }
-
-    private void BtnInstallWsl_Click(object sender, RoutedEventArgs e)
-    {
-        var (ok, msg) = _nativeDevService.InstallWslInConsole();
-        MessageBox.Show(msg, ok ? "已启动" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
-    }
-
-    private void RefreshSandboxStatus()
-    {
-        bool enabled = _nativeDevService.IsSandboxEnabled();
-        TxtSandboxStatus.Text = enabled ? "[已启用]" : "[未启用]";
-        TxtSandboxStatus.Foreground = enabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
-    }
-
-    private void BtnCheckSandbox_Click(object sender, RoutedEventArgs e)
-    {
-        RefreshSandboxStatus();
-        bool enabled = _nativeDevService.IsSandboxEnabled();
-        MessageBox.Show(enabled ? "Windows Sandbox 沙盒特性已在当前系统启用！" : "Windows Sandbox 尚未启用，需点击启用并重启。", "沙盒状态", MessageBoxButton.OK, MessageBoxImage.Information);
-    }
-
-    private void BtnEnableSandbox_Click(object sender, RoutedEventArgs e)
-    {
-        var (ok, msg) = _nativeDevService.EnableSandboxInConsole();
-        MessageBox.Show(msg, ok ? "已发起启用" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
-    }
-
-    private void RefreshDevDriveStatus()
-    {
-        var (supported, hasDevDrive, info) = _nativeDevService.GetDevDriveStatus();
-        if (hasDevDrive)
-        {
-            TxtDevDriveStatus.Text = "[已挂载 Dev Drive 开发驱动器]";
-            TxtDevDriveStatus.Foreground = ThemeBrushes.Success;
-        }
-        else if (supported)
-        {
-            TxtDevDriveStatus.Text = "[系统支持 Dev Drive (当前未创建)]";
-            TxtDevDriveStatus.Foreground = ThemeBrushes.Info;
-        }
-        else
-        {
-            TxtDevDriveStatus.Text = "[当前环境暂不支持 Dev Drive]";
-            TxtDevDriveStatus.Foreground = ThemeBrushes.Warning;
-        }
-    }
-
-    private void BtnRefreshDevDrive_Click(object sender, RoutedEventArgs e)
-    {
-        var (supported, hasDevDrive, info) = _nativeDevService.GetDevDriveStatus();
-        RefreshDevDriveStatus();
-        MessageBox.Show($"Dev Drive 状态检测结果：\n\n{info}", "Dev Drive 状态", MessageBoxButton.OK, MessageBoxImage.Information);
-    }
-
-    private void BtnOpenDisksSettings_Click(object sender, RoutedEventArgs e)
-    {
-        _nativeDevService.OpenDisksAndVolumesSettings();
-    }
-
-    private void BtnLaunchDevHome_Click(object sender, RoutedEventArgs e)
-    {
-        var (ok, msg) = _nativeDevService.LaunchOrInstallDevHome();
-        MessageBox.Show(msg, "Dev Home", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
-    }
-
-    #endregion
-
-    #region 2. 权限特权与开发者模式 (Sudo / Developer Mode / SSH / icacls)
+    #region 1. 权限特权与开发者模式 (Sudo / Developer Mode / SSH-Agent)
 
     private void RefreshSudoStatus()
     {
@@ -155,20 +68,6 @@ public partial class NativeDevView : UserControl
         MessageBox.Show(msg, "Sudo 设置", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
-    private void RefreshSshAgentStatus()
-    {
-        bool running = _nativeDevService.IsSshAgentAutoStart();
-        TxtSshAgentStatus.Text = running ? "[已开启自启与运行]" : "[当前未自启]";
-        TxtSshAgentStatus.Foreground = running ? ThemeBrushes.Success : ThemeBrushes.Warning;
-    }
-
-    private void BtnEnableSshAgent_Click(object sender, RoutedEventArgs e)
-    {
-        var (ok, msg) = _nativeDevService.EnableSshAgentAutoStart();
-        RefreshSshAgentStatus();
-        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
-    }
-
     private void RefreshDevModeStatus()
     {
         bool enabled = _nativeDevService.IsDeveloperModeEnabled();
@@ -190,118 +89,32 @@ public partial class NativeDevView : UserControl
         _nativeDevService.OpenDeveloperSettings();
     }
 
-    #endregion
-
-    #region 3. 原生网络链路与系统诊断 (pktmon / 路由 / resmon / 性能)
-
-    private async void RunDiagnostic(string cmd, string args)
+    private void RefreshSshAgentStatus()
     {
-        _diagCts?.Cancel();
-        _diagCts = new CancellationTokenSource();
-
-        if (BtnStopDiag != null) BtnStopDiag.IsEnabled = true;
-        TxtDiagConsole.AppendText($"\n>>> [{DateTime.Now:HH:mm:ss}] 启动诊断: {cmd} {args}\n");
-        TxtDiagConsole.ScrollToEnd();
-
-        try
-        {
-            await _winTricksService.RunNetworkDiagnosticAsync(cmd, args, line =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    TxtDiagConsole.AppendText(line + "\n");
-                    TxtDiagConsole.ScrollToEnd();
-                });
-            }, _diagCts.Token);
-        }
-        catch (Exception ex)
-        {
-            TxtDiagConsole.AppendText($"[诊断异常]: {ex.Message}\n");
-        }
-        finally
-        {
-            if (BtnStopDiag != null) BtnStopDiag.IsEnabled = false;
-        }
+        bool running = _nativeDevService.IsSshAgentAutoStart();
+        TxtSshAgentStatus.Text = running ? "[已开启自启与运行]" : "[当前未自启]";
+        TxtSshAgentStatus.Foreground = running ? ThemeBrushes.Success : ThemeBrushes.Warning;
     }
 
-    private void BtnTracertFast_Click(object sender, RoutedEventArgs e)
+    private void BtnEnableSshAgent_Click(object sender, RoutedEventArgs e)
     {
-        string host = string.IsNullOrWhiteSpace(TxtRouteHost.Text) ? "1.1.1.1" : TxtRouteHost.Text.Trim();
-        RunDiagnostic("tracert", $"-d -h 20 {host}");
-    }
-
-    private void BtnPathping_Click(object sender, RoutedEventArgs e)
-    {
-        string host = string.IsNullOrWhiteSpace(TxtRouteHost.Text) ? "1.1.1.1" : TxtRouteHost.Text.Trim();
-        RunDiagnostic("pathping", $"-n -q 2 -p 250 -h 15 {host}");
-    }
-
-    private void BtnRoutePrint_Click(object sender, RoutedEventArgs e)
-    {
-        RunDiagnostic("route", "print -4");
-    }
-
-    private void BtnArp_Click(object sender, RoutedEventArgs e)
-    {
-        RunDiagnostic("arp", "-a");
-    }
-
-    private void BtnStopDiag_Click(object sender, RoutedEventArgs e)
-    {
-        _diagCts?.Cancel();
-        if (BtnStopDiag != null) BtnStopDiag.IsEnabled = false;
-        TxtDiagConsole.AppendText("[已请求终止诊断]\n");
-    }
-
-    private void BtnClearDiagLog_Click(object sender, RoutedEventArgs e)
-    {
-        TxtDiagConsole.Text = "[网络诊断控制台已清空就绪]\n";
-    }
-
-    private void BtnStartPktMon_Click(object sender, RoutedEventArgs e)
-    {
-        var (ok, msg) = _nativeDevService.StartPktMonConsole();
-        MessageBox.Show(msg, "PktMon 抓包监视器", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        var (ok, msg) = _nativeDevService.EnableSshAgentAutoStart();
+        RefreshSshAgentStatus();
+        MessageBox.Show(msg, ok ? "设置成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
     #endregion
 
-    #region 4. 原生实用工具（certutil / fsutil / 通用复制）
-
-    private void BtnPickFileHash_Click(object sender, RoutedEventArgs e)
-    {
-        var dialog = new OpenFileDialog
-        {
-            Title = "选择要使用原生 certutil 计算 SHA256 哈希的文件"
-        };
-        if (dialog.ShowDialog() == true)
-        {
-            var (ok, hash) = _nativeDevService.ComputeFileHash(dialog.FileName, "SHA256");
-            if (ok)
-            {
-                Clipboard.SetText(hash);
-                MessageBox.Show($"文件: {Path.GetFileName(dialog.FileName)}\n\nSHA256 哈希值:\n{hash}\n\n已自动复制到剪贴板！", "哈希计算成功 (certutil)", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                MessageBox.Show(hash, "计算失败", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
-    }
-
-    private void BtnCreateDummyFile_Click(object sender, RoutedEventArgs e)
-    {
-        BtnCreateDummyFile100M_Click(sender, e);
-    }
+    #region 2. 原生 CLI 与服务部署 (fsutil / 通用剪贴板复制)
 
     private void BtnCreateDummyFile100M_Click(object sender, RoutedEventArgs e)
     {
-        CreateDummyFileWithDialog("test_dummy_100m.dat", 100L * 1024L * 1024L);
+        CreateDummyFileWithDialog("test_dummy_100m.bin", 100L * 1024L * 1024L);
     }
 
     private void BtnCreateDummyFile1G_Click(object sender, RoutedEventArgs e)
     {
-        CreateDummyFileWithDialog("test_dummy_1g.dat", 1024L * 1024L * 1024L);
+        CreateDummyFileWithDialog("test_dummy_1g.bin", 1024L * 1024L * 1024L);
     }
 
     private void CreateDummyFileWithDialog(string defaultFileName, long sizeBytes)
@@ -310,7 +123,7 @@ public partial class NativeDevView : UserControl
         {
             Title = "选择保存测试文件的位置与文件名",
             FileName = defaultFileName,
-            Filter = "数据文件 (*.dat)|*.dat|所有文件 (*.*)|*.*"
+            Filter = "二进制数据文件 (*.bin)|*.bin|所有文件 (*.*)|*.*"
         };
         if (dialog.ShowDialog() == true)
         {
@@ -319,42 +132,18 @@ public partial class NativeDevView : UserControl
         }
     }
 
-    private void BtnLaunchTool_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is Button btn && btn.Tag is string app && !string.IsNullOrWhiteSpace(app))
-        {
-            try
-            {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = app,
-                    UseShellExecute = true
-                });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"启动工具失败: {ex.Message}", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
-    }
-
     private void BtnCopySnippet_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button btn && btn.Tag is string snippet && !string.IsNullOrWhiteSpace(snippet))
         {
             Clipboard.SetText(snippet);
-            MessageBox.Show($"已复制命令到剪贴板：\n\n{snippet}", "已复制", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"已复制命令或代码至剪贴板：\n\n{snippet}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-    }
-
-    private void BtnCopyCli_Click(object sender, RoutedEventArgs e)
-    {
-        BtnCopySnippet_Click(sender, e);
     }
 
     #endregion
 
-    #region 5. Shell 生态与脚本编程 (Shell Ecosystem & Scripting)
+    #region 3. Shell 生态与差异对比 (ExecutionPolicy / $PROFILE)
 
     private void RefreshExecPolicyStatus()
     {
@@ -429,4 +218,3 @@ public partial class NativeDevView : UserControl
 
     #endregion
 }
-

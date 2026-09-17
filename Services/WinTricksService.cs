@@ -867,6 +867,14 @@ public class WinTricksService
         Process.Start("shutdown.exe", "/r /t 0");
     }
 
+    /// <summary>
+    /// 触发重启并直接进入 UEFI/BIOS 固件界面 (shutdown /r /fw /t 0)
+    /// </summary>
+    public void TriggerRebootToBios()
+    {
+        Process.Start("shutdown.exe", "/r /fw /t 0");
+    }
+
     private static string RunProcessAndGetOutput(string fileName, string args)
     {
         var psi = new ProcessStartInfo
