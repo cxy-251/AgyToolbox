@@ -139,7 +139,7 @@
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
                                 <TextBlock Text="📦 步骤五：现代工具链搭建" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                <TextBlock Text="uv / pnpm / Zed / .NET / Rust 小工具" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
+                                <TextBlock Text="Git / uv / pnpm / Zed / .NET / Rust 小工具" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 

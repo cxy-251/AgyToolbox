@@ -17,12 +17,12 @@
         <Border Grid.Row="0" Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
             <StackPanel>
                 <TextBlock Text="📦 步骤五：现代工具链搭建与精选矩阵" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
-                <TextBlock Text="▎ 只精选实际在用的现代工具链——Python 用 uv、Node.js 用 pnpm、编辑器用 Zed、C# 用 dotnet CLI、外加 ripgrep/fd/bat 这几个 Rust 小工具替代经典命令。不追求覆盖所有流行工具，本地开发不需要容器隔离，所以这里不涉及 Docker。"
+                <TextBlock Text="▎ 只精选实际在用的现代工具链——版本控制用 Git + LFS、Python 用 uv、Node.js 用 pnpm、编辑器用 Zed、C# 用 dotnet CLI、外加 ripgrep/fd/bat 这几个 Rust 小工具替代经典命令。不追求覆盖所有流行工具，本地开发不需要容器隔离，所以这里不涉及 Docker。"
                            FontSize="12" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap" LineHeight="18"/>
             </StackPanel>
         </Border>
 
-        <!-- 6 个聚焦子标签 -->
+        <!-- 7 个聚焦子标签 -->
         <TabControl Grid.Row="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1"
                     ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
@@ -35,8 +35,8 @@
                             <StackPanel>
                                 <TextBlock Text="🎯 现代开发工具链选型与设计哲学" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
                                 
-                                <TextBlock Text="1. 为什么是这 6 个工具，而不是其他流行工具？" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                <TextBlock Text="• 只精选实际在用的生产级现代工具链：在 Windows 平台上，各类包管理与运行时繁杂冗余，新手极易陷入决策内耗。本指南杜绝概念堆砌，仅锁定当前经受真实项目验证、性能最快、维护最活跃的现代方案：&#x0a;  - Python：放弃沉重拖沓的 conda/pyenv/pipenv，全面拥抱 Rust 编写的瞬时包管理与运行时总管 uv。&#x0a;  - Node.js：跳过冗余且深层嵌套的传统 npm，借助官方内置 Corepack 启用硬链接省盘极客 pnpm。&#x0a;  - 代码编辑器：采用 GPU 硬件加速原生渲染、启动极快且资源占用极低的现代编辑器 Zed。&#x0a;  - C# / .NET：微软全平台开箱即用的高性能 dotnet CLI 与生产级运行时诊断/迁移生态。&#x0a;  - 控制台体验升级：精选三大 Rust 现代重构小工具（ripgrep、fd、bat），全量替代传统慢速控制台命令。"
+                                <TextBlock Text="1. 为什么是这套工具链，而不是其他流行工具？" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 只精选实际在用的生产级现代工具链：在 Windows 平台上，各类包管理与运行时繁杂冗余，新手极易陷入决策内耗。本指南杜绝概念堆砌，仅锁定当前经受真实项目验证、性能最快、维护最活跃的现代方案：&#x0a;  - 版本控制：以 Git + Git LFS 建立现代版本控制与大文件指针管理基石，避开换行符与凭据陷阱。&#x0a;  - Python：放弃沉重拖沓的 conda/pyenv/pipenv，全面拥抱 Rust 编写的瞬时包管理与运行时总管 uv。&#x0a;  - Node.js：跳过冗余且深层嵌套的传统 npm，借助官方内置 Corepack 启用硬链接省盘极客 pnpm。&#x0a;  - 代码编辑器：采用 GPU 硬件加速原生渲染、启动极快且资源占用极低的现代编辑器 Zed。&#x0a;  - C# / .NET：微软全平台开箱即用的高性能 dotnet CLI 与生产级运行时诊断/迁移生态。&#x0a;  - 控制台体验升级：精选三大 Rust 现代重构小工具（ripgrep、fd、bat），全量替代传统慢速控制台命令。"
                                            FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" LineHeight="18" Margin="0,0,0,14"/>
 
                                 <TextBlock Text="2. 为什么这里完全不涉及 Docker 容器化？" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
@@ -48,7 +48,193 @@
                 </ScrollViewer>
             </TabItem>
 
-            <!-- Tab 2: 🐍 Python —— uv (下载 + 配置，不讲用法) -->
+            <!-- Tab 2: 🌿 Git 版本控制 (下载 + 配置 + 仓库连通 + LFS 大文件) -->
+            <TabItem Header="🌿 Git 版本控制">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+                    <StackPanel>
+                        <!-- 板块 1: 下载与验证 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📥 1. 下载与验证" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="通过 winget 精确安装官方 Git for Windows (-e 精确匹配包 ID):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="winget install --id Git.Git -e"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：采用 -e (--exact) 参数精准锚定 Git 官方分发包，避免模糊匹配安装非官方封装版。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="winget install --id Git.Git -e"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="验证 Git 安装与版本状态:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="git --version"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="git --version"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: 全局身份与行为配置 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ 2. 全局身份与 Windows 核心行为配置" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <!-- 身份配置 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="配置全局提交者姓名与邮箱 (author 字段身份来源):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="git config --global user.name &quot;YourName&quot;&#x0d;&#x0a;git config --global user.email &quot;you@example.com&quot;"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：配置写入 ~/.gitconfig，这是 Git 提交记录里「作者 (Author)」字段的来源。装完 Git 第一件事就是配这个，避免每次 commit 都使用系统默认的匿名主机账户。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="git config --global user.name &quot;YourName&quot;&#x0d;&#x0a;git config --global user.email &quot;you@example.com&quot;"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 换行符配置 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="解决跨平台换行符地雷 (core.autocrlf = true):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="git config --global core.autocrlf true"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：Windows 特有的经典坑——Windows 文本文件默认用 \r\n 换行，Unix/Linux/Git 仓库标准是 \n。开启 autocrlf true 让 Git 在检出时还原为 \r\n、提交时自动转为 \n，避免跨平台协作时一堆文件被误标为「全文件变更」其实只是换行符不一致。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="git config --global core.autocrlf true"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 凭据管理器 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="启用 Windows 原生凭据管理器 (Git Credential Manager):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="git config --global credential.helper manager"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：Git for Windows 自带凭据管理器 (GCM)。配置后，HTTPS 远程仓库首次认证会弹出系统级授权窗口，凭据自动写入 Windows 凭据管理器（与【步骤三：自带工具排错指南】中 SecurityAuthSection 讲解的 cmdkey 命令属于同一套底层系统安全存储）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="git config --global credential.helper manager"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: 仓库连通 (只讲连通，不铺开讲 commit/branch 工作流) -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="🔗 3. 仓库连通与 SSH 鉴权对接" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="初始化本地仓库并绑定 SSH 远程端点:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="git init&#x0d;&#x0a;git remote add origin git@github.com:yourname/yourrepo.git&#x0d;&#x0a;git push -u origin main"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：此处深度衔接步骤三/四中已配置好的 ssh-agent 后台服务与 ssh-keygen 密钥对。远程地址必须采用 git@github.com:... 这种 SSH 协议格式（而非 HTTPS），才能无缝触发免密公钥认证。日常 add/commit/branch 这类具体业务工作流不在此展开，向导聚焦于「帮助将网络与权限环境完全接通」。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="git init&#x0d;&#x0a;git remote add origin git@github.com:yourname/yourrepo.git&#x0d;&#x0a;git push -u origin main"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 4: Git LFS (大文件版本控制) -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="📦 4. Git LFS (大文件版本控制)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <!-- 1. 确认与安装 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="先行检测系统是否已自带 LFS (新版 Git.Git 大多已内置):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="git lfs version"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：Git for Windows 新版本安装包通常默认已集成 git-lfs.exe。先运行该命令确认；仅当终端提示未识别命令时，才需要单独通过 winget 补装：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6" Margin="0,0,0,4"
+                                                 Text="git lfs version"/>
+                                        <Grid Margin="0,4,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="若未内置，通过 winget 独立安装 GitHub.GitLFS:" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制补装命令" Style="{DynamicResource SecondaryButton}" FontSize="9" Padding="4,1"
+                                                    Click="BtnCopySnippet_Click" Tag="winget install --id GitHub.GitLFS -e"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6" Margin="0,4,0,0"
+                                                 Text="winget install --id GitHub.GitLFS -e"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 2. 启用与追踪大文件 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="全局激活 LFS 并声明大文件追踪模式 (.gitattributes):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="git lfs install&#x0d;&#x0a;git lfs track &quot;*.psd&quot;&#x0d;&#x0a;git lfs track &quot;*.zip&quot;&#x0d;&#x0a;git add .gitattributes&#x0d;&#x0a;git lfs ls-files"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：git lfs track 会自动在工程内生成/追加 .gitattributes 文件，声明哪些二进制大文件通过 LFS 托管（Git 树只保存哈希指针，真实大文件内容独立拉取），彻底杜绝设计稿、压缩包、机器学习权重等大文件直接提交导致 Git 仓库体积膨胀至数 GB 的顽疾。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="git lfs install&#x0d;&#x0a;git lfs track &quot;*.psd&quot;&#x0d;&#x0a;git lfs track &quot;*.zip&quot;&#x0d;&#x0a;git add .gitattributes&#x0d;&#x0a;git lfs ls-files"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 3: 🐍 Python —— uv (下载 + 配置，不讲用法) -->
             <TabItem Header="🐍 Python —— uv">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
                     <StackPanel>
