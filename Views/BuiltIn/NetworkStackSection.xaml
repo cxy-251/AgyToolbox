@@ -289,13 +289,36 @@
             <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
                 <StackPanel>
                     <WrapPanel VerticalAlignment="Center" Margin="0,0,0,6">
-                        <TextBlock Text="6. 本地端口占用与属主 PID 秒查 (netstat &amp; Get-NetTCPConnection)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="6. 本地端口占用嗅探与一键终结 (netstat &amp; Get-NetTCPConnection)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                         <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
                             <TextBlock Text="端口占用击杀闭环" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
                         </Border>
                     </WrapPanel>
-                    <TextBlock Text="开发与日常运维高频痛点：8080/3000/5000 端口提示已被占用。利用原生命令秒查监听状态与占用者 PID，配合 taskkill 即可实现手术刀级强杀。"
+                    <TextBlock Text="开发与日常运维高频痛点：8080/3000/5000 端口提示已被占用。输入端口号一键查明占用进程名与 PID，并可直接强行杀死释放端口；亦可复制原生命令手动排查。"
                                FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <!-- 交互式一键端口嗅探与终结 (免敲命令) -->
+                    <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="140"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="目标端口:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBox x:Name="TxtPortToKill" Grid.Column="1" Text="8080" Padding="6,4" FontSize="12" Margin="0,0,10,0"
+                                         Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}"/>
+                                <Button Grid.Column="2" Content="查占用的进程" Click="BtnCheckPort_Click"/>
+                                <TextBlock x:Name="TxtPortResult" Grid.Column="3" VerticalAlignment="Center" Margin="14,0,0,0" FontSize="12" Foreground="{DynamicResource BrushTextSecondary}"/>
+                            </Grid>
+                            <StackPanel x:Name="PanelKillPort" Orientation="Horizontal" Margin="0,10,0,0" Visibility="Collapsed">
+                                <TextBlock x:Name="TxtPortOccupantDesc" Text="-" VerticalAlignment="Center" Foreground="#DC2626" FontWeight="SemiBold" FontSize="12" Margin="0,0,12,0"/>
+                                <Button Content="💥 强行杀死该进程并释放端口" Background="#DC2626" Click="BtnKillPortProcess_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
 
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -333,7 +356,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- 工具 6: 局域网共享文件夹正向创建、赋权与排错 -->
+            <!-- 工具 7: 局域网共享文件夹正向创建、赋权与排错 -->
             <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
                 <StackPanel>
                     <Grid Margin="0,0,0,6">
@@ -342,7 +365,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="6. 局域网共享文件夹正向创建、赋权与访问排障" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <TextBlock Text="7. 局域网共享文件夹正向创建、赋权与访问排障" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                             <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
                                 <TextBlock Text="局域网协作必备" FontSize="10" Foreground="{DynamicResource BrushAlertGreenText}" FontWeight="Bold"/>
                             </Border>
@@ -384,7 +407,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- 工具 7: 系统时间跑偏与 NTP 授时同步 (w32tm & 双系统 8 小时修复) -->
+            <!-- 工具 8: 系统时间跑偏与 NTP 授时同步 (w32tm & 双系统 8 小时修复) -->
             <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
                 <StackPanel>
                     <Grid Margin="0,0,0,6">
@@ -393,7 +416,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="7. 系统时间跑偏排查 (w32tm) 与双系统 8 小时时差修复" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <TextBlock Text="8. 系统时间跑偏排查 (w32tm) 与双系统 8 小时时差修复" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
                             <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
                                 <TextBlock Text="授时与双系统时钟" FontSize="10" Foreground="{DynamicResource BrushAlertPurpleText}" FontWeight="Bold"/>
                             </Border>

@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using AgyToolbox.Services;
@@ -11,6 +12,49 @@ public partial class NetworkStackSection : UserControl
     public NetworkStackSection()
     {
         InitializeComponent();
+    }
+
+    private void BtnCheckPort_Click(object sender, RoutedEventArgs e)
+    {
+        if (int.TryParse(TxtPortToKill.Text.Trim(), out int port))
+        {
+            var occs = _service.FindPortOccupants(port);
+            if (occs.Count == 0)
+            {
+                TxtPortResult.Text = $"✓ 端口 {port} 空闲未被占用";
+                TxtPortResult.Foreground = ThemeBrushes.Success;
+                PanelKillPort.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                var first = occs[0];
+                TxtPortResult.Text = $"✗ 端口正在被占用！";
+                TxtPortResult.Foreground = ThemeBrushes.Danger;
+                TxtPortOccupantDesc.Text = $"占用进程: {first.ProcessName} (PID: {first.Pid})";
+                PanelKillPort.Tag = first.Pid;
+                PanelKillPort.Visibility = Visibility.Visible;
+            }
+        }
+        else
+        {
+            MessageBox.Show("请输入正确的数字端口号。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void BtnKillPortProcess_Click(object sender, RoutedEventArgs e)
+    {
+        if (PanelKillPort.Tag is int pid)
+        {
+            if (_service.KillProcessByPid(pid))
+            {
+                MessageBox.Show($"已成功终止 PID: {pid} 进程，端口已释放！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                BtnCheckPort_Click(sender, e);
+            }
+            else
+            {
+                MessageBox.Show("终止进程失败，可能需要管理员权限。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
     }
 
     private void BtnTestNetConnection_Click(object sender, RoutedEventArgs e)
