@@ -15,6 +15,7 @@ public partial class MainWindow : Window
     private readonly SystemOptView _systemOptView = new();
     private readonly BuiltInGuideView _builtInGuideView = new();
     private readonly NativeDevView _nativeDevView = new();
+    private readonly ModernToolchainView _modernToolchainView = new();
     private readonly PortableToolboxView _portableToolboxView = new();
 
     public MainWindow()
@@ -108,7 +109,12 @@ public partial class MainWindow : Window
         else if (NavNativeDev.IsChecked == true)
         {
             MainContentHost.Content = _nativeDevView;
-            TxtHeaderBreadcrumb.Text = "步骤四：原生开发与终端基建";
+            TxtHeaderBreadcrumb.Text = "步骤四：原生开发与免编译脚本";
+        }
+        else if (NavModernToolchain.IsChecked == true)
+        {
+            MainContentHost.Content = _modernToolchainView;
+            TxtHeaderBreadcrumb.Text = "步骤五：现代工具链搭建";
         }
         else if (NavToolbox.IsChecked == true)
         {

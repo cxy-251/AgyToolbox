@@ -1,0 +1,581 @@
+<UserControl x:Class="AgyToolbox.Views.ModernToolchainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1000">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <!-- 顶部始终可见的说明看板 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 6 个聚焦子标签内容 -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部模块说明看板 (全标签外层始终可见) -->
+        <Border Grid.Row="0" Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
+            <StackPanel>
+                <TextBlock Text="📦 步骤五：现代工具链搭建与精选矩阵" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
+                <TextBlock Text="▎ 只精选实际在用的现代工具链——Python 用 uv、Node.js 用 pnpm、编辑器用 Zed、C# 用 dotnet CLI、外加 ripgrep/fd/bat 这几个 Rust 小工具替代经典命令。不追求覆盖所有流行工具，本地开发不需要容器隔离，所以这里不涉及 Docker。"
+                           FontSize="12" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap" LineHeight="18"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 6 个聚焦子标签 -->
+        <TabControl Grid.Row="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1"
+                    ItemContainerStyle="{DynamicResource SubTabItemStyle}">
+
+            <!-- Tab 1: 🧭 定位说明 -->
+            <TabItem Header="🧭 定位说明">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+                    <StackPanel>
+                        <!-- 核心定位卡片 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="🎯 现代开发工具链选型与设计哲学" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+                                
+                                <TextBlock Text="1. 为什么是这 6 个工具，而不是其他流行工具？" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 只精选实际在用的生产级现代工具链：在 Windows 平台上，各类包管理与运行时繁杂冗余，新手极易陷入决策内耗。本指南杜绝概念堆砌，仅锁定当前经受真实项目验证、性能最快、维护最活跃的现代方案：&#x0a;  - Python：放弃沉重拖沓的 conda/pyenv/pipenv，全面拥抱 Rust 编写的瞬时包管理与运行时总管 uv。&#x0a;  - Node.js：跳过冗余且深层嵌套的传统 npm，借助官方内置 Corepack 启用硬链接省盘极客 pnpm。&#x0a;  - 代码编辑器：采用 GPU 硬件加速原生渲染、启动极快且资源占用极低的现代编辑器 Zed。&#x0a;  - C# / .NET：微软全平台开箱即用的高性能 dotnet CLI 与生产级运行时诊断/迁移生态。&#x0a;  - 控制台体验升级：精选三大 Rust 现代重构小工具（ripgrep、fd、bat），全量替代传统慢速控制台命令。"
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" LineHeight="18" Margin="0,0,0,14"/>
+
+                                <TextBlock Text="2. 为什么这里完全不涉及 Docker 容器化？" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 本地单机开发不需要强制容器隔离：在个人 Windows 开发机上，本地 Native 原生进程拥有最低的调度开销、最迅捷的启动速度与最直接的端口/文件调试体验，无需承受 Hyper-V / WSL2 虚拟化带来的常驻内存霸占与文件跨系统 IO 性能折损。&#x0a;• 职责边界分明：容器化（Docker / Podman / K8s）是多人团队协作抹平系统环境差异、CI/CD 自动化构建集群及云端生产部署阶段的核心工具，不属于本地轻量开荒与快速编码的主线逻辑。"
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" LineHeight="18"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 2: 🐍 Python —— uv (下载 + 配置，不讲用法) -->
+            <TabItem Header="🐍 Python —— uv">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+                    <StackPanel>
+                        <!-- 板块 1: 下载与验证 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📥 1. 下载与验证" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+                                
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="通过 winget 官方包管理器安装 Astral uv:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="winget install --id=astral-sh.uv"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：uv 是由 Astral 团队使用 Rust 打造的极致轻量级 Python 包管理与运行时管理器，兼具极速依赖解析与 Python 版本自动化管理。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="winget install --id=astral-sh.uv"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="验证 uv 安装与当前版本:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="uv --version"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="uv --version"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: 配置 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ 2. 环境配置与工程骨架初始化" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="安装独立 Python 运行时版本 (例如 3.12):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="uv python install 3.12"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：uv 具备独立的 Python 运行时管理能力，不依赖系统是否预装了 Python。执行 uv python install 会下载官方独立免安装二进制版本，装完后 uv 即可在任何项目工程中按需直调。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="uv python install 3.12"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="初始化项目环境骨架:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="uv init myproject"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：这一步仅用于建立项目基础骨架（自动生成标准 pyproject.toml、.python-version 与项目初始结构），确立环境依赖基准。后续的包安装与日常运行等业务操作不在本搭建向导展开。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="uv init myproject"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <TextBlock Text="💡 环境变量提示：若需要显式指定全局或多工具共享的 Python 解释器来源，可配置环境变量 UV_PYTHON（例如指向具体的 Python 可执行文件路径或语义化版本），uv 在解析解释器时会优先依据该变量锁定，避免因系统 PATH 顺序漂移产生版本混乱。"
+                                               FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 3: 📦 Node.js —— pnpm (下载 + 配置，不讲用法) -->
+            <TabItem Header="📦 Node.js —— pnpm">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+                    <StackPanel>
+                        <!-- 板块 1: 下载与验证 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📥 1. 下载与验证" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <!-- 路径 A: 官方推荐 Corepack -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="官方推荐途径：通过 Node.js 原生 Corepack 激活 pnpm:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="corepack enable&#x0d;&#x0a;corepack prepare pnpm@latest --activate&#x0d;&#x0a;pnpm --version"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：Corepack 是现代 Node.js 自带的官方包管理器协调器，能够确保开发机精准激活并匹配团队声明的 pnpm 版本，无需全局 npm install 污染环境。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="corepack enable&#x0d;&#x0a;corepack prepare pnpm@latest --activate&#x0d;&#x0a;pnpm --version"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 路径 B: winget 备选 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="备选途径：通过 winget 独立安装 pnpm:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="winget install pnpm"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：若开发机尚未配置好 Node.js Corepack 或希望完全独立管理 pnpm 二进制，可选用 Windows 官方 winget 快速安装。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="winget install pnpm"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: 配置 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ 2. 全局硬链接存储与项目配置认知" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="自定义全局内容寻址 Store 目录 (转移 C 盘占用):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="pnpm config set store-dir D:\pnpm-store"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：pnpm 依靠全局基于内容寻址的内容库建立硬链接（Hard Link），所有项目共享同一份物理文件。当 C 盘空间紧张时，可通过此命令将 store-dir 迁移到 D 盘等数据分区。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="pnpm config set store-dir D:\pnpm-store"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <TextBlock Text="📄 项目关键配置文件代表的含义（认知准备）:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="• .npmrc：位于项目根目录或用户主目录，声明包管理器行为规范。常用于指定国内镜像源（如 registry=https://registry.npmmirror.com）、自动安装同级依赖（auto-install-peers=true）或限制幽灵依赖。&#x0a;• pnpm-workspace.yaml：用于定义 Monorepo 多包工程工作区。当存在该文件时，表明此仓库下的各子模块（packages/*）之间允许直接通过软链接互相引用，避免跨工程发布测试的繁琐流程。"
+                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" LineHeight="16"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 4: 🎨 编辑器 —— Zed (下载 + 配置，不讲用法) -->
+            <TabItem Header="🎨 编辑器 —— Zed">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+                    <StackPanel>
+                        <!-- 板块 1: 下载 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📥 1. 下载与安装" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+                                
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="通过 winget 安装高性能现代编辑器 Zed:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="winget install Zed-Industries.Zed"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：Zed 是基于 Rust 开发的新一代极速代码编辑器，采用 GPU 硬件加速渲染，冷启动秒开，原生支持协作与语言服务器协议 (LSP)。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="winget install Zed-Industries.Zed"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: 配置 (各语言 LSP 环境识别配置) -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ 2. 全局配置与多语言 LSP 环境识别" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+                                
+                                <TextBlock Text="• 配置文件位置：~/.config/zed/settings.json（Windows 对应目录为 %USERPROFILE%\.config\zed\settings.json）。Zed 的所有外观行为与语言服务器对接均通过该声明式 JSON 文件集中配置。"
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="各主流语言在 Zed 中的环境对接方案:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,6"/>
+                                        <TextBlock Text="• 🐍 Python：在 settings.json 中将 pyright / basedpyright 语言服务指向 uv 创建的虚拟环境解释器（例如项目内的 .venv/Scripts/python.exe），使编辑器直接获得智能补全与语法检查。&#x0a;• 📦 Node.js / TypeScript：Zed 已经内置支持 TypeScript 语言服务（vtsls），开箱自动识别项目中的 node_modules 与 tsconfig.json，无需额外复杂配置。&#x0a;• 🦀 Rust：Zed 具备对 rust-analyzer 的开箱即用深度集成。只要系统 PATH 中能找到 cargo / rustc，Zed 即可自动拉起内置服务，无需任何额外插件。&#x0a;• 💻 C#：在 Zed 扩展面板中安装官方 C# 扩展，并可通过配置指定 OmniSharp 或 csharp-language-server 提供代码智能导航。"
+                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" LineHeight="16"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="~/.config/zed/settings.json 推荐配置模板 (含各语言 LSP 环境指向):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制配置模板" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="{}{&#x0d;&#x0a;  &quot;ui_font_size&quot;: 14,&#x0d;&#x0a;  &quot;buffer_font_size&quot;: 14,&#x0d;&#x0a;  &quot;buffer_font_family&quot;: &quot;Consolas&quot;,&#x0d;&#x0a;  &quot;languages&quot;: {&#x0d;&#x0a;    &quot;Python&quot;: {&#x0d;&#x0a;      &quot;language_servers&quot;: [&quot;pyright&quot;]&#x0d;&#x0a;    },&#x0d;&#x0a;    &quot;Rust&quot;: {&#x0d;&#x0a;      &quot;language_servers&quot;: [&quot;rust-analyzer&quot;]&#x0d;&#x0a;    },&#x0d;&#x0a;    &quot;C#&quot;: {&#x0d;&#x0a;      &quot;language_servers&quot;: [&quot;omnisharp&quot;]&#x0d;&#x0a;    }&#x0d;&#x0a;  },&#x0d;&#x0a;  &quot;lsp&quot;: {&#x0d;&#x0a;    &quot;pyright&quot;: {&#x0d;&#x0a;      &quot;settings&quot;: {&#x0d;&#x0a;        &quot;python&quot;: {&#x0d;&#x0a;          &quot;pythonPath&quot;: &quot;./.venv/Scripts/python.exe&quot;&#x0d;&#x0a;        }&#x0d;&#x0a;      }&#x0d;&#x0a;    }&#x0d;&#x0a;  }&#x0d;&#x0a;}"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6" MaxHeight="130" VerticalScrollBarVisibility="Auto"
+                                                 Text="{}{&#x0d;&#x0a;  &quot;ui_font_size&quot;: 14,&#x0d;&#x0a;  &quot;buffer_font_size&quot;: 14,&#x0d;&#x0a;  &quot;languages&quot;: {&#x0d;&#x0a;    &quot;Python&quot;: { &quot;language_servers&quot;: [&quot;pyright&quot;] },&#x0d;&#x0a;    &quot;Rust&quot;: { &quot;language_servers&quot;: [&quot;rust-analyzer&quot;] },&#x0d;&#x0a;    &quot;C#&quot;: { &quot;language_servers&quot;: [&quot;omnisharp&quot;] }&#x0d;&#x0a;  },&#x0d;&#x0a;  &quot;lsp&quot;: {&#x0d;&#x0a;    &quot;pyright&quot;: { &quot;settings&quot;: { &quot;python&quot;: { &quot;pythonPath&quot;: &quot;./.venv/Scripts/python.exe&quot; } } }&#x0d;&#x0a;  }&#x0d;&#x0a;}"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 5: 💻 C# / .NET CLI (下载 + 配置 + 使用教学，三段全) -->
+            <TabItem Header="💻 C# / .NET CLI">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+                    <StackPanel>
+                        <!-- 板块 1: 下载与验证 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📥 1. 下载与验证" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="通过 winget 安装微软官方最新 .NET 9 SDK:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="winget install Microsoft.DotNet.SDK.9"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="winget install Microsoft.DotNet.SDK.9"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="验证 CLI 安装并列出本地所有已就绪 SDK:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="dotnet --version&#x0d;&#x0a;dotnet --list-sdks"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="dotnet --version&#x0d;&#x0a;dotnet --list-sdks"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: 配置 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ 2. 全局工具目录与 NuGet 源配置" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="1. 全局工具路径 (%USERPROFILE%\.dotnet\tools):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                        <TextBlock Text="• 所有通过 dotnet tool install -g 安装的命令行工具，默认二进制可执行文件均存放于 %USERPROFILE%\.dotnet\tools。&#x0a;• 安装 SDK 时安装程序通常会自动将该目录追加至当前用户的 PATH 环境变量中。如果安装工具后终端提示无法找到命令，请前往【步骤二：系统优化与安全】中的「环境变量管理」页面核对并补全该路径。"
+                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" LineHeight="16"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="2. NuGet 镜像源配置 (加速国内包下载):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="dotnet nuget add source https://repo.huaweicloud.com/repository/nuget/v3/index.json -n &quot;HuaweiCloud&quot;"/>
+                                        </Grid>
+                                        <TextBlock Text="• 配置文件位置：%APPDATA%\NuGet\NuGet.Config。若访问官方源网络延迟偏高，可执行上述命令添加国内镜像加速节点：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="dotnet nuget add source https://repo.huaweicloud.com/repository/nuget/v3/index.json -n &quot;HuaweiCloud&quot;"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: 使用教学 (全量指令) -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="📖 3. .NET CLI 全流程使用教学" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <!-- 项目工程创建 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="创建控制台应用与 WebAPI 工程模板:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="dotnet new console -n MyApp&#x0d;&#x0a;dotnet new webapi -n MyApi"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="dotnet new console -n MyApp&#x0d;&#x0a;dotnet new webapi -n MyApi"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 运行/编译/发布 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="本地即时运行、增量编译与 Release 生产发布:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="dotnet run&#x0d;&#x0a;dotnet build&#x0d;&#x0a;dotnet publish -c Release"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="dotnet run&#x0d;&#x0a;dotnet build&#x0d;&#x0a;dotnet publish -c Release"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 全局诊断与工程工具安装 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="安装两大约束级生产全局工具 (dotnet-ef / dotnet-trace):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="dotnet tool install -g dotnet-ef&#x0d;&#x0a;dotnet tool install -g dotnet-trace"/>
+                                        </Grid>
+                                        <TextBlock Text="• dotnet-ef：Entity Framework Core 官方命令行工具，用于执行数据库 Migration 迁移追踪、模型脚手架逆向与数据库结构更新。&#x0a;• dotnet-trace：微软跨平台官方运行时性能探针，无需重启线上进程即可按需实时采集 CPU 采样图谱与诊断调用栈。"
+                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6" LineHeight="16"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="dotnet tool install -g dotnet-ef&#x0d;&#x0a;dotnet tool install -g dotnet-trace"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 添加 NuGet 包依赖 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="为当前项目快速引入 NuGet 依赖包:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="dotnet add package Newtonsoft.Json"/>
+                                        </Grid>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="dotnet add package Newtonsoft.Json"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 6: 🦀 Rust 小工具 —— ripgrep + fd + bat (下载 + 配置 + 使用教学，三段全) -->
+            <TabItem Header="🦀 Rust 小工具 (rg / fd / bat)">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14">
+                    <StackPanel>
+                        <!-- 板块 1: 下载 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📥 1. 下载与安装三大 Rust 核心命令行工具" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="一键通过 winget 安装 ripgrep、fd 与 bat:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="winget install BurntSushi.ripgrep.MSVC&#x0d;&#x0a;winget install sharkdp.fd&#x0d;&#x0a;winget install sharkdp.bat"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：ripgrep (rg) 替代传统 findstr，毫秒级正则表达式多核并发搜索；fd 替代 dir /s，遵循 .gitignore 极速检索文件树；bat 替代 type / cat，带语法高亮与 Git 变更指示。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="winget install BurntSushi.ripgrep.MSVC&#x0d;&#x0a;winget install sharkdp.fd&#x0d;&#x0a;winget install sharkdp.bat"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 2: 配置 (PowerShell $PROFILE 联动) -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ 2. 与 PowerShell $PROFILE 联动配置" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="为 bat 配置函数别名顶替原生 cat / type:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制配置" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="function cat { bat --paging=never $args }"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：将上述函数追加写入当前 PowerShell $PROFILE 配置文件中，日常查看小文件时既拥有语法高亮，又自动关闭分页器滚动（详见步骤四 .ps1 tab 的 $PROFILE 板块）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="function cat { bat --paging=never $args }"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: 使用教学 (全量指令) -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="📖 3. 核心工具实战与组合使用教学" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+
+                                <!-- 1. ripgrep -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="ripgrep (rg) 基础用法 (文本匹配、类型过滤与正则):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="rg &quot;TODO&quot; --type cs&#x0d;&#x0a;rg -i &quot;error\s*:\s*\d+&quot;"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：默认尊重 .gitignore，秒级递归匹配；-t 或 --type 精确限定文件类别（如 cs, ts, py, rust）；-i 支持不区分大小写正则匹配。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="rg &quot;TODO&quot; --type cs&#x0d;&#x0a;rg -i &quot;error\s*:\s*\d+&quot;"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 2. fd -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="fd 基础用法 (按扩展名与模式极速检索文件):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="fd -e ps1&#x0d;&#x0a;fd --hidden &quot;appsettings&quot;"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：-e 快速过滤扩展名（如 ps1, json, sln）；默认跳过隐藏文件和 .git 目录，加上 --hidden 可透视隐藏配置文件。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="fd -e ps1&#x0d;&#x0a;fd --hidden &quot;appsettings&quot;"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 3. bat -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="bat 基础用法 (带语法高亮与行号查看源码):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="bat script.ps1"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：自动识别上百种语言格式并高亮着色，显示行号并标记 Git 增删改状态，比传统 Windows type 拥有极其优秀的终端阅读体验。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="bat script.ps1"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- 4. 管道组合实战 -->
+                                <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="多工具管道组合实战 (流式筛选并批量呈现):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <Button Grid.Column="1" Content="📋 复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2"
+                                                    Click="BtnCopySnippet_Click" Tag="# 跨平台 / Git Bash / WSL 场景 (xargs):&#x0d;&#x0a;fd -e ps1 | xargs bat&#x0d;&#x0a;&#x0d;&#x0a;# PowerShell 原生管道场景:&#x0d;&#x0a;fd -e ps1 | ForEach-Object { bat $_ }"/>
+                                        </Grid>
+                                        <TextBlock Text="说明：通过管道将 fd 搜出的文件流直接传递给 bat 批量打印预览。在 Git Bash 或 WSL 环境可直接管道串联 xargs bat，在 Windows 原生 PowerShell 中可直接通过 ForEach-Object 流式传递。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="6"
+                                                 Text="fd -e ps1 | xargs bat&#x0d;&#x0a;# 或在原生 PowerShell 中:&#x0d;&#x0a;fd -e ps1 | ForEach-Object { bat $_ }"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
