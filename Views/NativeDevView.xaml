@@ -15,17 +15,17 @@
         <Border Grid.Row="0" Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,10">
             <StackPanel>
                 <TextBlock Text="💻 步骤四：原生开发环境与免编译脚本" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
-                <TextBlock Text="坚持「纯血原生、零第三方依赖」：深度解析 Windows Shell 族谱底层机制、CWD 地址栏秒开技巧与 ExecutionPolicy 环境治理，剖析 .bat / .ps1 变量、编码与 O(n²) 性能陷阱；提供 .bat / .ps1 / .reg / .hta 全套免编译脚本工程化实战、单步调试、.NET 底层互操作与模板，构建纯粹扎实的 Windows 脚本开发能力。"
+                <TextBlock Text="坚持「纯血原生、零第三方依赖」：深度解析 Windows Shell 族谱底层机制与 ExecutionPolicy 权限治理；按语言专属分类深入剖析 .bat 批处理、.ps1 工程化进阶（断点调试、参数守卫、.NET 互操作、正则清洗）、.reg 注册表声明与 .hta 微前端应用，全面构建纯粹扎实的 Windows 脚本开发能力。"
                            FontSize="12" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
 
-        <!-- 2 个聚焦子标签 (严格拆分：纯脚本与开发语言本身，所有命令调用工具均已归位步骤二/三) -->
+        <!-- 5 个聚焦子标签 (按语言与运行环境分类，职责清晰，篇幅均衡) -->
         <TabControl Grid.Row="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1"
                     ItemContainerStyle="{DynamicResource SubTabItemStyle}">
 
-            <!-- Tab 1: 🐚 Shell 环境认知与脚本工程规范 -->
-            <TabItem Header="🐚 Shell 环境认知与脚本工程规范">
+            <!-- Tab 1: 🐚 Shell 环境与执行权限认知 (语言中立) -->
+            <TabItem Header="🐚 Shell 环境与执行权限认知">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
                         <!-- 第一块：Shell 家族族谱与原生真值表 -->
@@ -160,7 +160,7 @@
                                 </Grid>
 
                                 <!-- ExecutionPolicy 卡片 -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,6">
                                             <Grid.ColumnDefinitions>
@@ -177,7 +177,7 @@
                                         <TextBlock Text="• 为什么无需提权：使用 -Scope CurrentUser 仅修改当前用户配置，无需管理员身份即可生效，安全纯净无弹窗！"
                                                    FontSize="10" Foreground="{DynamicResource BrushSuccess}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,8"/>
 
-                                        <Grid Margin="0,0,0,8">
+                                        <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
@@ -193,132 +193,11 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- 第三块：语法避坑、编码规范与性能陷阱 -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
-                            <StackPanel>
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="⚠️ 3. 语法避坑、编码规范与 O(n²) 性能陷阱" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                        <Border Background="{DynamicResource BrushAlertErrorBg}" BorderBrush="{DynamicResource BrushAlertErrorBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
-                                            <TextBlock Text="⚡ 核心痛点" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource BrushAlertErrorText}"/>
-                                        </Border>
-                                    </WrapPanel>
-                                </Grid>
-
-                                <!-- 语法陷阱与编码陷阱 (左右双栏) -->
-                                <Grid Margin="0,0,0,10">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <!-- 语法陷阱 -->
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
-                                        <StackPanel>
-                                            <TextBlock Text="⚠️ 变量与退出码注意点 (.bat vs .ps1)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertErrorText}" Margin="0,0,0,4"/>
-                                            <TextBlock Text="1. 变量提取机制：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="• CMD 批处理：%VAR%（静态只读），循环内需 setlocal enabledelayedexpansion 并用 !VAR!。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                            <TextBlock Text="• PowerShell：$env:VAR（读写系统环境变量），$var（内部脚本变量）。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-                                            <TextBlock Text="2. 退出码与错误中断：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="• CMD：%ERRORLEVEL% 表示上一程序退出码 (0 为成功)。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                            <TextBlock Text="• PowerShell：$LASTEXITCODE 表示外部程序退出码；$? 表示上一条 cmdlet 成功状态；遇错即停声明 $ErrorActionPreference = 'Stop'。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        </StackPanel>
-                                    </Border>
-
-                                    <!-- 编码陷阱 -->
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
-                                        <StackPanel>
-                                            <TextBlock Text="🔤 脚本编码规范（编码选择与乱码预防）" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertWarningText}" Margin="0,0,0,4"/>
-                                            <TextBlock Text="1. CMD 批处理 (.bat) 编码法则：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="• 中文 Windows CMD 默认代码页为 CP936 (GBK)。若保存为纯 UTF-8，中文注释极易导致语法解析截断！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                            <TextBlock Text="• 对策：保存为 ANSI / GBK 编码，或在首行声明 chcp 65001 >nul 强制切 UTF-8。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-                                            <TextBlock Text="2. PowerShell 5.1 (.ps1) 编码法则：" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <TextBlock Text="• PowerShell 5.1 默认编码要求带 BOM 的 UTF-8（UTF-8 with BOM）。保存为无 BOM 的纯 UTF-8 时，中文极易被吞乱码！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                            <TextBlock Text="• 对策：在 VS Code 状态栏右下角切换为【UTF-8 with BOM】保存；PowerShell 7+ 则全面支持无 BOM 纯 UTF-8。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        </StackPanel>
-                                    </Border>
-                                </Grid>
-
-                                <!-- 性能陷阱卡片: 数组扩容 O(n²) -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="⚡ 核心性能陷阱：PowerShell 动态数组 $arr += $item 的 O(n²) 致命退化" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertErrorText}"/>
-                                            <Border Grid.Column="1" Background="{DynamicResource BrushAlertErrorBg}" CornerRadius="4" Padding="6,1">
-                                                <TextBlock Text="新手必踩大坑" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertErrorText}"/>
-                                            </Border>
-                                        </Grid>
-                                        <TextBlock Text="• 陷阱本质：PowerShell 的 @() 底层映射为固定长度的 object[] 数组，尺寸不可变！每次执行 +=，底层都会在堆内存重新申请「原长度+1」的全新数组并把所有旧数据全量深拷贝一次。当循环次数达到 10,000 次时，内部数据拷贝量高达 50,000,000 次，脚本直接陷入漫长假死！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        <TextBlock Text="• 优雅解法 1 (首选泛型列表)：声明 [System.Collections.Generic.List[object]]$list = [System.Collections.Generic.List[object]]::new()，循环内调用 $list.Add($x)，分摊时间复杂度 O(1)。&#x0a;• 优雅解法 2 (直接管道流捕获)：$res = foreach ($i in 1..10000) { $i * 2 }，利用 PowerShell 表达式流式赋值，由运行时直接缓冲并输出结果数组，完全零冗余内存搬移！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushSuccess}" TextWrapping="Wrap" Margin="0,4,0,6"/>
-                                        <Grid>
-                                            <TextBox Text="# 推荐高效写法 1: 强类型泛型列表 (极速追加)&#x0d;&#x0a;$list = [System.Collections.Generic.List[string]]::new()&#x0d;&#x0a;foreach ($i in 1..50000) { $list.Add(&quot;Item_$i&quot;) }&#x0d;&#x0a;&#x0d;&#x0a;# 推荐高效写法 2: 直接变量接收循环输出流 (管道流式分配)&#x0d;&#x0a;$result = foreach ($i in 1..50000) { &quot;Item_$i&quot; }" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6"/>
-                                            <Button Content="📋 复制性能优化写法" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
-                                                    Click="BtnCopySnippet_Click" Tag="$list = [System.Collections.Generic.List[string]]::new()&#x0d;&#x0a;foreach ($i in 1..50000) { $list.Add(&quot;Item_$i&quot;) }&#x0d;&#x0a;$result = foreach ($i in 1..50000) { &quot;Item_$i&quot; }"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 第四块：个人配置与现代演进 ($PROFILE) -->
+                        <!-- 第三块：认知地图——Windows 原生免编译脚本类型总览表 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
-                                <Grid Margin="0,0,0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
-                                        <TextBlock Text="🚀 4. PowerShell $PROFILE 个人配置文件初始化" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                        <Border Background="{DynamicResource BrushAlertSuccessBg}" BorderBrush="{DynamicResource BrushAlertSuccessBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
-                                            <TextBlock Text="⚡ 效率工具" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource BrushAlertSuccessText}"/>
-                                        </Border>
-                                    </WrapPanel>
-                                </Grid>
-
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
-                                    <StackPanel>
-                                        <TextBlock Text="📝 PowerShell $PROFILE 个人配置文件（规范化别名与函数配置）" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 作用机制：类似于 Linux 环境下的 ~/.bashrc 或 ~/.zshrc，每次启动 PowerShell 时自动载入执行。可配置常用高频别名 (如 gs -> git status)、终端网络代理快捷开关函数 (set-proxy / unset-proxy)、自定义端口查询函数等。"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Button Grid.Column="0" Content="📝 打开 PS 5.1 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnOpenProfilePs5_Click"/>
-                                            <Button Grid.Column="1" Content="📝 打开 pwsh 7 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="4,0,4,0" Click="BtnOpenProfilePwsh7_Click"/>
-                                            <Button Grid.Column="2" Content="📋 复制推荐模板脚本" Background="#16A34A" Margin="4,0,0,0" Click="BtnCopyProfileTemplate_Click"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </ScrollViewer>
-            </TabItem>
-
-            <!-- Tab 2: 📝 原生免编译脚本类型与写法 -->
-            <TabItem Header="📝 原生免编译脚本类型与写法">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
-                    <StackPanel>
-
-                        <!-- 板块 1: 认知地图——Windows 原生免编译脚本类型总览表 -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
-                            <StackPanel>
                                 <WrapPanel Margin="0,0,0,6">
-                                    <TextBlock Text="🗺️ 板块 1: 认知地图 —— Windows 原生免编译脚本类型总览" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <TextBlock Text="🗺️ 3. 认知地图 —— Windows 原生免编译脚本类型总览" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
                                     <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
                                         <TextBlock Text="底层执行引擎对照" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}"/>
                                     </Border>
@@ -433,223 +312,300 @@
                                 </Border>
                             </StackPanel>
                         </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                        <!-- 板块 2: .bat 批处理从零写起与调试排错 -->
+            <!-- Tab 2: 🔨 .bat 经典批处理开发 -->
+            <TabItem Header="🔨 .bat 经典批处理开发">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- 批处理原生调试排错看板 -->
+                        <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="🔍 批处理调试绝技：去掉 @echo off 观察「命令展开态」" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" CornerRadius="4" Padding="6,1">
+                                        <TextBlock Text="盲写终结者" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                                    </Border>
+                                </Grid>
+                                <TextBlock Text="• 痛点剖析：写批处理最怕盲写，语法报错时 cmd 窗口一闪而过退出。最原始也最有效的调试手段就是：将开头的 @echo off 注释或去掉，或在可疑段前显式声明 @echo on。&#x0a;• 真实形态：cmd.exe 会在执行每行前，先将该行所有参数与变量 (%~dp0、!VAR!) 实际代换展开后的样子打印在控制台上，路径拼错、空格未加引号一览无余！&#x0a;• 辅助断点：在可疑分支末尾插入 pause 阻止窗口自动关闭；或使用 cmd.exe /v:on /c test.bat 验证延迟变量环境。"
+                                           FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 语法核心机制 (双栏排布) -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
-                                <WrapPanel Margin="0,0,0,4">
-                                    <TextBlock Text="🔨 板块 2: .bat 批处理从零写起与单步调试排错" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
-                                    <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
-                                        <TextBlock Text="经典批处理精要" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}"/>
-                                    </Border>
-                                </WrapPanel>
-                                <TextBlock Text="虽然批处理语法古老，但在极客开箱、制作免依赖自解压安装包与双击启动器中依然不可替代。掌握以下核心机制与排错手段即可写出稳健脚本："
-                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
-
-                                <!-- 批处理原生调试排错看板 -->
-                                <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <TextBlock Text="🔍 批处理调试绝技：去掉 @echo off 观察「命令展开态」" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 痛点剖析：写批处理最怕盲写，语法报错时 cmd 窗口一闪而过退出。最原始也最有效的调试手段就是：将开头的 @echo off 注释或去掉，或在可疑段前显式声明 @echo on。&#x0a;• 真实形态：cmd.exe 会在执行每行前，先将该行所有参数与变量 (%~dp0、!VAR!) 实际代换展开后的样子打印在控制台上，路径拼错、空格未加引号一览无余！&#x0a;• 辅助断点：在可疑分支末尾插入 pause 阻止窗口自动关闭；或使用 cmd.exe /v:on /c test.bat 验证延迟变量环境。"
-                                                   FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 语法 5 大关键卡片 (双栏排布) -->
+                                <TextBlock Text="⚙️ .bat 核心语法机制与防坑规范" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
                                         <StackPanel>
                                             <TextBlock Text="1. 变量与延迟变量扩展 (!VAR! vs %VAR%):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
-                                            <TextBlock Text="在 for 循环或 if 代码块中，%VAR% 在预解析时就已被替换导致读不到循环内的实时值！必须使用 SetLocal EnableDelayedExpansion 并在代码块内使用 !VAR! 取值。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-                                            <TextBlock Text="2. 传参机制与特殊修饰符:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="在 for 循环或 if 代码块中，%VAR% 在预解析时就已被替换导致读不到循环内的实时值！必须使用 SetLocal EnableDelayedExpansion 并在代码块内使用 !VAR! 取值。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                            <TextBlock Text="2. 传参机制与特殊修饰符:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
                                             <TextBlock Text="%0 (当前脚本文件名) | %1~%9 (位置参数) | %* (所有参数) | %~dp0 (极其重要：当前脚本所在目录的绝对驱动器+路径，带反斜杠结尾，防 cd 路径漂移！)" FontSize="10" Foreground="{DynamicResource BrushSuccess}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="3. 退出状态码与错误跳转 (%ERRORLEVEL%):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
-                                            <TextBlock Text="上一条命令执行失败时 %ERRORLEVEL% 通常非 0。使用 if %ERRORLEVEL% neq 0 (goto :err) 拦截错误；脚本结束务必用 exit /b %CODE% 退出，切忌裸写 exit 导致宿主终端直接被关掉。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-                                            <TextBlock Text="4. for 循环与文本解析 (for /f):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,2,0,2"/>
+                                            <TextBlock Text="上一条命令执行失败时 %ERRORLEVEL% 通常非 0。使用 if %ERRORLEVEL% neq 0 (goto :err) 拦截错误；脚本结束务必用 exit /b %CODE% 退出，切忌裸写 exit 导致宿主终端直接被关掉。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                            <TextBlock Text="4. for 循环与文本解析 (for /f):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
                                             <TextBlock Text="遍历文件: for %%f in (*.log) do del &quot;%%f&quot;&#x0a;遍历命令输出: for /f &quot;tokens=1,2&quot; %%a in ('tasklist') do echo %%a %%b" FontSize="10" FontFamily="Consolas" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
 
-                                <!-- 实战完整脚本 clean_temp.bat -->
+                                <!-- 批处理专属编码法则 -->
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <StackPanel>
+                                        <TextBlock Text="🔤 批处理编码法则（CP936 vs UTF-8）" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertWarningText}" Margin="0,0,0,4"/>
+                                        <TextBlock Text="• 中文 Windows CMD 默认代码页为 CP936 (GBK)。若将 .bat 保存为无 BOM 的纯 UTF-8，中文注释极易导致语法解析器截断错乱，报「语法命令不正确」！&#x0a;• 正规解法：保存为 ANSI / GBK 编码；或者在脚本首行显式声明 chcp 65001 >nul 切换为 UTF-8 代码页。"
+                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 实战完整脚本 clean_temp.bat -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="📄 工业级范例脚本：clean_temp.bat (包含 %~dp0、延迟扩展、调试开关与错误治理)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <Button Grid.Column="1" Content="📋 一键复制 clean_temp.bat 源码" Background="#16A34A" FontSize="10" Padding="8,2"
+                                            Click="BtnCopySnippet_Click" Tag="@echo off&#x0d;&#x0a;:: 提示：排查脚本执行时，可将上一行改为 @echo on 观察展开态&#x0d;&#x0a;setlocal EnableExtensions EnableDelayedExpansion&#x0d;&#x0a;title Windows 原生临时文件安全清理工具&#x0d;&#x0a;cd /d &quot;%~dp0&quot;&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在初始化环境，工作根目录：%cd%&#x0d;&#x0a;set /a deleted_count=0&#x0d;&#x0a;set &quot;TARGET_DIR=%TEMP%&quot;&#x0d;&#x0a;&#x0d;&#x0a;if not exist &quot;!TARGET_DIR!&quot; (&#x0d;&#x0a;    echo [ERROR] 目标临时目录不存在: !TARGET_DIR!&#x0d;&#x0a;    exit /b 1&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在扫描并清理临时垃圾文件...&#x0d;&#x0a;for /r &quot;!TARGET_DIR!&quot; %%i in (*.tmp *.log) do (&#x0d;&#x0a;    del /f /q &quot;%%i&quot; >nul 2>&amp;1&#x0d;&#x0a;    if not exist &quot;%%i&quot; (&#x0d;&#x0a;        set /a deleted_count+=1&#x0d;&#x0a;    )&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [SUCCESS] 清理完成！共释放 !deleted_count! 个无用临时文件。&#x0d;&#x0a;endlocal&#x0d;&#x0a;exit /b 0"/>
+                                </Grid>
+                                <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="200" VerticalScrollBarVisibility="Auto"
+                                         Text="@echo off&#x0d;&#x0a;:: 提示：排查脚本执行时，可将上一行改为 @echo on 观察展开态&#x0d;&#x0a;setlocal EnableExtensions EnableDelayedExpansion&#x0d;&#x0a;title Windows 原生临时文件安全清理工具&#x0d;&#x0a;cd /d &quot;%~dp0&quot;&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在初始化环境，工作根目录：%cd%&#x0d;&#x0a;set /a deleted_count=0&#x0d;&#x0a;set &quot;TARGET_DIR=%TEMP%&quot;&#x0d;&#x0a;&#x0d;&#x0a;if not exist &quot;!TARGET_DIR!&quot; (&#x0d;&#x0a;    echo [ERROR] 目标临时目录不存在: !TARGET_DIR!&#x0d;&#x0a;    exit /b 1&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在扫描并清理临时垃圾文件...&#x0d;&#x0a;for /r &quot;!TARGET_DIR!&quot; %%i in (*.tmp *.log) do (&#x0d;&#x0a;    del /f /q &quot;%%i&quot; >nul 2>&amp;1&#x0d;&#x0a;    if not exist &quot;%%i&quot; (&#x0d;&#x0a;        set /a deleted_count+=1&#x0d;&#x0a;    )&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [SUCCESS] 清理完成！共释放 !deleted_count! 个无用临时文件。&#x0d;&#x0a;endlocal&#x0d;&#x0a;exit /b 0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 3: ⚡ .ps1 PowerShell 工程化实战 -->
+            <TabItem Header="⚡ .ps1 PowerShell 工程化实战">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- 第一块：配置文件与基础规范 ($PROFILE / 编码 / 变量) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📝 1. PowerShell 个人配置文件 ($PROFILE) 与基础规范" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,8"/>
+                                <TextBlock Text="• 作用机制：类似于 Linux 环境下的 ~/.bashrc，每次启动 PowerShell 时自动载入执行。可配置常用高频别名 (如 gs -> git status)、终端网络代理快捷开关函数 (set-proxy / unset-proxy)、自定义端口查询函数等。"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Content="📝 打开 PS 5.1 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="0,0,4,0" Click="BtnOpenProfilePs5_Click"/>
+                                    <Button Grid.Column="1" Content="📝 打开 pwsh 7 $PROFILE" Style="{DynamicResource SecondaryButton}" Margin="4,0,4,0" Click="BtnOpenProfilePwsh7_Click"/>
+                                    <Button Grid.Column="2" Content="📋 复制推荐模板脚本" Background="#16A34A" Margin="4,0,0,0" Click="BtnCopyProfileTemplate_Click"/>
+                                </Grid>
+
+                                <!-- 编码规范与变量/退出码 (左右双栏) -->
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,5,0">
+                                        <StackPanel>
+                                            <TextBlock Text="🔤 PowerShell 编码规范 (UTF-8 with BOM):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertWarningText}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="• PowerShell 5.1 默认要求带 BOM 的 UTF-8（UTF-8 with BOM）。保存为无 BOM 的纯 UTF-8 时，中文极易被吞乱码！&#x0a;• 对策：在 VS Code 状态栏右下角切换为【UTF-8 with BOM】保存；PowerShell 7+ 则全面支持无 BOM 纯 UTF-8。"
+                                                       FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="5,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="⚡ 变量体系与遇错即停:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                            <TextBlock Text="• 环境变量写为 $env:PATH；内部变量直接用 $var。&#x0a;• 外部程序退出码看 $LASTEXITCODE；上一条 cmdlet 状态看 $?。&#x0a;• 严谨脚本首行声明 $ErrorActionPreference = 'Stop' 实现遇错即停。"
+                                                       FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <!-- 性能陷阱卡片: 数组扩容 O(n²) -->
                                 <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
                                     <StackPanel>
-                                        <Grid Margin="0,0,0,6">
+                                        <Grid Margin="0,0,0,4">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Text="📄 工业级范例脚本：clean_temp.bat (包含 %~dp0、延迟扩展、调试开关与错误治理)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <Button Grid.Column="1" Content="📋 一键复制 clean_temp.bat 源码" Background="#16A34A" FontSize="10" Padding="8,2"
-                                                    Click="BtnCopySnippet_Click" Tag="@echo off&#x0d;&#x0a;:: 提示：排查脚本执行时，可将上一行改为 @echo on 观察展开态&#x0d;&#x0a;setlocal EnableExtensions EnableDelayedExpansion&#x0d;&#x0a;title Windows 原生临时文件安全清理工具&#x0d;&#x0a;cd /d &quot;%~dp0&quot;&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在初始化环境，工作根目录：%cd%&#x0d;&#x0a;set /a deleted_count=0&#x0d;&#x0a;set &quot;TARGET_DIR=%TEMP%&quot;&#x0d;&#x0a;&#x0d;&#x0a;if not exist &quot;!TARGET_DIR!&quot; (&#x0d;&#x0a;    echo [ERROR] 目标临时目录不存在: !TARGET_DIR!&#x0d;&#x0a;    exit /b 1&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在扫描并清理临时垃圾文件...&#x0d;&#x0a;for /r &quot;!TARGET_DIR!&quot; %%i in (*.tmp *.log) do (&#x0d;&#x0a;    del /f /q &quot;%%i&quot; >nul 2>&amp;1&#x0d;&#x0a;    if not exist &quot;%%i&quot; (&#x0d;&#x0a;        set /a deleted_count+=1&#x0d;&#x0a;    )&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [SUCCESS] 清理完成！共释放 !deleted_count! 个无用临时文件。&#x0d;&#x0a;endlocal&#x0d;&#x0a;exit /b 0"/>
+                                            <TextBlock Text="⚡ 核心性能陷阱：动态数组 $arr += $item 的 O(n²) 致命退化" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertErrorText}"/>
+                                            <Border Grid.Column="1" Background="{DynamicResource BrushAlertErrorBg}" CornerRadius="4" Padding="6,1">
+                                                <TextBlock Text="新手必踩大坑" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertErrorText}"/>
+                                            </Border>
                                         </Grid>
-                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="160" VerticalScrollBarVisibility="Auto"
-                                                 Text="@echo off&#x0d;&#x0a;:: 提示：排查脚本执行时，可将上一行改为 @echo on 观察展开态&#x0d;&#x0a;setlocal EnableExtensions EnableDelayedExpansion&#x0d;&#x0a;title Windows 原生临时文件安全清理工具&#x0d;&#x0a;cd /d &quot;%~dp0&quot;&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在初始化环境，工作根目录：%cd%&#x0d;&#x0a;set /a deleted_count=0&#x0d;&#x0a;set &quot;TARGET_DIR=%TEMP%&quot;&#x0d;&#x0a;&#x0d;&#x0a;if not exist &quot;!TARGET_DIR!&quot; (&#x0d;&#x0a;    echo [ERROR] 目标临时目录不存在: !TARGET_DIR!&#x0d;&#x0a;    exit /b 1&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [INFO] 正在扫描并清理临时垃圾文件...&#x0d;&#x0a;for /r &quot;!TARGET_DIR!&quot; %%i in (*.tmp *.log) do (&#x0d;&#x0a;    del /f /q &quot;%%i&quot; >nul 2>&amp;1&#x0d;&#x0a;    if not exist &quot;%%i&quot; (&#x0d;&#x0a;        set /a deleted_count+=1&#x0d;&#x0a;    )&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;echo [SUCCESS] 清理完成！共释放 !deleted_count! 个无用临时文件。&#x0d;&#x0a;endlocal&#x0d;&#x0a;exit /b 0"/>
+                                        <TextBlock Text="• 陷阱本质：PowerShell 的 @() 底层映射为固定长度的 object[] 数组，尺寸不可变！每次执行 +=，底层都会重新分配「原长度+1」新数组并把所有旧数据深拷贝一次。当循环次数达到 10,000 次时，数据拷贝量达 50,000,000 次，脚本直接卡死假死！"
+                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="• 优雅解法 1：[System.Collections.Generic.List[object]]$list = @()，循环内调用 $list.Add($x)，分摊复杂度 O(1)。&#x0a;• 优雅解法 2：$res = foreach ($i in 1..10000) { $i * 2 }，表达式流式捕获，零冗余内存搬移！"
+                                                   FontSize="10" Foreground="{DynamicResource BrushSuccess}" TextWrapping="Wrap" Margin="0,2,0,4"/>
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
                         </Border>
 
-                        <!-- 板块 3: .ps1 PowerShell 脚本工程实战与进阶 -->
-                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                        <!-- 第二块：断点调试与排错手段 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
-                                <WrapPanel Margin="0,0,0,4">
-                                    <TextBlock Text="⚡ 板块 3: .ps1 PowerShell 脚本工程实战、调试与 .NET 进阶" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
-                                    <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
-                                        <TextBlock Text="精通工程化标准" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}"/>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="🔍 2. 告别盲写：PowerShell 断点与单步调试排错实战" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushAlertInfoBg}" CornerRadius="4" Padding="6,1">
+                                        <TextBlock Text="优先必修" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertInfoText}"/>
                                     </Border>
-                                </WrapPanel>
-                                <TextBlock Text="从「单文件盲写」跨越到「工程级严谨交付」：涵盖调试排错、参数守卫校验与安全演练、多文件组织、.NET 底层互操作及正则清洗全维度实战："
-                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
-
-                                <!-- 进阶 1: 调试与排错手段 -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="🔍 1. 告别盲写：PowerShell 断点与单步调试排错实战" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushPrimary}"/>
-                                            <Border Grid.Column="1" Background="{DynamicResource BrushAlertInfoBg}" CornerRadius="4" Padding="6,1">
-                                                <TextBlock Text="优先必修" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertInfoText}"/>
-                                            </Border>
-                                        </Grid>
-                                        <TextBlock Text="• 调试输出流 (Write-Debug)：在代码中埋入 Write-Debug &quot;变量状态: $val&quot;，平时将 $DebugPreference 设为 'SilentlyContinue'（完全不干扰正常输出），排错时改设为 'Continue' 即刻无损透传全部诊断日志。"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        <TextBlock Text="• 原生语句级追踪 (Set-PSDebug)：无需任何外部插件，在控制台输入 Set-PSDebug -Trace 1 即可开启单步跟踪（执行到哪行打印哪行）；-Trace 2 甚至会同时打印变量实时赋值！调试完毕输入 Set-PSDebug -Off 关闭。"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,4"/>
-                                        <TextBlock Text="• VS Code 交互式断点：在 VS Code 中安装官方 PowerShell 扩展，F9 设行断点，按 F5 启动调试。支持 F10 单步跳过、F11 步入函数、变量面板实时监视；脚本中亦可直接写入 Wait-Debugger 暂停等待挂载！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushSuccess}" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                        <Grid>
-                                            <TextBox Text="# 开启追踪调试命令示例：&#x0d;&#x0a;$DebugPreference = 'Continue'&#x0d;&#x0a;Set-PSDebug -Trace 2&#x0d;&#x0a;.\my_complex_script.ps1&#x0d;&#x0a;Set-PSDebug -Off" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6"/>
-                                            <Button Content="📋 复制调试追踪命令" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
-                                                    Click="BtnCopySnippet_Click" Tag="$DebugPreference = 'Continue'&#x0d;&#x0a;Set-PSDebug -Trace 2"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 进阶 2: 参数校验与安全演练 (-WhatIf) -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="🛡️ 2. 参数守卫与安全演练：让别人敢跑你的脚本 (-WhatIf &amp; Validate)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushPrimary}"/>
-                                            <Border Grid.Column="1" Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1">
-                                                <TextBlock Text="工程分水岭" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}"/>
-                                            </Border>
-                                        </Grid>
-                                        <TextBlock Text="• 安全演练机制 (SupportsShouldProcess)：头部声明 [CmdletBinding(SupportsShouldProcess = $true)]，在执行删除、覆盖等破坏性动作前用 if ($PSCmdlet.ShouldProcess($target, &quot;删除&quot;)) 包裹。调用方即可直接使用 -WhatIf 参数进行无害预演（仅打印操作计划不真实改动），或用 -Confirm 交互确认！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        <TextBlock Text="• 强类型参数守卫：[ValidateSet('Dev','Prod')] 枚举限定 | [ValidateRange(1,65535)] 数值区间约束 | [ValidateScript({Test-Path $_})] 自定义断言校验 | [ValidateNotNullOrEmpty()] 非空保证。非法传参在第一行即被拦截报错，杜绝意外行为！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,6"/>
-                                        <Grid>
-                                            <TextBox Text="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [ValidateSet('Debug', 'Release')]&#x0d;&#x0a;    [string]$Configuration = 'Release',&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateRange(1, 30)]&#x0d;&#x0a;    [int]$RetainDays = 7,&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateScript({ Test-Path $_ })]&#x0d;&#x0a;    [string]$TargetDir = '.\dist'&#x0d;&#x0a;)&#x0d;&#x0a;if ($PSCmdlet.ShouldProcess($TargetDir, &quot;物理清理所有过期归档&quot;)) {&#x0d;&#x0a;    Remove-Item &quot;$TargetDir\*&quot; -Recurse -Force&#x0d;&#x0a;}" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6"/>
-                                            <Button Content="📋 复制 -WhatIf 参数模板" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
-                                                    Click="BtnCopySnippet_Click" Tag="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [ValidateSet('Debug', 'Release')]&#x0d;&#x0a;    [string]$Configuration = 'Release'&#x0d;&#x0a;)&#x0d;&#x0a;if ($PSCmdlet.ShouldProcess($Target, &quot;操作描述&quot;)) {&#x0d;&#x0a;    # 真实逻辑&#x0d;&#x0a;}"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 进阶 3: 函数与多文件组织 -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <TextBlock Text="📂 3. 多文件组织与模块化工程：拒绝几百行「意面脚本」" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 路径锚定基石 ($PSScriptRoot)：这是编写多文件脚本最核心的内置变量（代表当前脚本所在的绝对目录，相当于 .bat 的 %~dp0）。引用同级辅助脚本时务必写 . &quot;$PSScriptRoot\helpers.ps1&quot;，杜绝相对路径因 cd 漂移失效。"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        <TextBlock Text="• 点源引入 (Dot-Sourcing)：使用 . &quot;$PSScriptRoot\common_utils.ps1&quot; 可以在当前作用域直接引入公共函数与配置，快速拆分超长脚本。&#x0a;• 模块封装 (.psm1)：将可复用公共函数沉淀为 MyTool.psm1，使用 Export-ModuleMember -Function Get-CustomLog 显式导出外部接口，并在主脚本中 Import-Module -Force &quot;$PSScriptRoot\MyTool.psm1&quot; 规范化加载。"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,6"/>
-                                        <Grid>
-                                            <TextBox Text="# 主脚本 main.ps1 多文件组织架构：&#x0d;&#x0a;$scriptDir = $PSScriptRoot&#x0d;&#x0a;. &quot;$scriptDir\lib\logger.ps1&quot;        # Dot-Sourcing 加载日志工具&#x0d;&#x0a;Import-Module -Force &quot;$scriptDir\modules\Deploy.psm1&quot; # 导入自定义模块&#x0d;&#x0a;Write-Log -Message &quot;工程化多文件模块加载完毕！&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6"/>
-                                            <Button Content="📋 复制多文件组织模板" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
-                                                    Click="BtnCopySnippet_Click" Tag="$scriptDir = $PSScriptRoot&#x0d;&#x0a;. &quot;$scriptDir\lib\logger.ps1&quot;&#x0d;&#x0a;Import-Module -Force &quot;$scriptDir\modules\Deploy.psm1&quot;"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 进阶 4: PowerShell 直接调用 .NET 与内嵌 C# -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="⚡ 4. 标志性技能：PowerShell 直调 .NET 底层与 Add-Type 内嵌 C# 动态编译" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushPrimary}"/>
-                                            <Border Grid.Column="1" Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1">
-                                                <TextBlock Text="精通标志" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertPurpleText}"/>
-                                            </Border>
-                                        </Grid>
-                                        <TextBlock Text="• 本质澄清：PowerShell 不是一个简单的字符串 Shell，而是直接跑在 .NET CLR 之上的外壳宿主！整个庞大的 .NET BCL 基类库均可免安装直接静态调用（如 [System.IO.Path]::Combine()、[System.IO.Compression.ZipFile]、[System.Environment]::MachineName）。"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
-                                        <TextBlock Text="• 动态编译 C# (Add-Type)：这是超越所有传统脚本语言的核心杀手锏。无需安装 Visual Studio 或 SDK，直接在脚本中使用 Add-Type 嵌入一段 C# 代码，PowerShell 会在内存中即时将其编译为原生程序集，不仅能完成极致算力运算，还能直接 P/Invoke 声明调用 Windows Win32 底层 API！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,6"/>
-                                        <Grid>
-                                            <TextBox Text="# 在 PowerShell 内部直接嵌入并动态编译 C# 源码 (调用 Win32 原生 API 弹窗)：&#x0d;&#x0a;Add-Type @&quot;&#x0d;&#x0a;using System;&#x0d;&#x0a;using System.Runtime.InteropServices;&#x0d;&#x0a;public class NativePinvoke {&#x0d;&#x0a;    [DllImport(&quot;user32.dll&quot;, CharSet = CharSet.Auto)]&#x0d;&#x0a;    public static extern int MessageBox(IntPtr hWnd, String text, String caption, uint type);&#x0d;&#x0a;}&#x0d;&#x0a;&quot;@&#x0d;&#x0a;&#x0d;&#x0a;# 像原生 .NET 类型一样直接调用编译出的 C# 类：&#x0d;&#x0a;[NativePinvoke]::MessageBox([IntPtr]::Zero, &quot;这是从 PowerShell 内动态编译跑起来的原生 C#！&quot;, &quot;动态 C# 编译演示&quot;, 0)" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6" MaxHeight="140" VerticalScrollBarVisibility="Auto"/>
-                                            <Button Content="📋 复制 Add-Type 动态 C# 源码" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
-                                                    Click="BtnCopySnippet_Click" Tag="Add-Type @&quot;&#x0d;&#x0a;using System;&#x0d;&#x0a;using System.Runtime.InteropServices;&#x0d;&#x0a;public class NativePinvoke {&#x0d;&#x0a;    [DllImport(&quot;user32.dll&quot;, CharSet = CharSet.Auto)]&#x0d;&#x0a;    public static extern int MessageBox(IntPtr hWnd, String text, String caption, uint type);&#x0d;&#x0a;}&#x0d;&#x0a;&quot;@&#x0d;&#x0a;[NativePinvoke]::MessageBox([IntPtr]::Zero, &quot;动态 C# 编译成功！&quot;, &quot;提示&quot;, 0)"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 进阶 5: 正则表达式实战与日志异常清洗 -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <TextBlock Text="🎯 5. 正则表达式实战：从「能检索」升级为「对象级高精度提取」" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 操作符体系：-match 执行正则匹配，命中后自动把分组捕获存入数组 $Matches[1]、$Matches[2]；-replace 执行正则批量替换清洗。&#x0a;• 生产日志清洗实战：结合 [regex]::Matches($logText, '(?m)^ERROR\s+\[(?&lt;time&gt;[^\]]+)\]\s+(?&lt;msg&gt;.*)$')，利用对象管道将原本杂乱无章的纯文本日志秒级转换为包含时间戳、级别和异常信息的强类型对象集合！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
-                                        <Grid>
-                                            <TextBox Text="# 从日志文件中高精度提取异常堆栈与时间戳：&#x0d;&#x0a;$log = @&quot;&#x0d;&#x0a;[2026-09-17 12:00:01] INFO Application started&#x0d;&#x0a;[2026-09-17 12:01:23] ERROR DatabaseException: Connection timeout at line 42&#x0d;&#x0a;[2026-09-17 12:02:15] WARN Slow query detected&#x0d;&#x0a;&quot;@&#x0d;&#x0a;$pattern = '\[(?&lt;Timestamp&gt;[^\]]+)\]\s+ERROR\s+(?&lt;Exception&gt;\w+):\s+(?&lt;Message&gt;.*)'&#x0d;&#x0a;[regex]::Matches($log, $pattern) | ForEach-Object {&#x0d;&#x0a;    [PSCustomObject]@{&#x0d;&#x0a;        Time      = $_.Groups['Timestamp'].Value&#x0d;&#x0a;        Exception = $_.Groups['Exception'].Value&#x0d;&#x0a;        Detail    = $_.Groups['Message'].Value&#x0d;&#x0a;    }&#x0d;&#x0a;} | Format-Table" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6" MaxHeight="140" VerticalScrollBarVisibility="Auto"/>
-                                            <Button Content="📋 复制正则对象化解析代码" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
-                                                    Click="BtnCopySnippet_Click" Tag="$pattern = '\[(?&lt;Timestamp&gt;[^\]]+)\]\s+ERROR\s+(?&lt;Exception&gt;\w+):\s+(?&lt;Message&gt;.*)'&#x0d;&#x0a;[regex]::Matches($log, $pattern) | ForEach-Object {&#x0d;&#x0a;    [PSCustomObject]@{&#x0d;&#x0a;        Time      = $_.Groups['Timestamp'].Value&#x0d;&#x0a;        Exception = $_.Groups['Exception'].Value&#x0d;&#x0a;        Detail    = $_.Groups['Message'].Value&#x0d;&#x0a;    }&#x0d;&#x0a;}"/>
-                                        </Grid>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 实战完整脚本 backup_artifacts.ps1 -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,6">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="📄 工业级范例脚本：backup_artifacts.ps1 (融合参数守卫、-WhatIf 预演支持、异常治理与归档)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <Button Grid.Column="1" Content="📋 一键复制 backup_artifacts.ps1 源码" Background="#16A34A" FontSize="10" Padding="8,2"
-                                                    Click="BtnCopySnippet_Click" Tag="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [ValidateScript({ Test-Path $_ })]&#x0d;&#x0a;    [string]$SourceFolder = &quot;.\dist&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$BackupRoot = &quot;C:\Backups&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateRange(1, 365)]&#x0d;&#x0a;    [int]$RetainDays = 7&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;$ErrorActionPreference = 'Stop'&#x0d;&#x0a;Write-Host &quot;=== 🚀 原生构建产物备份归档任务启动 ===&quot; -ForegroundColor Cyan&#x0d;&#x0a;&#x0d;&#x0a;try {&#x0d;&#x0a;    if (-not (Test-Path $BackupRoot)) {&#x0d;&#x0a;        if ($PSCmdlet.ShouldProcess($BackupRoot, &quot;创建备份目标根目录&quot;)) {&#x0d;&#x0a;            New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null&#x0d;&#x0a;        }&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    $timestamp = Get-Date -Format &quot;yyyyMMdd_HHmmss&quot;&#x0d;&#x0a;    $zipName = &quot;Artifacts_$timestamp.zip&quot;&#x0d;&#x0a;    $zipPath = Join-Path $BackupRoot $zipName&#x0d;&#x0a;&#x0d;&#x0a;    if ($PSCmdlet.ShouldProcess($zipPath, &quot;压缩归档目录 $SourceFolder&quot;)) {&#x0d;&#x0a;        Write-Host &quot;正在压缩打包: $SourceFolder -> $zipPath&quot; -ForegroundColor Yellow&#x0d;&#x0a;        Compress-Archive -Path &quot;$SourceFolder\*&quot; -DestinationPath $zipPath -CompressionLevel Optimal -Force&#x0d;&#x0a;        $archiveSizeMb = [math]::Round(((Get-Item $zipPath).Length / 1MB), 2)&#x0d;&#x0a;        Write-Host &quot;归档打包完成！包大小: $archiveSizeMb MB&quot; -ForegroundColor Green&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    # 清理过期旧备份&#x0d;&#x0a;    $cutoffDate = (Get-Date).AddDays(-$RetainDays)&#x0d;&#x0a;    Get-ChildItem -Path $BackupRoot -Filter &quot;Artifacts_*.zip&quot; -ErrorAction SilentlyContinue |&#x0d;&#x0a;        Where-Object { $_.LastWriteTime -lt $cutoffDate } |&#x0d;&#x0a;        ForEach-Object {&#x0d;&#x0a;            if ($PSCmdlet.ShouldProcess($_.FullName, &quot;删除超过 $RetainDays 天的历史过期备份&quot;)) {&#x0d;&#x0a;                Write-Host &quot;正在清除过期备份: $($_.Name)&quot; -ForegroundColor Gray&#x0d;&#x0a;                Remove-Item $_.FullName -Force&#x0d;&#x0a;            }&#x0d;&#x0a;        }&#x0d;&#x0a;    Write-Host &quot;=== ✅ 任务流程执行完毕 ===&quot; -ForegroundColor Green&#x0d;&#x0a;}&#x0d;&#x0a;catch {&#x0d;&#x0a;    Write-Error &quot;备份任务异常失败: $($_.Exception.Message)&quot;&#x0d;&#x0a;    exit 1&#x0d;&#x0a;}"/>
-                                        </Grid>
-                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="180" VerticalScrollBarVisibility="Auto"
-                                                 Text="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [ValidateScript({ Test-Path $_ })]&#x0d;&#x0a;    [string]$SourceFolder = &quot;.\dist&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$BackupRoot = &quot;C:\Backups&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateRange(1, 365)]&#x0d;&#x0a;    [int]$RetainDays = 7&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;$ErrorActionPreference = 'Stop'&#x0d;&#x0a;Write-Host &quot;=== 🚀 原生构建产物备份归档任务启动 ===&quot; -ForegroundColor Cyan&#x0d;&#x0a;&#x0d;&#x0a;try {&#x0d;&#x0a;    if (-not (Test-Path $BackupRoot)) {&#x0d;&#x0a;        if ($PSCmdlet.ShouldProcess($BackupRoot, &quot;创建备份目标根目录&quot;)) {&#x0d;&#x0a;            New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null&#x0d;&#x0a;        }&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    $timestamp = Get-Date -Format &quot;yyyyMMdd_HHmmss&quot;&#x0d;&#x0a;    $zipName = &quot;Artifacts_$timestamp.zip&quot;&#x0d;&#x0a;    $zipPath = Join-Path $BackupRoot $zipName&#x0d;&#x0a;&#x0d;&#x0a;    if ($PSCmdlet.ShouldProcess($zipPath, &quot;压缩归档目录 $SourceFolder&quot;)) {&#x0d;&#x0a;        Write-Host &quot;正在压缩打包: $SourceFolder -> $zipPath&quot; -ForegroundColor Yellow&#x0d;&#x0a;        Compress-Archive -Path &quot;$SourceFolder\*&quot; -DestinationPath $zipPath -CompressionLevel Optimal -Force&#x0d;&#x0a;        $archiveSizeMb = [math]::Round(((Get-Item $zipPath).Length / 1MB), 2)&#x0d;&#x0a;        Write-Host &quot;归档打包完成！包大小: $archiveSizeMb MB&quot; -ForegroundColor Green&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    # 清理过期旧备份&#x0d;&#x0a;    $cutoffDate = (Get-Date).AddDays(-$RetainDays)&#x0d;&#x0a;    Get-ChildItem -Path $BackupRoot -Filter &quot;Artifacts_*.zip&quot; -ErrorAction SilentlyContinue |&#x0d;&#x0a;        Where-Object { $_.LastWriteTime -lt $cutoffDate } |&#x0d;&#x0a;        ForEach-Object {&#x0d;&#x0a;            if ($PSCmdlet.ShouldProcess($_.FullName, &quot;删除超过 $RetainDays 天的历史过期备份&quot;)) {&#x0d;&#x0a;                Write-Host &quot;正在清除过期备份: $($_.Name)&quot; -ForegroundColor Gray&#x0d;&#x0a;                Remove-Item $_.FullName -Force&#x0d;&#x0a;            }&#x0d;&#x0a;        }&#x0d;&#x0a;    Write-Host &quot;=== ✅ 任务流程执行完毕 ===&quot; -ForegroundColor Green&#x0d;&#x0a;}&#x0d;&#x0a;catch {&#x0d;&#x0a;    Write-Error &quot;备份任务异常失败: $($_.Exception.Message)&quot;&#x0d;&#x0a;    exit 1&#x0d;&#x0a;}"/>
-                                    </StackPanel>
-                                </Border>
-
-                                <!-- 衔接指引：如何自动化调度 -->
-                                <Border Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
-                                    <StackPanel>
-                                        <TextBlock Text="🔗 进阶学习衔接：写完的脚本，如何让它在 Windows 后台全自动跑起来？" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
-                                        <TextBlock Text="• 后台长驻守护：若需将脚本封装为系统后台守护服务（开机静默启动、崩溃自重启），详见【步骤三：自带工具排错指南】中的『7. sc.exe / schtasks 后台服务与计划任务』板块。&#x0a;• 周期定时调度：若需定时触发，直接在控制台注册计划任务（schtasks /create /tn &quot;MyAutoTask&quot; /sc daily /tr &quot;powershell.exe -ExecutionPolicy Bypass -File C:\path\backup.ps1&quot; /st 03:00）。保持脚本编写与系统调度的优雅解耦！"
-                                                   FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                </Border>
+                                </Grid>
+                                <TextBlock Text="• 调试输出流 (Write-Debug)：在代码中埋入 Write-Debug &quot;变量状态: $val&quot;，平时将 $DebugPreference 设为 'SilentlyContinue'（完全不干扰正常输出），排错时改设为 'Continue' 即刻无损透传全部诊断日志。"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                <TextBlock Text="• 原生语句级追踪 (Set-PSDebug)：无需任何外部插件，在控制台输入 Set-PSDebug -Trace 1 即可开启单步跟踪（执行到哪行打印哪行）；-Trace 2 甚至会同时打印变量实时赋值！调试完毕输入 Set-PSDebug -Off 关闭。"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,4"/>
+                                <TextBlock Text="• VS Code 交互式断点：在 VS Code 中安装官方 PowerShell 扩展，F9 设行断点，按 F5 启动调试。支持 F10 单步跳过、F11 步入函数、变量面板实时监视；脚本中亦可直接写入 Wait-Debugger 暂停等待挂载！"
+                                           FontSize="10" Foreground="{DynamicResource BrushSuccess}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <Grid>
+                                    <TextBox Text="# 开启追踪调试命令示例：&#x0d;&#x0a;$DebugPreference = 'Continue'&#x0d;&#x0a;Set-PSDebug -Trace 2&#x0d;&#x0a;.\my_complex_script.ps1&#x0d;&#x0a;Set-PSDebug -Off" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6"/>
+                                    <Button Content="📋 复制调试追踪命令" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
+                                            Click="BtnCopySnippet_Click" Tag="$DebugPreference = 'Continue'&#x0d;&#x0a;Set-PSDebug -Trace 2"/>
+                                </Grid>
                             </StackPanel>
                         </Border>
 
-                        <!-- 板块 4: .reg 注册表文件手写全解 -->
+                        <!-- 第三块：参数守卫与安全演练 (-WhatIf) -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="🛡️ 3. 参数守卫与安全演练：让别人敢跑你的脚本 (-WhatIf &amp; Validate)" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1">
+                                        <TextBlock Text="工程分水岭" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}"/>
+                                    </Border>
+                                </Grid>
+                                <TextBlock Text="• 安全演练机制 (SupportsShouldProcess)：头部声明 [CmdletBinding(SupportsShouldProcess = $true)]，在执行删除、覆盖等破坏性动作前用 if ($PSCmdlet.ShouldProcess($target, &quot;删除&quot;)) 包裹。调用方即可直接使用 -WhatIf 参数进行无害预演（仅打印操作计划不真实改动），或用 -Confirm 交互确认！"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                <TextBlock Text="• 强类型参数守卫：[ValidateSet('Dev','Prod')] 枚举限定 | [ValidateRange(1,65535)] 数值区间约束 | [ValidateScript({Test-Path $_})] 自定义断言校验 | [ValidateNotNullOrEmpty()] 非空保证。非法传参在第一行即被拦截报错，杜绝意外行为！"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,6"/>
+                                <Grid>
+                                    <TextBox Text="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [ValidateSet('Debug', 'Release')]&#x0d;&#x0a;    [string]$Configuration = 'Release',&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateRange(1, 30)]&#x0d;&#x0a;    [int]$RetainDays = 7,&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateScript({ Test-Path $_ })]&#x0d;&#x0a;    [string]$TargetDir = '.\dist'&#x0d;&#x0a;)&#x0d;&#x0a;if ($PSCmdlet.ShouldProcess($TargetDir, &quot;物理清理所有过期归档&quot;)) {&#x0d;&#x0a;    Remove-Item &quot;$TargetDir\*&quot; -Recurse -Force&#x0d;&#x0a;}" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6"/>
+                                    <Button Content="📋 复制 -WhatIf 参数模板" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
+                                            Click="BtnCopySnippet_Click" Tag="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [ValidateSet('Debug', 'Release')]&#x0d;&#x0a;    [string]$Configuration = 'Release'&#x0d;&#x0a;)&#x0d;&#x0a;if ($PSCmdlet.ShouldProcess($Target, &quot;操作描述&quot;)) {&#x0d;&#x0a;    # 真实逻辑&#x0d;&#x0a;}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第四块：多文件组织与模块化工程 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="📂 4. 多文件组织与模块化工程：拒绝几百行「意面脚本」" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 路径锚定基石 ($PSScriptRoot)：这是编写多文件脚本最核心的内置变量（代表当前脚本所在的绝对目录，相当于 .bat 的 %~dp0）。引用同级辅助脚本时务必写 . &quot;$PSScriptRoot\helpers.ps1&quot;，杜绝相对路径因 cd 漂移失效。"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                <TextBlock Text="• 点源引入 (Dot-Sourcing)：使用 . &quot;$PSScriptRoot\common_utils.ps1&quot; 可以在当前作用域直接引入公共函数与配置，快速拆分超长脚本。&#x0a;• 模块封装 (.psm1)：将可复用公共函数沉淀为 MyTool.psm1，使用 Export-ModuleMember -Function Get-CustomLog 显式导出外部接口，并在主脚本中 Import-Module -Force &quot;$PSScriptRoot\MyTool.psm1&quot; 规范化加载。"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,6"/>
+                                <Grid>
+                                    <TextBox Text="# 主脚本 main.ps1 多文件组织架构：&#x0d;&#x0a;$scriptDir = $PSScriptRoot&#x0d;&#x0a;. &quot;$scriptDir\lib\logger.ps1&quot;        # Dot-Sourcing 加载日志工具&#x0d;&#x0a;Import-Module -Force &quot;$scriptDir\modules\Deploy.psm1&quot; # 导入自定义模块&#x0d;&#x0a;Write-Log -Message &quot;工程化多文件模块加载完毕！&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6"/>
+                                    <Button Content="📋 复制多文件组织模板" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
+                                            Click="BtnCopySnippet_Click" Tag="$scriptDir = $PSScriptRoot&#x0d;&#x0a;. &quot;$scriptDir\lib\logger.ps1&quot;&#x0d;&#x0a;Import-Module -Force &quot;$scriptDir\modules\Deploy.psm1&quot;"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第五块：PowerShell 直接调用 .NET 与内嵌 C# -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="⚡ 5. 标志性技能：PowerShell 直调 .NET 底层与 Add-Type 内嵌 C# 动态编译" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1">
+                                        <TextBlock Text="精通标志" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertPurpleText}"/>
+                                    </Border>
+                                </Grid>
+                                <TextBlock Text="• 本质澄清：PowerShell 不是一个简单的字符串 Shell，而是直接跑在 .NET CLR 之上的外壳宿主！整个庞大的 .NET BCL 基类库均可免安装直接静态调用（如 [System.IO.Path]::Combine()、[System.IO.Compression.ZipFile]、[System.Environment]::MachineName）。"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
+                                <TextBlock Text="• 动态编译 C# (Add-Type)：这是超越所有传统脚本语言的核心杀手锏。无需安装 Visual Studio 或 SDK，直接在脚本中使用 Add-Type 嵌入一段 C# 代码，PowerShell 会在内存中即时将其编译为原生程序集，不仅能完成极致算力运算，还能直接 P/Invoke 声明调用 Windows Win32 底层 API！"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,6"/>
+                                <Grid>
+                                    <TextBox Text="# 在 PowerShell 内部直接嵌入并动态编译 C# 源码 (调用 Win32 原生 API 弹窗)：&#x0d;&#x0a;Add-Type @&quot;&#x0d;&#x0a;using System;&#x0d;&#x0a;using System.Runtime.InteropServices;&#x0d;&#x0a;public class NativePinvoke {&#x0d;&#x0a;    [DllImport(&quot;user32.dll&quot;, CharSet = CharSet.Auto)]&#x0d;&#x0a;    public static extern int MessageBox(IntPtr hWnd, String text, String caption, uint type);&#x0d;&#x0a;}&#x0d;&#x0a;&quot;@&#x0d;&#x0a;&#x0d;&#x0a;# 像原生 .NET 类型一样直接调用编译出的 C# 类：&#x0d;&#x0a;[NativePinvoke]::MessageBox([IntPtr]::Zero, &quot;这是从 PowerShell 内动态编译跑起来的原生 C#！&quot;, &quot;动态 C# 编译演示&quot;, 0)" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6" MaxHeight="140" VerticalScrollBarVisibility="Auto"/>
+                                    <Button Content="📋 复制 Add-Type 动态 C# 源码" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
+                                            Click="BtnCopySnippet_Click" Tag="Add-Type @&quot;&#x0d;&#x0a;using System;&#x0d;&#x0a;using System.Runtime.InteropServices;&#x0d;&#x0a;public class NativePinvoke {&#x0d;&#x0a;    [DllImport(&quot;user32.dll&quot;, CharSet = CharSet.Auto)]&#x0d;&#x0a;    public static extern int MessageBox(IntPtr hWnd, String text, String caption, uint type);&#x0d;&#x0a;}&#x0d;&#x0a;&quot;@&#x0d;&#x0a;[NativePinvoke]::MessageBox([IntPtr]::Zero, &quot;动态 C# 编译成功！&quot;, &quot;提示&quot;, 0)"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第六块：正则表达式实战与日志异常清洗 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="🎯 6. 正则表达式实战：从「能检索」升级为「对象级高精度提取」" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 操作符体系：-match 执行正则匹配，命中后自动把分组捕获存入数组 $Matches[1]、$Matches[2]；-replace 执行正则批量替换清洗。&#x0a;• 生产日志清洗实战：结合 [regex]::Matches($logText, '(?m)^ERROR\s+\[(?&lt;time&gt;[^\]]+)\]\s+(?&lt;msg&gt;.*)$')，利用对象管道将原本杂乱无章的纯文本日志秒级转换为包含时间戳、级别和异常信息的强类型对象集合！"
+                                           FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <Grid>
+                                    <TextBox Text="# 从日志文件中高精度提取异常堆栈与时间戳：&#x0d;&#x0a;$log = @&quot;&#x0d;&#x0a;[2026-09-17 12:00:01] INFO Application started&#x0d;&#x0a;[2026-09-17 12:01:23] ERROR DatabaseException: Connection timeout at line 42&#x0d;&#x0a;[2026-09-17 12:02:15] WARN Slow query detected&#x0d;&#x0a;&quot;@&#x0d;&#x0a;$pattern = '\[(?&lt;Timestamp&gt;[^\]]+)\]\s+ERROR\s+(?&lt;Exception&gt;\w+):\s+(?&lt;Message&gt;.*)'&#x0d;&#x0a;[regex]::Matches($log, $pattern) | ForEach-Object {&#x0d;&#x0a;    [PSCustomObject]@{&#x0d;&#x0a;        Time      = $_.Groups['Timestamp'].Value&#x0d;&#x0a;        Exception = $_.Groups['Exception'].Value&#x0d;&#x0a;        Detail    = $_.Groups['Message'].Value&#x0d;&#x0a;    }&#x0d;&#x0a;} | Format-Table" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="6" MaxHeight="140" VerticalScrollBarVisibility="Auto"/>
+                                    <Button Content="📋 复制正则对象化解析代码" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{DynamicResource SecondaryButton}" Padding="6,2" FontSize="10" Margin="4"
+                                            Click="BtnCopySnippet_Click" Tag="$pattern = '\[(?&lt;Timestamp&gt;[^\]]+)\]\s+ERROR\s+(?&lt;Exception&gt;\w+):\s+(?&lt;Message&gt;.*)'&#x0d;&#x0a;[regex]::Matches($log, $pattern) | ForEach-Object {&#x0d;&#x0a;    [PSCustomObject]@{&#x0d;&#x0a;        Time      = $_.Groups['Timestamp'].Value&#x0d;&#x0a;        Exception = $_.Groups['Exception'].Value&#x0d;&#x0a;        Detail    = $_.Groups['Message'].Value&#x0d;&#x0a;    }&#x0d;&#x0a;}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第七块：实战完整脚本 backup_artifacts.ps1 -->
+                        <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="📄 工业级范例脚本：backup_artifacts.ps1 (融合参数守卫、-WhatIf 预演支持、异常治理与归档)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <Button Grid.Column="1" Content="📋 一键复制 backup_artifacts.ps1 源码" Background="#16A34A" FontSize="10" Padding="8,2"
+                                            Click="BtnCopySnippet_Click" Tag="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [ValidateScript({ Test-Path $_ })]&#x0d;&#x0a;    [string]$SourceFolder = &quot;.\dist&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$BackupRoot = &quot;C:\Backups&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateRange(1, 365)]&#x0d;&#x0a;    [int]$RetainDays = 7&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;$ErrorActionPreference = 'Stop'&#x0d;&#x0a;Write-Host &quot;=== 🚀 原生构建产物备份归档任务启动 ===&quot; -ForegroundColor Cyan&#x0d;&#x0a;&#x0d;&#x0a;try {&#x0d;&#x0a;    if (-not (Test-Path $BackupRoot)) {&#x0d;&#x0a;        if ($PSCmdlet.ShouldProcess($BackupRoot, &quot;创建备份目标根目录&quot;)) {&#x0d;&#x0a;            New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null&#x0d;&#x0a;        }&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    $timestamp = Get-Date -Format &quot;yyyyMMdd_HHmmss&quot;&#x0d;&#x0a;    $zipName = &quot;Artifacts_$timestamp.zip&quot;&#x0d;&#x0a;    $zipPath = Join-Path $BackupRoot $zipName&#x0d;&#x0a;&#x0d;&#x0a;    if ($PSCmdlet.ShouldProcess($zipPath, &quot;压缩归档目录 $SourceFolder&quot;)) {&#x0d;&#x0a;        Write-Host &quot;正在压缩打包: $SourceFolder -> $zipPath&quot; -ForegroundColor Yellow&#x0d;&#x0a;        Compress-Archive -Path &quot;$SourceFolder\*&quot; -DestinationPath $zipPath -CompressionLevel Optimal -Force&#x0d;&#x0a;        $archiveSizeMb = [math]::Round(((Get-Item $zipPath).Length / 1MB), 2)&#x0d;&#x0a;        Write-Host &quot;归档打包完成！包大小: $archiveSizeMb MB&quot; -ForegroundColor Green&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    # 清理过期旧备份&#x0d;&#x0a;    $cutoffDate = (Get-Date).AddDays(-$RetainDays)&#x0d;&#x0a;    Get-ChildItem -Path $BackupRoot -Filter &quot;Artifacts_*.zip&quot; -ErrorAction SilentlyContinue |&#x0d;&#x0a;        Where-Object { $_.LastWriteTime -lt $cutoffDate } |&#x0d;&#x0a;        ForEach-Object {&#x0d;&#x0a;            if ($PSCmdlet.ShouldProcess($_.FullName, &quot;删除超过 $RetainDays 天的历史过期备份&quot;)) {&#x0d;&#x0a;                Write-Host &quot;正在清除过期备份: $($_.Name)&quot; -ForegroundColor Gray&#x0d;&#x0a;                Remove-Item $_.FullName -Force&#x0d;&#x0a;            }&#x0d;&#x0a;        }&#x0d;&#x0a;    Write-Host &quot;=== ✅ 任务流程执行完毕 ===&quot; -ForegroundColor Green&#x0d;&#x0a;}&#x0d;&#x0a;catch {&#x0d;&#x0a;    Write-Error &quot;备份任务异常失败: $($_.Exception.Message)&quot;&#x0d;&#x0a;    exit 1&#x0d;&#x0a;}"/>
+                                </Grid>
+                                <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="180" VerticalScrollBarVisibility="Auto"
+                                         Text="[CmdletBinding(SupportsShouldProcess = $true)]&#x0d;&#x0a;param(&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [ValidateScript({ Test-Path $_ })]&#x0d;&#x0a;    [string]$SourceFolder = &quot;.\dist&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [Parameter(Mandatory = $false)]&#x0d;&#x0a;    [string]$BackupRoot = &quot;C:\Backups&quot;,&#x0d;&#x0a;&#x0d;&#x0a;    [ValidateRange(1, 365)]&#x0d;&#x0a;    [int]$RetainDays = 7&#x0d;&#x0a;)&#x0d;&#x0a;&#x0d;&#x0a;$ErrorActionPreference = 'Stop'&#x0d;&#x0a;Write-Host &quot;=== 🚀 原生构建产物备份归档任务启动 ===&quot; -ForegroundColor Cyan&#x0d;&#x0a;&#x0d;&#x0a;try {&#x0d;&#x0a;    if (-not (Test-Path $BackupRoot)) {&#x0d;&#x0a;        if ($PSCmdlet.ShouldProcess($BackupRoot, &quot;创建备份目标根目录&quot;)) {&#x0d;&#x0a;            New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null&#x0d;&#x0a;        }&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    $timestamp = Get-Date -Format &quot;yyyyMMdd_HHmmss&quot;&#x0d;&#x0a;    $zipName = &quot;Artifacts_$timestamp.zip&quot;&#x0d;&#x0a;    $zipPath = Join-Path $BackupRoot $zipName&#x0d;&#x0a;&#x0d;&#x0a;    if ($PSCmdlet.ShouldProcess($zipPath, &quot;压缩归档目录 $SourceFolder&quot;)) {&#x0d;&#x0a;        Write-Host &quot;正在压缩打包: $SourceFolder -> $zipPath&quot; -ForegroundColor Yellow&#x0d;&#x0a;        Compress-Archive -Path &quot;$SourceFolder\*&quot; -DestinationPath $zipPath -CompressionLevel Optimal -Force&#x0d;&#x0a;        $archiveSizeMb = [math]::Round(((Get-Item $zipPath).Length / 1MB), 2)&#x0d;&#x0a;        Write-Host &quot;归档打包完成！包大小: $archiveSizeMb MB&quot; -ForegroundColor Green&#x0d;&#x0a;    }&#x0d;&#x0a;&#x0d;&#x0a;    # 清理过期旧备份&#x0d;&#x0a;    $cutoffDate = (Get-Date).AddDays(-$RetainDays)&#x0d;&#x0a;    Get-ChildItem -Path $BackupRoot -Filter &quot;Artifacts_*.zip&quot; -ErrorAction SilentlyContinue |&#x0d;&#x0a;        Where-Object { $_.LastWriteTime -lt $cutoffDate } |&#x0d;&#x0a;        ForEach-Object {&#x0d;&#x0a;            if ($PSCmdlet.ShouldProcess($_.FullName, &quot;删除超过 $RetainDays 天的历史过期备份&quot;)) {&#x0d;&#x0a;                Write-Host &quot;正在清除过期备份: $($_.Name)&quot; -ForegroundColor Gray&#x0d;&#x0a;                Remove-Item $_.FullName -Force&#x0d;&#x0a;            }&#x0d;&#x0a;        }&#x0d;&#x0a;    Write-Host &quot;=== ✅ 任务流程执行完毕 ===&quot; -ForegroundColor Green&#x0d;&#x0a;}&#x0d;&#x0a;catch {&#x0d;&#x0a;    Write-Error &quot;备份任务异常失败: $($_.Exception.Message)&quot;&#x0d;&#x0a;    exit 1&#x0d;&#x0a;}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 第八块：衔接指引：如何自动化调度 -->
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="8" Padding="12">
+                            <StackPanel>
+                                <TextBlock Text="🔗 进阶学习衔接：写完的脚本，如何让它在 Windows 后台全自动跑起来？" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertBlueText}" Margin="0,0,0,4"/>
+                                <TextBlock Text="• 后台长驻守护：若需将脚本封装为系统后台守护服务（开机静默启动、崩溃自重启），详见【步骤三：自带工具排错指南】中的『7. sc.exe / schtasks 后台服务与计划任务』板块。&#x0a;• 周期定时调度：若需定时触发，直接在控制台注册计划任务（schtasks /create /tn &quot;MyAutoTask&quot; /sc daily /tr &quot;powershell.exe -ExecutionPolicy Bypass -File C:\path\backup.ps1&quot; /st 03:00）。保持脚本编写与系统调度的优雅解耦！"
+                                           FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 4: 📜 .reg 注册表配置声明 -->
+            <TabItem Header="📜 .reg 注册表配置声明">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- 说明与安全警示 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
                                 <WrapPanel Margin="0,0,0,4">
-                                    <TextBlock Text="📜 板块 4: .reg 注册表文件手写全解 —— 纯文本配置声明的艺术" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <TextBlock Text="📜 .reg 注册表文件手写全解 —— 纯文本配置声明的艺术" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
                                     <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
                                         <TextBlock Text="高阶配置下发" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertPurpleText}"/>
                                     </Border>
@@ -658,18 +614,23 @@
                                            FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
 
                                 <!-- 安全预警看板 -->
-                                <Border Background="{DynamicResource BrushAlertRedBg}" BorderBrush="{DynamicResource BrushAlertRedBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                                <Border Background="{DynamicResource BrushAlertRedBg}" BorderBrush="{DynamicResource BrushAlertRedBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
                                     <TextBlock Text="🛑 核心安全警示：绝对不要双击来历不明的 .reg 文件！双击会静默或通过 UAC 弹窗将全部配置直接写入系统底层，无「撤回」按钮。收到陌生 .reg 时，务必先【右键 -&gt; 编辑 (记事本)】逐行审阅注册表主键路径与键值！"
                                                FontSize="10" Foreground="{DynamicResource BrushAlertRedText}" FontWeight="SemiBold" TextWrapping="Wrap"/>
                                 </Border>
+                            </StackPanel>
+                        </Border>
 
-                                <!-- 语法 4 大关键要素 (双栏排布) -->
+                        <!-- 语法 4 大关键要素 (双栏排布) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ .reg 4 大核心语法与物理删除机制" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
                                 <Grid Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                                    <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,6,0">
                                         <StackPanel>
                                             <TextBlock Text="1. 头部声明规范与主键路径:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
                                             <TextBlock Text="第一行必须精确书写：Windows Registry Editor Version 5.00，后跟一个空行。主键路径使用方括号括起，例如：[HKEY_CURRENT_USER\Software\MyApp]。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
@@ -677,7 +638,7 @@
                                             <TextBlock Text="• 字符串 (REG_SZ): &quot;Key&quot;=&quot;Value&quot; (注意路径反斜杠必须写双反斜杠 \\ 转义!)&#x0a;• 32位整型 (REG_DWORD): &quot;Enabled&quot;=dword:00000001 (十六进制8位)&#x0a;• 默认项 (Default): @=&quot;MyDefaultValue&quot;" FontSize="10" FontFamily="Consolas" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>
-                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="6,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="3. 核心删除机制 (减号符号 - 的妙用):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertErrorText}" Margin="0,0,0,2"/>
                                             <TextBlock Text="• 删除整项 (Key): 在路径方括号最前端加减号：[-HKEY_CURRENT_USER\Software\MyApp]&#x0a;• 删除单个键值 (Value): 将键值设为减号：&quot;OldSetting&quot;=-&#x0a;新手最常犯的错误是用空字符串替换，那只会置空而不是从注册表物理移除！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
@@ -686,31 +647,38 @@
                                         </StackPanel>
                                     </Border>
                                 </Grid>
-
-                                <!-- 手写 .reg 范例模板 -->
-                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
-                                    <StackPanel>
-                                        <Grid Margin="0,0,0,6">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="📄 标准规范范例：app_settings.reg (含字符串、DWORD、键值删除与整项清理)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                            <Button Grid.Column="1" Content="📋 一键复制 .reg 完整模板" Background="#16A34A" FontSize="10" Padding="8,2"
-                                                    Click="BtnCopySnippet_Click" Tag="Windows Registry Editor Version 5.00&#x0d;&#x0a;&#x0d;&#x0a;; 示例 1: 新增或修改配置项 (字符串、DWORD 与双反斜杠转义)&#x0d;&#x0a;[HKEY_CURRENT_USER\Software\AgyDemoTool]&#x0d;&#x0a;@=&quot;Agy Registry Configuration Demo&quot;&#x0d;&#x0a;&quot;AppVersion&quot;=&quot;1.0.0&quot;&#x0d;&#x0a;&quot;InstallDir&quot;=&quot;C:\\Program Files\\AgyTool&quot;&#x0d;&#x0a;&quot;EnableHardwareAcceleration&quot;=dword:00000001&#x0d;&#x0a;&quot;TelemetryLevel&quot;=dword:00000000&#x0d;&#x0a;&#x0d;&#x0a;; 示例 2: 删除已废弃的旧键值 (设置等于负号)&#x0d;&#x0a;&quot;ObsoleteLegacySetting&quot;=-&#x0d;&#x0a;&#x0d;&#x0a;; 示例 3: 物理删除整个废弃子项 (在括号开头加负号)&#x0d;&#x0a;[-HKEY_CURRENT_USER\Software\AgyDemoTool\DeprecatedCache]&#x0d;&#x0a;"/>
-                                        </Grid>
-                                        <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="160" VerticalScrollBarVisibility="Auto"
-                                                 Text="Windows Registry Editor Version 5.00&#x0d;&#x0a;&#x0d;&#x0a;; 示例 1: 新增或修改配置项 (字符串、DWORD 与双反斜杠转义)&#x0d;&#x0a;[HKEY_CURRENT_USER\Software\AgyDemoTool]&#x0d;&#x0a;@=&quot;Agy Registry Configuration Demo&quot;&#x0d;&#x0a;&quot;AppVersion&quot;=&quot;1.0.0&quot;&#x0d;&#x0a;&quot;InstallDir&quot;=&quot;C:\\Program Files\\AgyTool&quot;&#x0d;&#x0a;&quot;EnableHardwareAcceleration&quot;=dword:00000001&#x0d;&#x0a;&quot;TelemetryLevel&quot;=dword:00000000&#x0d;&#x0a;&#x0d;&#x0a;; 示例 2: 删除已废弃的旧键值 (设置等于负号)&#x0d;&#x0a;&quot;ObsoleteLegacySetting&quot;=-&#x0d;&#x0a;&#x0d;&#x0a;; 示例 3: 物理删除整个废弃子项 (在括号开头加负号)&#x0d;&#x0a;[-HKEY_CURRENT_USER\Software\AgyDemoTool\DeprecatedCache]"/>
-                                    </StackPanel>
-                                </Border>
                             </StackPanel>
                         </Border>
 
-                        <!-- 板块 5: 冷门但真实存在的 .hta -->
+                        <!-- 手写 .reg 范例模板 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
                             <StackPanel>
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="📄 标准规范范例：app_settings.reg (含字符串、DWORD、键值删除与整项清理)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                    <Button Grid.Column="1" Content="📋 一键复制 .reg 完整模板" Background="#16A34A" FontSize="10" Padding="8,2"
+                                            Click="BtnCopySnippet_Click" Tag="Windows Registry Editor Version 5.00&#x0d;&#x0a;&#x0d;&#x0a;; 示例 1: 新增或修改配置项 (字符串、DWORD 与双反斜杠转义)&#x0d;&#x0a;[HKEY_CURRENT_USER\Software\AgyDemoTool]&#x0d;&#x0a;@=&quot;Agy Registry Configuration Demo&quot;&#x0d;&#x0a;&quot;AppVersion&quot;=&quot;1.0.0&quot;&#x0d;&#x0a;&quot;InstallDir&quot;=&quot;C:\\Program Files\\AgyTool&quot;&#x0d;&#x0a;&quot;EnableHardwareAcceleration&quot;=dword:00000001&#x0d;&#x0a;&quot;TelemetryLevel&quot;=dword:00000000&#x0d;&#x0a;&#x0d;&#x0a;; 示例 2: 删除已废弃的旧键值 (设置等于负号)&#x0d;&#x0a;&quot;ObsoleteLegacySetting&quot;=-&#x0d;&#x0a;&#x0d;&#x0a;; 示例 3: 物理删除整个废弃子项 (在括号开头加负号)&#x0d;&#x0a;[-HKEY_CURRENT_USER\Software\AgyDemoTool\DeprecatedCache]&#x0d;&#x0a;"/>
+                                </Grid>
+                                <TextBox IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Padding="8" MaxHeight="200" VerticalScrollBarVisibility="Auto"
+                                         Text="Windows Registry Editor Version 5.00&#x0d;&#x0a;&#x0d;&#x0a;; 示例 1: 新增或修改配置项 (字符串、DWORD 与双反斜杠转义)&#x0d;&#x0a;[HKEY_CURRENT_USER\Software\AgyDemoTool]&#x0d;&#x0a;@=&quot;Agy Registry Configuration Demo&quot;&#x0d;&#x0a;&quot;AppVersion&quot;=&quot;1.0.0&quot;&#x0d;&#x0a;&quot;InstallDir&quot;=&quot;C:\\Program Files\\AgyTool&quot;&#x0d;&#x0a;&quot;EnableHardwareAcceleration&quot;=dword:00000001&#x0d;&#x0a;&quot;TelemetryLevel&quot;=dword:00000000&#x0d;&#x0a;&#x0d;&#x0a;; 示例 2: 删除已废弃的旧键值 (设置等于负号)&#x0d;&#x0a;&quot;ObsoleteLegacySetting&quot;=-&#x0d;&#x0a;&#x0d;&#x0a;; 示例 3: 物理删除整个废弃子项 (在括号开头加负号)&#x0d;&#x0a;[-HKEY_CURRENT_USER\Software\AgyDemoTool\DeprecatedCache]"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 5: 🪟 原生微前端与脚本退场 (.hta / WSH) -->
+            <TabItem Header="🪟 原生微前端与脚本退场 (.hta / WSH)">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+                    <StackPanel>
+                        <!-- 板块 A: .hta 微型前端应用 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
                                 <WrapPanel Margin="0,0,0,4">
-                                    <TextBlock Text="🌐 板块 5: 冷门但真实存在的 .hta (HTML Application 原生微型前端应用)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                    <TextBlock Text="🌐 1. .hta (HTML Application 原生微型前端应用)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
                                     <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
                                         <TextBlock Text="免装 Electron" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}"/>
                                     </Border>
@@ -736,6 +704,30 @@
                             </StackPanel>
                         </Border>
 
+                        <!-- 板块 B: .vbs / .js / .wsf (WSH 历史定位与退场提醒) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="🛑 2. .vbs / .js / .wsf (Windows Script Host 历史定位与退场提醒)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushAlertErrorText}"/>
+                                    <Border Grid.Column="1" Background="{DynamicResource BrushAlertErrorBg}" CornerRadius="4" Padding="6,1">
+                                        <TextBlock Text="官方淘汰中" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource BrushAlertErrorText}"/>
+                                    </Border>
+                                </Grid>
+                                <TextBlock Text="Windows Script Host (wscript.exe / cscript.exe) 曾是 Windows 2000 / XP 时代的脚本基石，但在现代安全与系统演进中已被全面淘汰："
+                                           FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,8" TextWrapping="Wrap"/>
+
+                                <Border Background="{DynamicResource BrushAlertRedBg}" BorderBrush="{DynamicResource BrushAlertRedBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <StackPanel>
+                                        <TextBlock Text="• 历史辉煌与安全隐患：基于 COM 架构，虽能方便调用 ActiveXObject，但缺乏安全沙箱与现代类型约束，历史上成为 Office 宏病毒、勒索木马的高发媒介。&#x0a;• 微软官方退场路线图：Windows 11 24H2 起已正式将 VBScript 剥离为「按需可选功能 (Feature on Demand)」，并计划在未来主版本中彻底移除其运行解释器！&#x0a;• 现代化迁移指南：新项目严禁再使用 .vbs 或 .js(WSH) 编写；历史维护脚本建议尽快迁移重构为 PowerShell 脚本（调用 .NET API）或 .bat 批处理。"
+                                                   FontSize="10" Foreground="{DynamicResource BrushAlertRedText}" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
