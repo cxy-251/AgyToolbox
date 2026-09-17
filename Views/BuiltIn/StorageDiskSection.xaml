@@ -410,9 +410,17 @@
                         <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="3,0,3,0">
                             <StackPanel>
                                 <TextBlock Text="⚡ 秒级创建测试文件 (createnew)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
-                                <TextBlock Text="无需漫长写零等待，直接向文件分配表瞬间分配指定字节（如下例 10GB），用于磁盘 I/O 读写压测或空间占位。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBlock Text="无需漫长写零等待，直接向文件分配表瞬间分配指定字节，用于磁盘 I/O 读写压测或空间占位：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
                                 <TextBox Text="fsutil file createnew C:\test_10G.tmp 10737418240" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
-                                <Button Content="复制创建 10GB 文件" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil file createnew C:\test_10GB.tmp 10737418240" Click="BtnCopyCmd_Click"/>
+                                <Grid Margin="0,0,0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="⚡ 一键 100MB" Background="#10B981" FontSize="10" Padding="4,2" Margin="0,0,2,0" Click="BtnCreateDummyFile100M_Click"/>
+                                    <Button Grid.Column="1" Content="🚀 一键 1GB" Background="#0284C7" FontSize="10" Padding="4,2" Margin="2,0,0,0" Click="BtnCreateDummyFile1G_Click"/>
+                                </Grid>
+                                <Button Content="复制创建 10GB 文件命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="fsutil file createnew C:\test_10GB.tmp 10737418240" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
 
@@ -471,6 +479,76 @@
                                 <TextBlock Text="轻量级控制台快速查询。若 Status 返回 OK 则物理正常；若返回 Pred Fail (预测故障) 则需立即备份数据更换硬盘。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
                                 <TextBox Text="wmic diskdrive get model,status,interfaceType" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
                                 <Button Content="复制 WMIC 状态查询" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="wmic diskdrive get model,status,interfaceType" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 9: 工业级多线程文件同步与镜像 (robocopy.exe) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel Margin="0,0,0,4">
+                        <TextBlock Text="9. 工业级多线程文件同步与镜像 (robocopy.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                            <TextBlock Text="原生多线程同步" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertBlueText}"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="Windows 官方 Robust File Copy。比普通 copy/xcopy 强悍数倍：支持多线程并发传输、网络闪断自动重试、跳过未改动文件与断点续传：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="增量多线程同步 (/E /MT:16 /R:2 /W:1 /NP):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                <TextBlock Text="包含所有子目录，16线程并发，失败重试2次等1秒，安静模式无干扰进度：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                <TextBox Text="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /E /MT:16 /R:2 /W:1 /NP" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制增量同步命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /E /MT:16 /R:2 /W:1 /NP" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="镜像克隆同步 (/MIR /MT:16 /R:1 /W:1):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                <TextBlock Text="⚠️ 镜像模式会同时在目标目录中删除源端不存在的多余文件：" FontSize="10" Foreground="#DC2626" Margin="0,0,0,4"/>
+                                <TextBox Text="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /MIR /MT:16 /R:1 /W:1" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制镜像同步命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="robocopy &quot;C:\Source&quot; &quot;D:\Backup&quot; /MIR /MT:16 /R:1 /W:1" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 10: 符号链接与链接管理 (mklink / New-Item) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel Margin="0,0,0,4">
+                        <TextBlock Text="10. 原生符号链接与软硬链接管理 (mklink / New-Item)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                            <TextBlock Text="目录重定向与映射" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertPurpleText}"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="将大体积开发缓存、Node 依赖、微信/游戏存储从 C 盘无缝重定向到其他分区，或在项目工程中创建轻量跨目录软链接：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="CMD 原生语法创建目录软链接 (mklink /D):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="cmd /c mklink /D &quot;C:\LinkFolder&quot; &quot;D:\TargetFolder&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制 mklink 目录软链接命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="cmd /c mklink /D &quot;C:\LinkFolder&quot; &quot;D:\TargetFolder&quot;" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="PowerShell 原生语法创建符号链接 (New-Item):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="New-Item -ItemType SymbolicLink -Path .\link -Target .\target" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制 New-Item 符号链接命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="New-Item -ItemType SymbolicLink -Path .\link -Target .\target" Click="BtnCopyCmd_Click"/>
                             </StackPanel>
                         </Border>
                     </Grid>

@@ -184,6 +184,163 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 5: Win11 24H2+ 原生 sudo 提权控制 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="5. Win11 24H2+ 原生 sudo 提权控制 (sudo.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertPurpleBg}" BorderBrush="{DynamicResource BrushAlertPurpleBorder}" BorderThickness="1" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                <TextBlock Text="✨ 24H2 内联提权" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertPurpleText}"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtSudoStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <Button Content="🔄 刷新" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnRefreshSudo_Click"/>
+                            <Button Content="🟢 启用 (内联当前窗口)" Background="#10B981" Margin="0,0,6,0" Click="BtnEnableSudoNormal_Click"/>
+                            <Button Content="🪟 启用 (独立弹窗)" Style="{DynamicResource SecondaryButton}" Margin="0,0,6,0" Click="BtnEnableSudoWindow_Click"/>
+                            <Button Content="🛑 禁用" Background="#EF4444" Click="BtnDisableSudo_Click"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                        <TextBlock Text="💡 原生 sudo 提权机制：不同于传统右键“以管理员身份运行”需重开窗口丢失工作路径，Win11 原生 sudo 支持在当前终端直接内联提权执行管理员指令，并支持 normal (内联) 与 forceNewWindow (独立弹窗) 运行模式。"
+                                   FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
+                    </Border>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="直接提权启动系统关键服务 (示例):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="sudo net start wuauserv" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制提权启动命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="sudo net start wuauserv" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="命令行查看或配置 sudo 运行模式:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="sudo config --enable normal" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制配置模式命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="sudo config --enable normal" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 6: 原生 OpenSSH 密钥认证与 ssh-agent 凭据托管服务 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="6. 原生 OpenSSH 密钥认证与 ssh-agent 凭据托管服务" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                                <TextBlock Text="SSH 密钥保险箱" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="TxtSshAgentStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <Button x:Name="BtnEnableSshAgent" Content="开启 ssh-agent 自启" Background="#0284C7" Click="BtnEnableSshAgent_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="Windows 10/11 内置 OpenSSH 客户端。配置 ssh-agent 服务开机自启后，只需解锁一次私钥口令，即可在所有终端窗口与 Git 推拉中免口令畅行。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="生成现代高安全 Ed25519 密钥 (替代传统 RSA):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制 Ed25519 密钥生成命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="ssh-keygen -t ed25519 -C &quot;your_email@example.com&quot;" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="将私钥托管至代理并测试连通性:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="ssh-add ~\.ssh\id_ed25519 &amp;&amp; ssh -T git@github.com" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制添加私钥与测试命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="ssh-add ~\.ssh\id_ed25519 &amp;&amp; ssh -T git@github.com" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 7: 原生后台服务 (sc.exe) 与计划任务 (schtasks.exe) 命令行管理 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel Margin="0,0,0,4">
+                        <TextBlock Text="7. 原生后台服务 (sc.exe) 与计划任务 (schtasks.exe) 命令行控制" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                            <TextBlock Text="免装 NSSM / 自动化调度" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="系统服务与定时任务原生调度组合。无需依赖第三方工具，直接使用 Windows 原生二进制即可注册系统常驻守护进程与精确定时自动化任务："
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
+                        <TextBlock Text="⚠️ sc.exe 经典避坑法则：binPath=、start=、DisplayName= 等参数的「等号与参数值之间必须有且仅有一个空格」！例如 binPath= &quot;C:\App.exe&quot;（若写成 binPath=&quot;...&quot; 将报错）。"
+                                   FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                    </Border>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="注册自启后台服务 (sc.exe create):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="sc.exe create MyBackend binPath= &quot;C:\App\backend.exe --service&quot; start= auto" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制创建服务命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="sc.exe create MyBackend binPath= &quot;C:\App\backend.exe --service&quot; start= auto" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="配置服务崩溃自动重启 (sc.exe failure):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="sc.exe failure MyBackend reset= 86400 actions= restart/60000/restart/60000/&quot;&quot;/60000" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制配置恢复机制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="sc.exe failure MyBackend reset= 86400 actions= restart/60000/restart/60000/&quot;&quot;/60000" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="创建每日凌晨 02:00 计划任务 (schtasks /create):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="schtasks /create /tn &quot;DailyTask&quot; /tr &quot;powershell.exe -File C:\Scripts\job.ps1&quot; /sc daily /st 02:00 /ru SYSTEM" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制创建计划任务命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="schtasks /create /tn &quot;DailyTask&quot; /tr &quot;powershell.exe -File C:\Scripts\job.ps1&quot; /sc daily /st 02:00 /ru SYSTEM" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="开机/登录自动触发任务 (/sc onlogon):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBox Text="schtasks /create /tn &quot;DevEnvInit&quot; /tr &quot;C:\Tools\init.bat&quot; /sc onlogon /rl HIGHEST" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制开机自启任务命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="schtasks /create /tn &quot;DevEnvInit&quot; /tr &quot;C:\Tools\init.bat&quot; /sc onlogon /rl HIGHEST" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

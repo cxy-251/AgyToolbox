@@ -130,7 +130,7 @@
                                      Style="{StaticResource PowerToysNavItemStyle}" Click="Nav_Click">
                             <StackPanel>
                                 <TextBlock Text="💻 步骤四：原生开发与免编译全家谱" FontSize="13" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                <TextBlock Text="权限特权 / 原生CLI与服务 / Shell生态 / 脚本全家谱" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
+                                <TextBlock Text="Shell生态认知 / ExecutionPolicy治理 / 原生脚本全家谱" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                             </StackPanel>
                         </RadioButton>
 

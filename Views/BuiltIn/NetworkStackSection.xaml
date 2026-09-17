@@ -458,6 +458,52 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 9: 原生轻量网络请求与 REST API 调试 (irm 与 curl.exe) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <WrapPanel Margin="0,0,0,4">
+                        <TextBlock Text="9. 原生轻量网络请求与 REST API 调试 (irm 与 curl.exe)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0">
+                            <TextBlock Text="免装 Postman" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource BrushAlertGreenText}"/>
+                        </Border>
+                    </WrapPanel>
+                    <TextBlock Text="无需安装臃肿的第三方 HTTP 调试工具。PowerShell 原生内置 JSON 对象反序列化管道 (irm)，Win10 1803+ 亦默认预装官方原生 curl.exe：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- 卡片 A: irm -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="PowerShell irm 自动反序列化 JSON 对象:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                <TextBlock Text="直接点属性访问字段（如 .tag_name），或使用 -Method Post 发送 JSON 载荷：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                <TextBox Text="$release = irm https://api.github.com/repos/cli/cli/releases/latest; $release.tag_name" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制 irm 接口请求命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="$release = irm https://api.github.com/repos/cli/cli/releases/latest; $release.tag_name" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <!-- 卡片 B: POST JSON -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="PowerShell 原生发送 POST 请求传递 JSON:" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,2"/>
+                                <TextBlock Text="原生支持 ContentType 与 Body 传递，响应自动映射为结构化对象：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,4"/>
+                                <TextBox Text="irm -Method Post -Uri &quot;http://127.0.0.1:8080/api/echo&quot; -Body '{\&quot;msg\&quot;:\&quot;ping\&quot;}' -ContentType &quot;application/json&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制 POST 请求命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="irm -Method Post -Uri &quot;http://127.0.0.1:8080/api/echo&quot; -Body '{\&quot;msg\&quot;:\&quot;ping\&quot;}' -ContentType &quot;application/json&quot;" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Windows 原生 curl.exe 调试 (⚠️ PS5.1 默认将 curl 别名给 iwr，务必带 .exe 后缀):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                            <TextBox Text="curl.exe -i -X POST &quot;http://127.0.0.1:8080/api&quot; -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;:\&quot;agy\&quot;}&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                            <Button Content="复制原生 curl.exe 调试命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="curl.exe -i -X POST &quot;http://127.0.0.1:8080/api&quot; -H &quot;Content-Type: application/json&quot; -d &quot;{\&quot;name\&quot;:\&quot;agy\&quot;}&quot;" Click="BtnCopyCmd_Click"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

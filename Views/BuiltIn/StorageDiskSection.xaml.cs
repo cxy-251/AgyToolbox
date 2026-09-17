@@ -65,10 +65,36 @@ public partial class StorageDiskSection : UserControl
     }
 
     private readonly WinOptimizerService _optimizerService = new();
+    private readonly NativeDevService _nativeDevService = new();
 
     private void BtnQuerySmartHealth_Click(object sender, RoutedEventArgs e)
     {
         var (ok, output) = _optimizerService.QueryPhysicalDisksHealth();
         MessageBox.Show(output, "物理磁盘 SMART 健康与状态检测", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnCreateDummyFile100M_Click(object sender, RoutedEventArgs e)
+    {
+        CreateDummyFileWithDialog("test_dummy_100m.bin", 100L * 1024L * 1024L);
+    }
+
+    private void BtnCreateDummyFile1G_Click(object sender, RoutedEventArgs e)
+    {
+        CreateDummyFileWithDialog("test_dummy_1g.bin", 1024L * 1024L * 1024L);
+    }
+
+    private void CreateDummyFileWithDialog(string defaultFileName, long sizeBytes)
+    {
+        var dialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Title = "选择保存测试文件的位置与文件名",
+            FileName = defaultFileName,
+            Filter = "二进制数据文件 (*.bin)|*.bin|所有文件 (*.*)|*.*"
+        };
+        if (dialog.ShowDialog() == true)
+        {
+            var (ok, msg) = _nativeDevService.CreateDummyFile(dialog.FileName, sizeBytes);
+            MessageBox.Show(msg, "fsutil 创建测试文件", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        }
     }
 }

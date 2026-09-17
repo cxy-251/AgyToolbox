@@ -723,6 +723,170 @@
                 </StackPanel>
             </Border>
 
+            <!-- 板块 5: CMD 纯字符流 vs PowerShell 强类型对象级指令对照矩阵 -->
+            <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="5. CMD 纯字符流 vs PowerShell 强类型对象级指令对照矩阵" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertInfoBg}" BorderBrush="{DynamicResource BrushAlertInfoBorder}" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="效率对照矩阵" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource BrushAlertInfoText}"/>
+                            </Border>
+                        </WrapPanel>
+                    </Grid>
+                    <TextBlock Text="核心技术代差：CMD 是基于字符流的纯文本切分（依赖 findstr、for /f）；PowerShell 是基于 .NET 强类型对象的结构化数据管道（属性直接提取、强类型排序与过滤）。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,10"/>
+
+                    <!-- 矩阵卡片 1: 进程查询与内存过滤 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                            <StackPanel>
+                                <TextBlock Text="⬛ CMD：按字符搜索进程" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="单纯文本流匹配，无法精确提取字段或数学比较：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="tasklist | findstr /i &quot;node&quot;" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="tasklist | findstr /i &quot;node&quot;" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🟦 PowerShell：按属性降序取内存前 5 进程" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                <TextBlock Text="通过 WorkingSet64 强类型属性直接排序取前 5：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 5 Name, Id, WorkingSet64" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 5 Name, Id, WorkingSet64" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 矩阵卡片 2: 端口占用与反查进程 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                            <StackPanel>
+                                <TextBlock Text="⬛ CMD：netstat 文本过滤端口" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="只给出数字 PID，需人眼记下再手动敲 tasklist 查名字：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="netstat -ano | findstr :8080" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="netstat -ano | findstr :8080" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🟦 PowerShell：原生 TCP 强类型连接对象查询" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                <TextBlock Text="原生 TCP 连接结构化对象直接过滤本地端口与归属 PID：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, State, OwningProcess" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, State, OwningProcess" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 矩阵卡片 3: 文件递归查找与时间排序 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                            <StackPanel>
+                                <TextBlock Text="⬛ CMD：dir 递归查找文件" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="纯文本输出所有匹配路径，无法轻松做管道二次计算：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="dir /s /b /o:-d *.log" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="dir /s /b /o:-d *.log" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🟦 PowerShell：对象管道按修改时间取最新 10 个" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                <TextBlock Text="返回 FileInfo 对象，可按大小、时间精确排序和格式化输出：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="Get-ChildItem -Path . -Filter *.log -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 10 FullName, Length, LastWriteTime" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-ChildItem -Path . -Filter *.log -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 10 FullName, Length, LastWriteTime" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 矩阵卡片 4: 文件内容搜索 (Grep) -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                            <StackPanel>
+                                <TextBlock Text="⬛ CMD：findstr 全局搜索文件内容" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="基础正则字符串检索，速度极快，适合快速找关键字：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="findstr /s /i /n &quot;TODO&quot; *.cs" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="findstr /s /i /n &quot;TODO&quot; *.cs" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🟦 PowerShell：Select-String 对象级模式匹配" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                <TextBlock Text="返回 MatchInfo 对象，包含行号、上下文及捕获组：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="Select-String -Path &quot;**\*.cs&quot; -Pattern &quot;TODO&quot; | Select-Object Path, LineNumber, Line" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Select-String -Path &quot;**\*.cs&quot; -Pattern &quot;TODO&quot; | Select-Object Path, LineNumber, Line" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 矩阵卡片 5: 网络探测与哈希校验 -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                            <StackPanel>
+                                <TextBlock Text="⬛ CMD：ping 与 certutil 哈希校验" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="ping 仅测 ICMP，certutil 测哈希需剔除多余文案：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="ping -n 4 github.com &amp;&amp; certutil -hashfile target.zip SHA256" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="ping -n 4 github.com" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🟦 PowerShell：Test-NetConnection 与 Get-FileHash" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                <TextBlock Text="原生支持 TCP 端口三次握手探测，直接获得精准 Hash 字段：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="Test-NetConnection github.com -Port 443; (Get-FileHash ./target.zip -Algorithm SHA256).Hash" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Test-NetConnection github.com -Port 443" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- 矩阵卡片 6: 环境变量 PATH 拆分与多线程复制 -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,4,0">
+                            <StackPanel>
+                                <TextBlock Text="⬛ CMD：robocopy 16 线程与 clip 剪贴板注入" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                <TextBlock Text="CMD 经典多线程断点传输与输出管道转剪贴板：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="robocopy C:\Src D:\Dst /E /MT:16 /R:1 /W:1 &amp; ipconfig | clip" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="ipconfig /all | clip" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="4,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🟦 PowerShell：PATH 智能拆分与网络一键执行" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                <TextBlock Text="将粘连的 PATH 按分号逐行输出，以及现代 irm 管道执行：" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                <TextBox Text="$env:PATH -split ';'; irm https://get.scoop.sh | iex" IsReadOnly="True" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" FontFamily="Consolas" FontSize="10" Padding="4" Margin="0,0,0,4"/>
+                                <Button Content="复制命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="$env:PATH -split ';'" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>
