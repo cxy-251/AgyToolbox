@@ -301,6 +301,261 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 6: 设备管理器黄色感叹号排查与驱动测试模式 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="6. 设备管理器黄色感叹号排查与驱动测试模式" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertYellowBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="驱动排障" FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="🖥️ 打开设备管理器" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnDevMgmt_Click"/>
+                            <Button Content="⚡ 开启驱动测试模式" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnEnableTestSigning_Click"/>
+                            <Button Content="🛡️ 恢复签名限制" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Click="BtnDisableTestSigning_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="新机装完系统最常见的「未知设备/黄色感叹号」排查。双击异常设备 -&gt;「详细信息」-&gt; 选择「硬件 ID」，复制形如 PCI\VEN_xxxx&amp;DEV_xxxx 的代码即可在搜索引擎精准定位芯片组/声卡/无线网卡驱动。若需安装自制或无签名开源驱动，可开启测试模式。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 硬件 ID 查询指南 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="🔍 硬件 ID (Hardware IDs) 溯源原理" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="VEN 代表厂商 ID（如 8086 为 Intel，10DE 为 NVIDIA，10EC 为 Realtek），DEV 代表芯片设备型号。复制硬件 ID 是解决一切黄色感叹号的根本方法。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="PCI\VEN_8086&amp;DEV_7A27 (示例：Intel 芯片组总线控制器)" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="打开设备管理器查找" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnDevMgmt_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 禁用驱动程序强制签名 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🛠️ 驱动测试模式与完整性校验控制" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="安装某些老旧烧录器、硬件调试器或内嵌驱动时若提示「哈希值不存在」，需在引导项开启 testsigning (需重启生效)。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="bcdedit /set testsigning on" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制开启测试模式命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="bcdedit /set testsigning on" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 7: 音频无声与麦克风故障排错 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="7. 音频无声音、麦克风无输入与音频服务排障" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="音频声卡排查" FontSize="10" Foreground="{DynamicResource BrushAlertGreenText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="🔊 重启音频服务" Background="#10B981" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnRestartAudio_Click"/>
+                            <Button Content="🎛️ 经典声音面板" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnMmsys_Click"/>
+                            <Button Content="🎤 麦克风隐私权限" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Click="BtnMicPrivacy_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="新手常见「电脑突然没声音」「腾讯会议/语音麦克风没有波形」。常见诱因包括：Windows 默认静音了桌面应用的麦克风权限、默认输出设备跳到了显示器音频接口、或 AudioEndpointBuilder 服务死锁。可点击上方按钮一键重启音频栈。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 经典声音控制面板 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="🎛️ 经典声音控制台 (mmsys.cpl)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="Windows 现代设置界面难以查看详细采样率与电平。经典面板可直接观察绿色电平跳动、禁用多余虚拟声卡并设置【默认设备】。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="mmsys.cpl" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="打开经典声音面板" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnMmsys_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 麦克风隐私权限 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🎤 麦克风权限阻断排查" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="Windows 10/11 默认安全策略常拦截第三方软件访问麦克风。若浏览器或开发工具无法录音，需在此确保【允许桌面应用访问麦克风】处于开启状态。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="ms-settings:privacy-microphone" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="直达麦克风权限设置" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnMicPrivacy_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 8: 蓝牙连接与外设配对排障 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="8. 蓝牙连接失败、设备搜不到与服务排障" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="无线蓝牙排障" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="📶 重启蓝牙服务 (bthserv)" Background="#10B981" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnRestartBluetooth_Click"/>
+                            <Button Content="⚙️ 打开蓝牙设置" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Click="BtnOpenBluetoothSettings_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="蓝牙鼠标/耳机已配对却连不上、或新设备搜不到时的排错：通常因无线网卡休眠断电导致 bthserv 堆栈挂起。重启蓝牙支持服务后重新开启配对即可恢复正常。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 蓝牙休眠断电排查 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="🔋 蓝牙休眠断电问题" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="在设备管理器中展开【蓝牙】与【网络适配器】，双击蓝牙无线模块 -&gt;【电源管理】-&gt; 取消勾选【允许计算机关闭此设备以节约电源】，可彻底杜绝蓝牙耳机频繁断联。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <Button Content="打开设备管理器排查电源" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnDevMgmt_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 蓝牙设备删除残留清理 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🧹 蓝牙旧配对缓存清理" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="若蓝牙提示「无法连接」或「删除设备失败」，需先在设备管理器中点击【查看】勾选【显示隐藏的设备】，展开蓝牙分支手动卸载灰色失效的历史配对节点。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <Button Content="打开蓝牙控制页重新配对" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnOpenBluetoothSettings_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 9: 打印机正向添加与打印队列卡死一键修复 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="9. 打印机正向添加与打印队列卡死一键清空" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="打印队列自救" FontSize="10" Foreground="{DynamicResource BrushAlertPurpleText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="🧹 一键清空卡死打印队列" Background="#EF4444" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnClearPrintQueue_Click"/>
+                            <Button Content="➕ 添加打印机向导" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnAddPrinter_Click"/>
+                            <Button Content="🖨️ 打印管理 (printmanagement)" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Click="BtnPrintMgmt_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="Windows 打印服务常见故障：打印任务在队列中显示「正在删除...」却永远卡住，导致后续所有文档全部无法打印。点击【一键清空卡死打印队列】可自动停止 Spooler、强制擦除 spool\PRINTERS 磁盘缓存并重启后台服务。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 打印队列卡死底层路径 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="📂 打印队列脱机缓存路径 (spool\PRINTERS)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="打印队列卡死的物理原因是有损坏的 .SHD 或 .SPL 文件锁死。手动处理时可停止后台服务并清空此文件夹。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="C:\Windows\System32\spool\PRINTERS" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="打开 PRINTERS 目录" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnOpenPrintersDir_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 正向添加打印机向导 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="➕ 经典原生添加打印机向导 (printui.dll)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="通过 Win32 原生 printui 接口快速拉起网络/本地打印机添加向导，支持通过 TCP/IP 地址或手动指定 INF 驱动安装。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="rundll32.exe printui.dll,PrintUIEntry /il" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="启动添加打印机向导" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnAddPrinter_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 10: 多显示器排列与高分屏 DPI 缩放模糊排查 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="10. 多显示器排列、投影快捷切换与高分屏 DPI 模糊修复" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertBlueBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="显示与 DPI" FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="🖥️ 屏幕投影 (Win+P)" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnDisplaySwitch_Click"/>
+                            <Button Content="🔍 打开显示设置" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnOpenDisplaySettings_Click"/>
+                            <Button Content="🖋️ ClearType 字体平滑" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Click="BtnClearType_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="多屏开荒必备：外接显示器排列对齐、副屏拓展快捷切换，以及解决老旧 Win32 软件在 4K/2K 高分屏 (125%/150%/200% DPI) 下文字发虚、发糊的官方兼容性方案。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 老旧软件 DPI 缩放发糊根治 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="👓 老软件字体模糊根治秘籍 (高 DPI 替代)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="右键发糊软件主程序 .exe -&gt;【属性】-&gt;【兼容性】-&gt; 点击【更改高 DPI 设置】-&gt; 勾选【替代高 DPI 缩放行为】-&gt; 下拉菜单选择【系统 (增强)】，即可由 Windows DWM 强制渲染矢量清晰文字！" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <Button Content="打开 ClearType 字体微调" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnClearType_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 跨屏拖拽鼠标卡顿与多屏对齐 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="📐 多屏鼠标跨屏平滑穿梭与刷新率对齐" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="当双屏分辨率或物理高度不一致时，鼠标跨屏常因边缘不贴齐被卡住。进入显示设置拖动矩形框使其上下边缘精确平齐；若主屏 144Hz 副屏 60Hz 出现微卡顿，请在高级显示中确认副屏刷新率已锁至最高。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <Button Content="打开 Windows 显示排列设置" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Click="BtnOpenDisplaySettings_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

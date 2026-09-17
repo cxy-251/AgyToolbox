@@ -63,4 +63,12 @@ public partial class StorageDiskSection : UserControl
             MessageBox.Show($"已复制命令到剪贴板:\n{cmd}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
+
+    private readonly WinOptimizerService _optimizerService = new();
+
+    private void BtnQuerySmartHealth_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, output) = _optimizerService.QueryPhysicalDisksHealth();
+        MessageBox.Show(output, "物理磁盘 SMART 健康与状态检测", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
 }

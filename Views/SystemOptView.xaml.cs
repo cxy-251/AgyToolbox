@@ -35,7 +35,9 @@ public partial class SystemOptView : UserControl
         RefreshFastStartupStatus();
         RefreshReservedStorageStatus();
         RefreshStorageSenseStatus();
+        RefreshVirtualMemoryStatus();
         RefreshExplorerSettings();
+        RefreshAccountsAndLicenseStatus();
         RefreshDevIoStatus();
     }
 
@@ -265,6 +267,60 @@ public partial class SystemOptView : UserControl
         MessageBox.Show(msg, ok ? "激活成功" : "提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
+    private void BtnOpenRestoreConfig_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenSystemProtectionSettings();
+    }
+
+    private void BtnOpenRestoreWizard_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenSystemRestoreWizard();
+    }
+
+    private void BtnCreateRestorePoint_Click(object sender, RoutedEventArgs e)
+    {
+        string defaultName = $"AgyToolbox_优化备份_{DateTime.Now:yyyyMMdd_HHmmss}";
+        var confirm = MessageBox.Show(
+            $"确定要立即创建系统还原点吗？\n\n还原点名称：{defaultName}\n\n该操作将拍摄 C 盘系统环境快照，便于随时回退后悔。",
+            "创建系统还原点",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (confirm != MessageBoxResult.Yes) return;
+
+        BtnCreateRestorePoint.IsEnabled = false;
+        try
+        {
+            var (ok, msg) = _winOptimizerService.CreateSystemRestorePoint(defaultName);
+            MessageBox.Show(msg, ok ? "创建成功" : "创建提示", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        }
+        finally
+        {
+            BtnCreateRestorePoint.IsEnabled = true;
+        }
+    }
+
+    private void RefreshVirtualMemoryStatus()
+    {
+        bool clearPageFile = _winOptimizerService.IsClearPageFileAtShutdownEnabled();
+        TxtClearPageFileStatus.Text = clearPageFile ? "● 已开启关机清空页面文件 (高安全/稍增关机耗时)" : "○ 默认快速关机 (保留文件碎片)";
+        TxtClearPageFileStatus.Foreground = clearPageFile ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleClearPageFile.Content = clearPageFile ? "恢复默认快速关机" : "开启关机清空";
+    }
+
+    private void BtnOpenVirtualMemory_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenVirtualMemorySettings();
+    }
+
+    private void BtnToggleClearPageFile_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsClearPageFileAtShutdownEnabled();
+        var res = _winOptimizerService.SetClearPageFileAtShutdown(!current);
+        MessageBox.Show(res.Message, "页面文件安全策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshVirtualMemoryStatus();
+    }
+
     #endregion
 
     #region 4. 资源管理器开荒与系统交互
@@ -450,6 +506,54 @@ public partial class SystemOptView : UserControl
     {
         _winOptimizerService.RestartExplorer();
         MessageBox.Show("已向资源管理器发送重启指令，桌面与任务栏将在 1~2 秒内刷新！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    private void RefreshAccountsAndLicenseStatus()
+    {
+        bool netplwizRestored = _winOptimizerService.IsNetplwizAutoLogonCheckboxRestored();
+        TxtNetplwizStatus.Text = netplwizRestored ? "● 已还原自动登录复选框 (支持免密直达桌面)" : "○ 微软默认隐藏复选框";
+        TxtNetplwizStatus.Foreground = netplwizRestored ? ThemeBrushes.Success : ThemeBrushes.Warning;
+        BtnToggleNetplwiz.Content = netplwizRestored ? "隐藏复选框" : "还原免密复选框";
+    }
+
+    private void BtnToggleNetplwiz_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _winOptimizerService.IsNetplwizAutoLogonCheckboxRestored();
+        var res = _winOptimizerService.SetNetplwizAutoLogonCheckbox(!current);
+        MessageBox.Show(res.Message, "netplwiz 策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshAccountsAndLicenseStatus();
+    }
+
+    private void BtnOpenNetplwiz_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenNetplwiz();
+    }
+
+    private void BtnOpenLusrmgr_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenLusrmgr();
+    }
+
+    private void BtnOpenSignInOptions_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenSignInOptions();
+    }
+
+    private void BtnOpenActivationSettings_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenActivationSettings();
+    }
+
+    private void BtnQueryActivationExpiry_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.QueryActivationExpiry();
+        MessageBox.Show(msg, "Windows 激活到期状态 (slmgr /xpr)", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnQueryLicenseDetails_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, msg) = _winOptimizerService.QueryLicenseDetails();
+        MessageBox.Show(msg, "Windows 许可证通道详情 (slmgr /dli)", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
     }
 
     #endregion
@@ -927,6 +1031,34 @@ public partial class SystemOptView : UserControl
         var res = _winOptimizerService.SetGameDvrDisabled(!isCurrentlyDisabled);
         MessageBox.Show(res.Message, "GameDVR 策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshDevIoStatus();
+    }
+
+    #endregion
+
+    #region 语言包、输入法与 CJK 字体排障
+
+    private void BtnOpenRegionLanguage_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenRegionLanguageSettings();
+    }
+
+    private void BtnOpenIntlCpl_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenIntlCpl();
+    }
+
+    private void BtnOpenOptionalFeatures_Click(object sender, RoutedEventArgs e)
+    {
+        _winOptimizerService.OpenOptionalFeaturesSettings();
+    }
+
+    private void BtnCopyTagText_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string text)
+        {
+            Clipboard.SetText(text);
+            MessageBox.Show($"已复制命令到剪贴板:\n{text}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     #endregion

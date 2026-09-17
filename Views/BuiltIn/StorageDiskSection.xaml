@@ -429,6 +429,54 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 8: 物理磁盘 SMART 健康度与硬件故障预测 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="8. 物理磁盘 SMART 健康状态与介质故障预测" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="硬件级健康预测" FontSize="10" Foreground="{DynamicResource BrushAlertGreenText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <Button Grid.Column="1" Content="🔍 一键检测全盘 SMART 物理健康" Background="#10B981" Padding="10,4" FontSize="11" Click="BtnQuerySmartHealth_Click"/>
+                    </Grid>
+                    <TextBlock Text="不同于 chkdsk 仅检查 NTFS 逻辑目录树或软错误，本功能直接穿透至 NVMe/SATA 驱动器控制器，提取底层 SMART 健康诊断状态 (Healthy/Warning) 与闪存介质类型，用于及早发现闪存坏块或掉盘征兆。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: PowerShell 现代物理磁盘探查 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,5,0">
+                            <StackPanel>
+                                <TextBlock Text="📊 现代存储子系统查询 (Get-PhysicalDisk)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="精准辨别 NVMe / SATA 总线，区分 SSD 固态与 HDD 机械，列出 HealthStatus 整体健康度。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="Get-PhysicalDisk | Select-Object DeviceId, FriendlyName, MediaType, BusType, HealthStatus" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制物理盘查询命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="Get-PhysicalDisk | Select-Object DeviceId, FriendlyName, MediaType, BusType, HealthStatus, OperationalStatus" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: WMIC 经典驱动器健康探查 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="5,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="📟 驱动器控制器状态 (wmic diskdrive)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="轻量级控制台快速查询。若 Status 返回 OK 则物理正常；若返回 Pred Fail (预测故障) 则需立即备份数据更换硬盘。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="wmic diskdrive get model,status,interfaceType" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制 WMIC 状态查询" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="wmic diskdrive get model,status,interfaceType" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

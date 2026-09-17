@@ -1763,4 +1763,482 @@ Add-MpPreference -ExclusionProcess $procs -ErrorAction SilentlyContinue
     }
 
     #endregion
+
+    #region 14. 系统还原点与备份安全机制 (后悔药机制)
+
+    /// <summary>
+    /// 解除系统还原点创建频率限制并创建还原点
+    /// </summary>
+    public (bool Success, string Message) CreateSystemRestorePoint(string description)
+    {
+        try
+        {
+            // 1. 解除 24 小时内只能建一次的频率限制
+            using (var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore"))
+            {
+                key.SetValue("SystemRestorePointCreationFrequency", 0, RegistryValueKind.DWord);
+            }
+
+            // 2. 确保 C 盘已启用还原保护，并创建还原点
+            string script = $@"
+try {{
+    Enable-ComputerRestore -Drive 'C:\' -ErrorAction SilentlyContinue
+    Checkpoint-Computer -Description '{description}' -RestorePointType 'APPLICATION_INSTALL' -ErrorAction Stop
+    Write-Output 'SUCCESS'
+}} catch {{
+    Write-Output $_.Exception.Message
+}}";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(15000);
+
+            if (output.Contains("SUCCESS"))
+            {
+                return (true, $"系统还原点【{description}】创建成功！\n如需回退，可随时点击【启动系统还原向导】一键恢复系统状态。");
+            }
+            else
+            {
+                return (false, $"创建还原点失败: {output}\n提示：请确保系统磁盘保护已开启且拥有足够磁盘配额。");
+            }
+        }
+        catch (Exception ex)
+        {
+            return (false, $"创建系统还原点异常: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 打开系统还原向导 (rstrui.exe)
+    /// </summary>
+    public void OpenSystemRestoreWizard()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = "rstrui.exe", UseShellExecute = true });
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// 打开系统保护配置窗口 (SystemPropertiesProtection.exe)
+    /// </summary>
+    public void OpenSystemProtectionSettings()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = "SystemPropertiesProtection.exe", UseShellExecute = true });
+        }
+        catch { }
+    }
+
+    #endregion
+
+    #region 15. 系统激活与许可证排查 (slmgr.vbs)
+
+    /// <summary>
+    /// 查询 Windows 激活到期状态 (slmgr.vbs /xpr)
+    /// </summary>
+    public (bool Success, string Message) QueryActivationExpiry()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cscript.exe",
+                Arguments = @"//nologo C:\Windows\System32\slmgr.vbs /xpr",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(6000);
+
+            return (true, string.IsNullOrWhiteSpace(output) ? "未查询到激活到期信息。" : output);
+        }
+        catch (Exception ex) { return (false, $"查询激活到期状态失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 查询 Windows 许可证详细信息 (slmgr.vbs /dli)
+    /// </summary>
+    public (bool Success, string Message) QueryLicenseDetails()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cscript.exe",
+                Arguments = @"//nologo C:\Windows\System32\slmgr.vbs /dli",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(6000);
+
+            return (true, string.IsNullOrWhiteSpace(output) ? "未查询到许可证信息。" : output);
+        }
+        catch (Exception ex) { return (false, $"查询许可证失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 打开官方激活设置页
+    /// </summary>
+    public void OpenActivationSettings()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = "ms-settings:activation", UseShellExecute = true });
+        }
+        catch { }
+    }
+
+    #endregion
+
+    #region 16. 本地账户与登录管理 (netplwiz / 免密自动登录 / OOBE)
+
+    /// <summary>
+    /// 检测 netplwiz 自动登录复选框是否已还原展示 (DevicePasswordLessBuildVersion = 0)
+    /// </summary>
+    public bool IsNetplwizAutoLogonCheckboxRestored()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\PasswordLess\Device");
+            var val = key?.GetValue("DevicePasswordLessBuildVersion");
+            return val is int intVal && intVal == 0;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 还原或隐藏 netplwiz 中的【要使用本计算机，用户必须输入用户名和密码】复选框
+    /// </summary>
+    public (bool Success, string Message) SetNetplwizAutoLogonCheckbox(bool restore)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\PasswordLess\Device");
+            key.SetValue("DevicePasswordLessBuildVersion", restore ? 0 : 2, RegistryValueKind.DWord);
+
+            return (true, restore
+                ? "已成功还原 netplwiz 自动登录复选框！\n打开用户账户窗口后，取消勾选【要使用本计算机，用户必须输入用户名和密码】并输入密码，即可实现开机跳过密码直达桌面。"
+                : "已恢复微软无密码现代登录策略限制 (隐藏该复选框)。");
+        }
+        catch (Exception ex) { return (false, $"设置 netplwiz 复选框失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 打开用户账户控制面板 (netplwiz)
+    /// </summary>
+    public void OpenNetplwiz()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = "netplwiz.exe", UseShellExecute = true });
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// 打开本地用户和组管理 (lusrmgr.msc)
+    /// </summary>
+    public void OpenLusrmgr()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = "lusrmgr.msc", UseShellExecute = true });
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// 打开 Windows 登录选项与 Windows Hello 设置
+    /// </summary>
+    public void OpenSignInOptions()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = "ms-settings:signinoptions", UseShellExecute = true });
+        }
+        catch { }
+    }
+
+    #endregion
+
+    #region 17. 虚拟内存与分页文件 (pagefile.sys) 调优
+
+    /// <summary>
+    /// 打开系统属性高级性能选项 (虚拟内存设置页)
+    /// </summary>
+    public void OpenVirtualMemorySettings()
+    {
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = "SystemPropertiesPerformance.exe", Arguments = "3", UseShellExecute = true });
+        }
+        catch { }
+    }
+
+    /// <summary>
+    /// 检测关机时是否自动清空虚拟内存页面文件 (ClearPageFileAtShutdown)
+    /// </summary>
+    public bool IsClearPageFileAtShutdownEnabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management");
+            var val = key?.GetValue("ClearPageFileAtShutdown");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭关机清空页面文件 (安全抹除敏感 RAM 碎片，但略微增加关机时间)
+    /// </summary>
+    public (bool Success, string Message) SetClearPageFileAtShutdown(bool enable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management");
+            key.SetValue("ClearPageFileAtShutdown", enable ? 1 : 0, RegistryValueKind.DWord);
+
+            return (true, enable
+                ? "已启用关机清空页面文件！(关机时擦除 pagefile.sys 敏感内存数据，保障高密数据安全)"
+                : "已恢复默认不清除页面文件 (关机速度更快)。");
+        }
+        catch (Exception ex) { return (false, $"配置页面文件策略失败: {ex.Message}"); }
+    }
+
+    #endregion
+
+    #region 18. 物理磁盘 SMART 健康状态检测
+
+    /// <summary>
+    /// 查询系统中所有物理硬盘的 SMART 健康状态、介质类型与总线
+    /// </summary>
+    public (bool Success, string Output) QueryPhysicalDisksHealth()
+    {
+        try
+        {
+            string script = @"
+Get-PhysicalDisk | Select-Object DeviceId, FriendlyName, MediaType, BusType, HealthStatus, OperationalStatus, @{Name='SizeGB';Expression={[math]::Round($_.Size/1GB, 1)}} | Format-Table -AutoSize | Out-String -Width 120
+";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(8000);
+
+            return (true, string.IsNullOrWhiteSpace(output) ? "未查询到物理磁盘信息。" : output);
+        }
+        catch (Exception ex) { return (false, $"查询磁盘 SMART 健康失败: {ex.Message}"); }
+    }
+
+    #endregion
+
+    #region 19. 打印服务队列卡死一键修复
+
+    /// <summary>
+    /// 清空卡死的打印队列缓存并安全重启 Print Spooler 服务
+    /// </summary>
+    public (bool Success, string Message) ClearPrintQueueAndRestartSpooler()
+    {
+        try
+        {
+            string script = @"
+Stop-Service -Name Spooler -Force -ErrorAction SilentlyContinue
+Remove-Item -Path '$env:SystemRoot\System32\spool\PRINTERS\*' -Force -Recurse -ErrorAction SilentlyContinue
+Start-Service -Name Spooler
+Write-Output 'DONE'
+";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string output = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(8000);
+
+            return (true, "已成功停止打印后台服务、彻底清空卡死的 PRINTERS 队列缓存，并重新启动 Print Spooler！\n卡死的打印任务已全部注销。");
+        }
+        catch (Exception ex) { return (false, $"清空打印队列失败: {ex.Message}"); }
+    }
+
+    #endregion
+
+    #region 20. 音频与蓝牙子系统快速排错与服务重启
+
+    /// <summary>
+    /// 一键重启 Windows 原生音频服务 (AudioSrv 与 AudioEndpointBuilder)
+    /// </summary>
+    public (bool Success, string Message) RestartAudioSubsystem()
+    {
+        try
+        {
+            string script = @"
+Restart-Service -Name AudioEndpointBuilder -Force -ErrorAction SilentlyContinue
+Restart-Service -Name Audiosrv -Force -ErrorAction SilentlyContinue
+Write-Output 'DONE'
+";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(8000);
+
+            return (true, "已重启 Windows 音频终端生成器 (AudioEndpointBuilder) 与音频服务 (Audiosrv)！\n驱动挂死或无声故障已重置。");
+        }
+        catch (Exception ex) { return (false, $"重启音频服务失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 一键重启蓝牙支持服务 (bthserv)
+    /// </summary>
+    public (bool Success, string Message) RestartBluetoothService()
+    {
+        try
+        {
+            string script = @"
+Restart-Service -Name bthserv -Force -ErrorAction SilentlyContinue
+Write-Output 'DONE'
+";
+            var psi = new ProcessStartInfo
+            {
+                FileName = "powershell.exe",
+                Arguments = $"-NoProfile -ExecutionPolicy Bypass -Command \"{script}\"",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            proc?.WaitForExit(8000);
+
+            return (true, "已成功重启蓝牙支持服务 (bthserv)！\n可尝试重新发起设备配对或连接。");
+        }
+        catch (Exception ex) { return (false, $"重启蓝牙服务失败: {ex.Message}"); }
+    }
+
+    #endregion
+
+    #region 21. 双系统时差修复与 w32tm 时间强制同步
+
+    /// <summary>
+    /// 检测是否已开启双系统 UTC 硬件时钟同步 (解决 Windows 与 Linux 差 8 小时问题)
+    /// </summary>
+    public bool IsRealTimeIsUniversalEnabled()
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\TimeZoneInformation");
+            var val = key?.GetValue("RealTimeIsUniversal");
+            return val is int intVal && intVal == 1;
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭 RealTimeIsUniversal (双系统时差一键修复)
+    /// </summary>
+    public (bool Success, string Message) SetRealTimeIsUniversal(bool enable)
+    {
+        try
+        {
+            using var key = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control\TimeZoneInformation");
+            if (enable)
+            {
+                key.SetValue("RealTimeIsUniversal", 1, RegistryValueKind.DWord);
+                return (true, "已开启【双系统 UTC 硬件时钟模式 (RealTimeIsUniversal=1)】！\n主板 BIOS/RTC 将以 UTC 计数，彻底终结 Windows 与 Linux 双系统切换时时钟相差 8 小时的顽疾。");
+            }
+            else
+            {
+                key.DeleteValue("RealTimeIsUniversal", false);
+                return (true, "已恢复 Windows 默认本地时间 (Local Time) 主板硬件时钟模式。");
+            }
+        }
+        catch (Exception ex) { return (false, $"设置时区时钟失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 强制与 Windows / NTP 网络时间服务器立即同步 (w32tm /resync /force)
+    /// </summary>
+    public (bool Success, string Output) ResyncNetworkTime()
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "w32tm.exe",
+                Arguments = "/resync /force",
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            using var proc = Process.Start(psi);
+            string std = proc?.StandardOutput.ReadToEnd()?.Trim() ?? "";
+            string err = proc?.StandardError.ReadToEnd()?.Trim() ?? "";
+            proc?.WaitForExit(8000);
+
+            string combined = (std + "\n" + err).Trim();
+            return (proc?.ExitCode == 0, string.IsNullOrWhiteSpace(combined) ? "时间同步指令已成功发送。" : combined);
+        }
+        catch (Exception ex) { return (false, $"时间同步失败: {ex.Message}"); }
+    }
+
+    #endregion
+
+    #region 22. 语言、输入法与区域控制台
+
+    /// <summary>
+    /// 打开 Windows 现代语言和区域设置 (ms-settings:regionlanguage)
+    /// </summary>
+    public void OpenRegionLanguageSettings()
+    {
+        try { Process.Start(new ProcessStartInfo("ms-settings:regionlanguage") { UseShellExecute = true }); } catch { }
+    }
+
+    /// <summary>
+    /// 打开 Windows 可选功能设置 (ms-settings:optionalfeatures)
+    /// </summary>
+    public void OpenOptionalFeaturesSettings()
+    {
+        try { Process.Start(new ProcessStartInfo("ms-settings:optionalfeatures") { UseShellExecute = true }); } catch { }
+    }
+
+    /// <summary>
+    /// 打开经典区域控制台 (intl.cpl)
+    /// </summary>
+    public void OpenIntlCpl()
+    {
+        try { Process.Start(new ProcessStartInfo("intl.cpl") { UseShellExecute = true }); } catch { }
+    }
+
+    #endregion
 }

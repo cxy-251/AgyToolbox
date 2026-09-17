@@ -333,6 +333,108 @@
                 </StackPanel>
             </Border>
 
+            <!-- 工具 6: 局域网共享文件夹正向创建、赋权与排错 -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="6. 局域网共享文件夹正向创建、赋权与访问排障" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertGreenBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="局域网协作必备" FontSize="10" Foreground="{DynamicResource BrushAlertGreenText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="🌐 高级共享设置" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnOpenAdvancedSharing_Click"/>
+                            <Button Content="📁 查看当前共享 (net share)" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Click="BtnListNetShares_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="新手局域网互传文件指南。包含一键放行防火墙网络发现、通过原生 net share 快速创建公开读写目录，以及排查 Windows 10/11 经典的 0x80070035「找不到网络路径」错误。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 开启网络发现与放行防火墙 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="📶 放行网络发现与文件共享防火墙规则" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="若局域网搜不到此电脑，需向 Windows Defender 防火墙放行「文件和打印机共享」全套规则。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="netsh advfirewall firewall set rule group=&quot;文件和打印机共享&quot; new enable=Yes" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制防火墙放行命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="netsh advfirewall firewall set rule group=&quot;文件和打印机共享&quot; new enable=Yes" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 原生命令一键建立共享目录 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="⚡ 原生 net share 创建局域网共享目录" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="将指定本地目录（如 C:\ShareFolder）发布为局域网共享名 ProjectShare，赋予所有人完整读写权限。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="net share ProjectShare=C:\ShareFolder /grant:everyone,full" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制创建共享命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="net share ProjectShare=C:\ShareFolder /grant:everyone,full" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- 工具 7: 系统时间跑偏与 NTP 授时同步 (w32tm & 双系统 8 小时修复) -->
+            <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="16" Margin="0,16,0,0">
+                <StackPanel>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="7. 系统时间跑偏排查 (w32tm) 与双系统 8 小时时差修复" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                            <Border Background="{DynamicResource BrushAlertPurpleBg}" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="授时与双系统时钟" FontSize="10" Foreground="{DynamicResource BrushAlertPurpleText}" FontWeight="Bold"/>
+                            </Border>
+                        </WrapPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Button Content="🕒 强制 NTP 网络同步" Background="#10B981" Padding="8,3" FontSize="10" Margin="0,0,6,0" Click="BtnResyncTime_Click"/>
+                            <Button Content="⚡ 切换双系统 UTC 时钟" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="10" Click="BtnToggleRealTimeIsUniversal_Click"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="排查系统时钟跑偏、主板 RTC 电池没电导致的 HTTPS 证书校验失败 (时钟不准确)。支持一键执行 w32tm 强制授时同步，以及一键开启 RealTimeIsUniversal 解决 Windows 与 Linux 双系统时钟反复打架。"
+                               FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10" TextWrapping="Wrap"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 卡片 A: 查询时间同步状态与时钟源 -->
+                        <Border Grid.Column="0" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="🔍 查询时间同步状态与偏差源 (w32tm /query)" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="查看当前计算机使用的 NTP 授时服务器地址、上次同步时间戳及本地时钟源层级 (Stratum)。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="w32tm /query /status" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制时钟状态查询命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="w32tm /query /status" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 卡片 B: 双系统 8 小时时差原理与注册表修复 -->
+                        <Border Grid.Column="1" Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🐧 Windows + Linux 双系统时差 8 小时根治" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushTextPrimary}" Margin="0,0,0,4"/>
+                                <TextBlock Text="Linux 默认将主板硬件 RTC 视作 UTC，而 Windows 默认视作本地时间 (CST=UTC+8)。点击右上角【切换双系统 UTC 时钟】写入 RealTimeIsUniversal=1 即可彻底根治。" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                                <TextBox Text="reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsUniversal /t REG_DWORD /d 1 /f" IsReadOnly="True" FontFamily="Consolas" FontSize="9" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,4"/>
+                                <Button Content="复制 RealTimeIsUniversal 命令" Style="{DynamicResource SecondaryButton}" FontSize="10" Padding="6,2" Tag="reg add &quot;HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation&quot; /v RealTimeIsUniversal /t REG_DWORD /d 1 /f" Click="BtnCopyCmd_Click"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
     </ScrollViewer>
 </UserControl>

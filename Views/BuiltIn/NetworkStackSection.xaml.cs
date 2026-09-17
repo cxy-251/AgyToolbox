@@ -54,4 +54,50 @@ public partial class NetworkStackSection : UserControl
             MessageBox.Show($"已复制命令到剪贴板:\n{cmd}", "复制成功", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
+
+    private readonly WinOptimizerService _optimizerService = new();
+
+    private void BtnOpenAdvancedSharing_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "control.exe",
+                Arguments = "/name Microsoft.NetworkAndSharingCenter /page Advanced",
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"打开高级共享设置失败: {ex.Message}", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private void BtnListNetShares_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = "/k net share",
+                UseShellExecute = true
+            });
+        }
+        catch { }
+    }
+
+    private void BtnResyncTime_Click(object sender, RoutedEventArgs e)
+    {
+        var (ok, output) = _optimizerService.ResyncNetworkTime();
+        MessageBox.Show(output, "NTP 网络授时同步", MessageBoxButton.OK, ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
+
+    private void BtnToggleRealTimeIsUniversal_Click(object sender, RoutedEventArgs e)
+    {
+        bool current = _optimizerService.IsRealTimeIsUniversalEnabled();
+        var res = _optimizerService.SetRealTimeIsUniversal(!current);
+        MessageBox.Show(res.Message, "双系统 UTC 硬件时钟", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+    }
 }

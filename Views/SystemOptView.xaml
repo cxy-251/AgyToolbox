@@ -323,6 +323,83 @@
                                 </StackPanel>
                             </Border>
                         </Grid>
+
+                        <!-- 板块 5: 🛡️ 系统还原点与安全备份机制 (开荒后悔药) -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,14,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🛡️ 5. 系统还原点与安全备份 (后悔药机制)" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (在进行大量注册表精简与系统优化前的安全护航快照)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                        <Button Content="⚙️ 配置保护与容量" Style="{DynamicResource SecondaryButton}" Padding="10,4" Margin="0,0,6,0" Click="BtnOpenRestoreConfig_Click"/>
+                                        <Button Content="🚀 打开还原向导" Style="{DynamicResource SecondaryButton}" Padding="10,4" Click="BtnOpenRestoreWizard_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                            <TextBlock Text="⚡ 一键创建当前状态系统还原点 (已解除 24 小时创建频率限制)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="调用 Windows 原生卷影保护机制为系统 C 盘拍摄完整状态快照。若后续系统调试或配置失误，可使用系统还原向导 (rstrui.exe) 随时回退至当前健康状态。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnCreateRestorePoint" Grid.Column="1" Content="⚡ 一键创建还原点" Background="#10B981" Padding="12,5" FontSize="11" VerticalAlignment="Center" Click="BtnCreateRestorePoint_Click"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 6: 💾 虚拟内存与分页文件 (pagefile.sys) 调优 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="💾 6. 虚拟内存与分页文件 (pagefile.sys) 手动配置" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (SSD 多盘位规划、释放 C 盘空间与关机清空页面文件)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="⚙️ 打开虚拟内存设置" Background="#4F46E5" Padding="10,4" Click="BtnOpenVirtualMemory_Click"/>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock Text="💡 原生开发机虚拟内存最佳实践指南：" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertInfoText}" Margin="0,0,0,4"/>
+                                        <TextBlock Text="• 16GB 内存机型：强烈建议保持系统托管或固定初始值/最大值 4096MB~8192MB，避免物理内存耗尽触发系统 panic。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
+                                        <TextBlock Text="• 32GB~64GB 内存机型：可将页面文件由系统 C 盘迁移至高速副盘 NVMe，或将初始/最大值均固定为 4096MB，立省 C 盘 10GB~30GB 宝贵空间且消除文件碎片。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
+                                        <TextBlock Text="• 绝对不要彻底禁用分页文件：即使 128G 内存，Windows 核心内存管理器与部分大型 IDE (如 VS / Unreal Engine) 以及蓝屏 Minidump 仍依赖页面文件保留虚拟映射。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                            <WrapPanel VerticalAlignment="Center">
+                                                <TextBlock Text="关机清空页面文件敏感数据 (ClearPageFileAtShutdown)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                <TextBlock x:Name="TxtClearPageFileStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                            </WrapPanel>
+                                            <TextBlock Text="关机时向 pagefile.sys 覆写 0 清除内存残留，防止泄露未加密源码密钥（开启会略微增加关机耗时）。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                        <Button x:Name="BtnToggleClearPageFile" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleClearPageFile_Click"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -572,6 +649,174 @@
                                                 </StackPanel>
                                                 <Button Grid.Column="1" Content="重启 Explorer" Background="#0284C7" Padding="10,3" FontSize="11" VerticalAlignment="Center" Click="BtnRestartExplorer_Click"/>
                                             </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 3: 本地账户与无密自动登录 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="👤 3. 本地账户与无密码自动登录管理" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (跳过开机密码输入、还原 netplwiz 复选框、OOBE 免联网创建本地账户)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                        <Button Content="👥 本地用户和组 (lusrmgr)" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="11" Margin="0,0,6,0" Click="BtnOpenLusrmgr_Click"/>
+                                        <Button Content="🔑 登录选项 (Hello/PIN)" Style="{DynamicResource SecondaryButton}" Padding="8,3" FontSize="11" Click="BtnOpenSignInOptions_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 还原 netplwiz 复选框 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="还原 netplwiz 自动登录复选框 (DevicePasswordLessBuildVersion = 0)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock x:Name="TxtNetplwizStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="Win10 2004+ 与 Win11 强制隐藏了【要使用本计算机，用户必须输入用户名和密码】。开启此项后即可还原该选项，取消勾选即可跳过开机输入密码。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleNetplwiz" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="10,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleNetplwiz_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 启动 netplwiz -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <TextBlock Text="打开账户自动登录配置向导 (netplwiz)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                    <TextBlock Text="使用方法：确保上方复选框已还原后，打开向导 -&gt; 取消勾选【要使用本计算机，用户必须输入用户名和密码】 -&gt; 点击应用并输入当前密码，下次开机即可免输入密码直达桌面。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="👤 运行 netplwiz" Background="#0284C7" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnOpenNetplwiz_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- OOBE 免联网创建本地账户贴士 -->
+                                        <Border Padding="12,10" Background="{DynamicResource BrushAlertYellowBg}">
+                                            <StackPanel>
+                                                <TextBlock Text="💡 新机装机开荒秘籍：OOBE 阶段跳过微软账户联网强制绑定" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                                                <TextBlock Text="重装系统首次开机停在【让我们为你连接到网络】无法继续时：按键盘 Shift + F10 唤出黑底命令行，输入 oobe\bypassnro 回车重启系统。重启后网络界面将出现【我没有 Internet 连接】按钮，点击即可创建离线纯净本地账户！" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 4: 系统激活与数字许可证管理 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🔑 4. 系统激活与数字许可证管理 (slmgr.vbs)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (原生授权状态查询、到期日探查与官方数字权利管理)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <Button Grid.Column="1" Content="⚙️ 打开官方激活设置" Style="{DynamicResource SecondaryButton}" Padding="10,4" Click="BtnOpenActivationSettings_Click"/>
+                                </Grid>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="12">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                            <TextBlock Text="Windows 原生授权与激活状态探查" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                            <TextBlock Text="调用 Windows 原生软件授权管理脚本 (slmgr.vbs) 精准查询授权通道（Retail 零售、OEM 绑定、Volume KMS 批量）及永久激活或具体过期时间。即使 Win11 24H2 逐步弱化 VBScript，官方 slmgr 仍是系统授权排错的第一标准。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Button Content="🕒 查询到期状态 (/xpr)" Style="{DynamicResource SecondaryButton}" Padding="10,4" Margin="0,0,6,0" Click="BtnQueryActivationExpiry_Click"/>
+                                            <Button Content="📜 许可证详情 (/dli)" Style="{DynamicResource SecondaryButton}" Padding="10,4" Click="BtnQueryLicenseDetails_Click"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 板块 5: 中文语言包、输入法与 CJK 字体/乱码排错 -->
+                        <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <WrapPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <TextBlock Text="🇨🇳 5. 中文语言包、拼音输入法与 CJK 字体/乱码排错" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
+                                        <TextBlock Text=" (开荒无中文/输入法缺失/方块乱码/ANSI 编码排障)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                    </WrapPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Button Content="🌐 语言和区域设置" Style="{DynamicResource SecondaryButton}" Padding="10,4" Margin="0,0,6,0" Click="BtnOpenRegionLanguage_Click"/>
+                                        <Button Content="🔤 经典区域控制台 (intl.cpl)" Style="{DynamicResource SecondaryButton}" Padding="10,4" Click="BtnOpenIntlCpl_Click"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="纯英文原版 ISO 或海外品牌机开荒常遇痛点：系统无中文界面、打不出汉字、软件界面全是「???」或方块乱码。提供官方免第三方补全方案：" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,0,0,10"/>
+
+                                <Border Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8">
+                                    <StackPanel>
+                                        <!-- 1. 语言包与输入法一键安装指令 -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                                    <TextBlock Text="📦 PowerShell 原生安装中文语言包与微软拼音输入法" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                    <TextBlock Text="适用于 Win11 22H2+ 原生一键下载安装完整中文体验包 (包括基础文字、语音与拼音输入法)。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4"/>
+                                                    <TextBox Text="Install-Language zh-CN" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,2"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="📋 复制安装命令" Style="{DynamicResource SecondaryButton}" Padding="10,4" VerticalAlignment="Center" Tag="Install-Language zh-CN" Click="BtnCopyTagText_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 2. 中文补充字体 (解决方块字乱码) -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" Margin="0,0,16,0">
+                                                    <TextBlock Text="🔠 补充 CJK 中文字体包 (解决部分软件标题/按钮显示为方块 □)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                    <TextBlock Text="当精简版或原版系统缺失微软雅黑、宋体、黑体补充字形时，第三方工具会退化为方块。可打开【可选功能】或执行原生 DISM 安装补充字体。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,2,0,4" TextWrapping="Wrap"/>
+                                                    <TextBox Text="DISM /Online /Add-Capability /CapabilityName:Language.Fonts.Hans~~~und-Hans~0.0.1.0" IsReadOnly="True" FontFamily="Consolas" FontSize="10" Background="{DynamicResource BrushCodeBg}" Foreground="{DynamicResource BrushTextPrimary}" BorderBrush="{DynamicResource BrushCodeBorder}" Margin="0,0,0,2"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <Button Content="⚙️ 可选功能" Style="{DynamicResource SecondaryButton}" Padding="8,4" Margin="0,0,6,0" Click="BtnOpenOptionalFeatures_Click"/>
+                                                    <Button Content="📋 复制 DISM" Style="{DynamicResource SecondaryButton}" Padding="8,4" Tag="DISM /Online /Add-Capability /CapabilityName:Language.Fonts.Hans~~~und-Hans~0.0.1.0" Click="BtnCopyTagText_Click"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 3. 非 Unicode 程序 ANSI 与 UTF-8 踩坑提示 -->
+                                        <Border Padding="12,10" Background="{DynamicResource BrushAlertYellowBg}">
+                                            <StackPanel>
+                                                <TextBlock Text="⚠️ 非 Unicode 程序语言 (ANSI 问号 ??? 乱码与 UTF-8 Beta 避坑)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertYellowText}"/>
+                                                <TextBlock Text="• 软件文字全是 ???：打开经典控制台 (intl.cpl) -&gt;【管理】-&gt;【更改系统区域设置】，确保当前语言为「中文(简体，中国)」。&#x0a;• 慎用「Beta: 使用 Unicode UTF-8 提供全球语言支持」：此复选框会将系统 ANSI 代码页从 936 (GBK) 强制切换为 65001 (UTF-8)。虽然对部分开源命令行工具友好，但会导致大量老旧国内软件、绿色安装包、行业软件及部分编译器直接闪退或严重乱码！遇到乱码首选取消勾选该 Beta 项。" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
                                         </Border>
                                     </StackPanel>
                                 </Border>
