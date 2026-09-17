@@ -320,15 +320,15 @@
             <TabItem Header="🔨 .bat 经典批处理开发">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
                     <StackPanel>
-                        <!-- 第一块：语法核心机制、编码与调试绝技 -->
+                        <!-- 第一块：语法核心机制、编码与调试技巧 -->
                         <Border Background="{DynamicResource BrushCardBg}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="8" Padding="14" Margin="0,0,0,14">
                             <StackPanel>
-                                <TextBlock Text="⚙️ 1. 语法核心机制、编码规则与调试绝技" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
+                                <TextBlock Text="⚙️ 1. 语法核心机制、编码规则与调试技巧" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,10"/>
                                 
                                 <!-- 调试排错看板 -->
                                 <Border Background="{DynamicResource BrushAlertYellowBg}" BorderBrush="{DynamicResource BrushAlertYellowBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,0,10">
                                     <StackPanel>
-                                        <TextBlock Text="🔍 批处理调试绝技：去掉 @echo off 观察「命令展开态」" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,4"/>
+                                        <TextBlock Text="🔍 批处理调试技巧：去掉 @echo off 观察「命令展开态」" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushAlertYellowText}" Margin="0,0,0,4"/>
                                         <TextBlock Text="• 痛点剖析：写批处理最怕盲写，语法报错时 cmd 窗口一闪而过退出。最原始也最有效的调试手段就是：将开头的 @echo off 注释或去掉，或在可疑段前显式声明 @echo on。&#x0a;• 真实形态：cmd.exe 会在执行每行前，先将该行所有参数与变量 (%~dp0、!VAR!) 实际代换展开后的样子打印在控制台上，路径拼错、空格未加引号一览无余！&#x0a;• 辅助断点：在可疑分支末尾插入 pause 阻止窗口自动关闭；或使用 cmd.exe /v:on /c test.bat 验证延迟变量环境。"
                                                    FontSize="10" Foreground="{DynamicResource BrushAlertYellowText}" TextWrapping="Wrap"/>
                                     </StackPanel>
@@ -505,7 +505,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Background="{DynamicResource BrushCardBgAlt}" BorderBrush="{DynamicResource BrushCardBorder}" BorderThickness="1" CornerRadius="6" Padding="10" Margin="0,0,5,0">
                                         <StackPanel>
-                                            <TextBlock Text="🔍 调试绝技 (告别盲写):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,2"/>
+                                            <TextBlock Text="🔍 调试排错技巧 (告别盲写):" FontWeight="Bold" FontSize="11" Foreground="{DynamicResource BrushPrimary}" Margin="0,0,0,2"/>
                                             <TextBlock Text="• Set-PSDebug -Trace 1 (语句单步追踪) / -Trace 2 (变量赋值实时打印)&#x0a;• Write-Debug 配合 $DebugPreference = 'Continue' 透传诊断流&#x0a;• 脚本中插入 Wait-Debugger 暂停等待 VS Code 调试器挂载" FontSize="10" Foreground="{DynamicResource BrushTextSecondary}" TextWrapping="Wrap"/>
                                         </StackPanel>
                                     </Border>
@@ -539,7 +539,7 @@
 
                                 <!-- 自动化调度跨步骤衔接看板 -->
                                 <Border Background="{DynamicResource BrushAlertBlueBg}" BorderBrush="{DynamicResource BrushAlertBlueBorder}" BorderThickness="1" CornerRadius="6" Padding="10">
-                                    <TextBlock Text="🔗 脚本自动化调度指引：若需让脚本长驻后台守护或开机周期执行，请查阅【步骤三：自带工具排错指南】中的『7. sc.exe / schtasks 后台服务与计划任务』板块，保持“步骤四只教写代码，步骤三管理系统调度”的纯粹职责分离。"
+                                    <TextBlock Text="🔗 脚本自动化调度指引：若需让脚本长驻后台守护或开机周期执行，请查阅【步骤三：自带工具排错指南】中的『7. 原生后台服务 (sc.exe) 与计划任务 (schtasks.exe) 命令行控制』板块，保持“步骤四只教写代码，步骤三管理系统调度”的纯粹职责分离。"
                                                FontSize="10" Foreground="{DynamicResource BrushAlertBlueText}" TextWrapping="Wrap"/>
                                 </Border>
                             </StackPanel>

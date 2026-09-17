@@ -716,7 +716,7 @@
                             <TextBlock Text="Ctrl + Shift + Esc" FontSize="16" FontWeight="Bold" Foreground="#F59E0B" VerticalAlignment="Center"/>
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="直接呼出任务管理器 (绕过安全桌面)" FontSize="13" FontWeight="Bold" Foreground="{DynamicResource BrushTextPrimary}"/>
-                                <TextBlock Text="相比 Ctrl+Alt+Del 需要跳转中间安全切换大蓝屏，此热键直达任务管理器，全屏游戏卡死或程序未响应时急救秒杀首选。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                <TextBlock Text="相比 Ctrl+Alt+Del 需要跳转中间安全切换大蓝屏，此热键直达任务管理器，全屏游戏卡死或程序未响应时急救首选。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                             </StackPanel>
                         </Grid>
                     </Border>
