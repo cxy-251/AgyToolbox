@@ -1008,7 +1008,7 @@
                                     </Grid.ColumnDefinitions>
                                     <WrapPanel Grid.Column="0" VerticalAlignment="Center">
                                         <TextBlock Text="⚡ 7. 系统响应与内核不分页注册表极致调优 (Registry Supercharge)" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource BrushPrimary}"/>
-                                        <TextBlock Text=" (关机卡死秒级终止、菜单展开零延迟 0ms、内核执行体常驻物理内存)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
+                                        <TextBlock Text=" (卡死超时缩短、安全关机策略、菜单展开零延迟 0ms、内核常驻物理内存)" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="6,2,0,0"/>
                                     </WrapPanel>
                                 </Grid>
 
@@ -1023,16 +1023,34 @@
                                                 </Grid.ColumnDefinitions>
                                                 <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
                                                     <WrapPanel VerticalAlignment="Center">
-                                                        <TextBlock Text="未响应判定 1s 与关机服务等待 2s (HungAppTimeout &amp; WaitToKill)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
+                                                        <TextBlock Text="未响应快速判定与安全关机等待 (HungAppTimeout 1s &amp; WaitToKill 2s)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushTextPrimary}"/>
                                                         <TextBlock x:Name="TxtHungAppStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
                                                     </WrapPanel>
-                                                    <TextBlock Text="将未响应超时从 5 秒缩至 1 秒，关机等待从 20 秒缩至 2 秒。彻底告别关机或重启时被未响应进程死锁挂起。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                    <TextBlock Text="将未响应判定从 5 秒缩至 1 秒，关机服务超时从 20 秒缩至 2 秒。严格保持 AutoEndTasks=0 安全基线，关机遇未保存源码仍会弹窗询问，杜绝后台静默强杀。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
                                                 </StackPanel>
                                                 <Button x:Name="BtnToggleHungApp" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleHungApp_Click"/>
                                             </Grid>
                                         </Border>
 
-                                        <!-- 7.2 菜单零延迟 -->
+                                        <!-- 7.2 关机静默强杀 (高危选项) -->
+                                        <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
+                                                    <WrapPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="⚠️ 关机/注销静默强杀未响应任务 (AutoEndTasks = 1)" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource BrushAlertRedText}"/>
+                                                        <TextBlock x:Name="TxtAutoEndTasksStatus" Text="[检测中...]" FontSize="11" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                                    </WrapPanel>
+                                                    <TextBlock Text="【高危慎用】关机时不弹窗询问直接结束未响应进程。若 IDE/编辑器有未保存源码或断点挂起，将被直接强杀导致数据丢失！日常开发强烈建议保持【关闭】。" FontSize="11" Foreground="{DynamicResource BrushTextSecondary}" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                </StackPanel>
+                                                <Button x:Name="BtnToggleAutoEndTasks" Grid.Column="1" Content="切换状态" Style="{DynamicResource SecondaryButton}" Padding="12,4" FontSize="11" VerticalAlignment="Center" Click="BtnToggleAutoEndTasks_Click"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- 7.3 菜单零延迟 -->
                                         <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -1050,7 +1068,7 @@
                                             </Grid>
                                         </Border>
 
-                                        <!-- 7.3 内核常驻内存 -->
+                                        <!-- 7.4 内核常驻内存 -->
                                         <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -1068,7 +1086,7 @@
                                             </Grid>
                                         </Border>
 
-                                        <!-- 7.4 Windows Update 登录态免强制重启 -->
+                                        <!-- 7.5 Windows Update 登录态免强制重启 -->
                                         <Border Padding="12,10" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource BrushCardBorder}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -1086,7 +1104,7 @@
                                             </Grid>
                                         </Border>
 
-                                        <!-- 7.5 GameDVR 与后台录屏开销禁用 -->
+                                        <!-- 7.6 GameDVR 与后台录屏开销禁用 -->
                                         <Border Padding="12,10">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>

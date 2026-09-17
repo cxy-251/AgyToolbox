@@ -649,31 +649,37 @@ public partial class SystemOptView : UserControl
         TxtWerStatus.Foreground = werDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
         BtnToggleWer.Content = werDisabled ? "恢复 WER 报告" : "拦截错误报告";
 
-        // 14. 挂起超时与卡死快速释放
+        // 14. 挂起超时快速判定 (安全基线)
         bool hungAppOpt = _winOptimizerService.IsHungAppTimeoutOptimized();
-        TxtHungAppStatus.Text = hungAppOpt ? "● 挂起 1s 判定/关机 2s 等待 (防死锁)" : "○ 系统默认 (5s/20s 等待)";
+        TxtHungAppStatus.Text = hungAppOpt ? "● 快速判定 (挂起 1s/服务 2s 等待，安全弹窗)" : "○ 系统默认 (5s 判定/20s 等待)";
         TxtHungAppStatus.Foreground = hungAppOpt ? ThemeBrushes.Success : ThemeBrushes.Warning;
-        BtnToggleHungApp.Content = hungAppOpt ? "恢复默认等待" : "优化挂起超时";
+        BtnToggleHungApp.Content = hungAppOpt ? "恢复默认判定" : "优化挂起超时";
 
-        // 15. 菜单零悬停延迟
+        // 15. 关机静默强杀 (高危选项)
+        bool autoEndEnabled = _winOptimizerService.IsAutoEndTasksEnabled();
+        TxtAutoEndTasksStatus.Text = autoEndEnabled ? "⚠️ 已开启静默强杀 (关机不询问直接杀，有丢件风险)" : "🛡️ 保持安全关闭 (关机弹出未保存提示)";
+        TxtAutoEndTasksStatus.Foreground = autoEndEnabled ? ThemeBrushes.Warning : ThemeBrushes.Success;
+        BtnToggleAutoEndTasks.Content = autoEndEnabled ? "关闭静默强杀 (推荐)" : "开启静默强杀";
+
+        // 16. 菜单零悬停延迟
         bool menuZero = _winOptimizerService.IsMenuShowDelayZero();
         TxtMenuShowDelayStatus.Text = menuZero ? "● 菜单延迟 0ms (即点即出极速)" : "○ 系统默认 400ms 迟滞";
         TxtMenuShowDelayStatus.Foreground = menuZero ? ThemeBrushes.Success : ThemeBrushes.Warning;
         BtnToggleMenuShowDelay.Content = menuZero ? "恢复 400ms 默认" : "菜单延迟归零";
 
-        // 16. 内核常驻物理内存
+        // 17. 内核常驻物理内存
         bool pagingExecutiveDisabled = _winOptimizerService.IsPagingExecutiveDisabled();
         TxtPagingExecutiveStatus.Text = pagingExecutiveDisabled ? "● 内核与驱动常驻 RAM (零换出卡顿)" : "○ 允许内核分页换出";
         TxtPagingExecutiveStatus.Foreground = pagingExecutiveDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
         BtnTogglePagingExecutive.Content = pagingExecutiveDisabled ? "恢复默认分页" : "内核常驻内存";
 
-        // 17. Windows Update 登录免强制重启
+        // 18. Windows Update 登录免强制重启
         bool autoRebootDisabled = _winOptimizerService.IsAutoRebootDisabled();
         TxtAutoRebootStatus.Text = autoRebootDisabled ? "● 免重启保护已开启 (登录时不强制重启)" : "○ 系统默认强制自动重启";
         TxtAutoRebootStatus.Foreground = autoRebootDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
         BtnToggleAutoReboot.Content = autoRebootDisabled ? "恢复默认重启" : "开启免重启保护";
 
-        // 18. GameDVR 与后台录屏开销禁用
+        // 19. GameDVR 与后台录屏开销禁用
         bool gameDvrDisabled = _winOptimizerService.IsGameDvrDisabled();
         TxtGameDvrStatus.Text = gameDvrDisabled ? "● GameDVR 已彻底禁用 (图形钩子释放)" : "○ 默认后台挂钩与录屏";
         TxtGameDvrStatus.Foreground = gameDvrDisabled ? ThemeBrushes.Success : ThemeBrushes.Warning;
@@ -689,6 +695,22 @@ public partial class SystemOptView : UserControl
     private void BtnToggleDefenderRealtime_Click(object sender, RoutedEventArgs e)
     {
         bool isCurrentlyDisabled = _winOptimizerService.IsDefenderRealtimeDisabled();
+        if (!isCurrentlyDisabled)
+        {
+            var confirm = MessageBox.Show(
+                "【高风险安全操作确认】\n\n" +
+                "您正在尝试【关闭 Windows Defender 实时监控防护】。\n\n" +
+                "⚠️ 安全与性能影响说明：\n" +
+                "• 风险：系统将停止对新创建或下载的文件进行实时病毒扫描与恶意代码拦截。\n" +
+                "• 收益：彻底消除 MsMpEng 驱动对高频编译产生的万级临时文件的 I/O 拦截，构建性能成倍提升。\n" +
+                "• 推荐安全替代方案：若主要为了解决编译缓慢，强烈建议使用下方的【⚡ 一键注入白名单】，仅将代码目录与编译器进程列入豁免，既安全又高效。\n\n" +
+                "确定要继续关闭 Defender 实时监控防护吗？",
+                "高风险确认：关闭 Defender 实时防护",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes) return;
+        }
+
         var res = _winOptimizerService.SetDefenderRealtimeDisabled(!isCurrentlyDisabled);
         MessageBox.Show(res.Message, "Defender 实时监控策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshDevIoStatus();
@@ -697,6 +719,21 @@ public partial class SystemOptView : UserControl
     private void BtnToggleSmartScreen_Click(object sender, RoutedEventArgs e)
     {
         bool isCurrentlyDisabled = _winOptimizerService.IsSmartScreenDisabled();
+        if (!isCurrentlyDisabled)
+        {
+            var confirm = MessageBox.Show(
+                "【安全策略变更确认】\n\n" +
+                "您正在尝试【关闭 Windows SmartScreen 筛选器】。\n\n" +
+                "⚠️ 影响说明：\n" +
+                "• 风险：从网络下载的未知发布者二进制文件将不再经过微软云端安全信誉校验。\n" +
+                "• 收益：消除运行本地自编译可执行程序、自签名工具或 GitHub 开源工具链时的未知发布者拦截弹窗。\n\n" +
+                "确定要关闭 SmartScreen 筛选器吗？",
+                "确认：关闭 SmartScreen 筛选器",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+            if (confirm != MessageBoxResult.Yes) return;
+        }
+
         var res = _winOptimizerService.SetSmartScreenDisabled(!isCurrentlyDisabled);
         MessageBox.Show(res.Message, "SmartScreen 策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshDevIoStatus();
@@ -751,6 +788,22 @@ public partial class SystemOptView : UserControl
     private void BtnToggleHvci_Click(object sender, RoutedEventArgs e)
     {
         bool isCurrentlyDisabled = _winOptimizerService.IsHvciDisabled();
+        if (!isCurrentlyDisabled)
+        {
+            var confirm = MessageBox.Show(
+                "【内核级安全策略变更确认】\n\n" +
+                "您正在尝试【关闭基于虚拟化的内核代码完整性 (HVCI / 内存完整性)】。\n\n" +
+                "⚠️ 关键影响说明：\n" +
+                "• 风险：关闭基于虚拟化的安全内核隔离（VBS）对内核模式驱动签名的执行拦截保护。\n" +
+                "• 收益：消除虚拟机管理程序在驱动层与高频系统调用中的校验损耗，释放 5%~15% 的 CPU 裸机吞吐性能。\n" +
+                "• 注意：此项修改必须【重启计算机】后方可真正生效。\n\n" +
+                "确定要关闭 HVCI 内存完整性吗？",
+                "确认：关闭 HVCI 内存完整性",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes) return;
+        }
+
         var res = _winOptimizerService.SetHvciDisabled(!isCurrentlyDisabled);
         MessageBox.Show(res.Message, "HVCI 策略变更", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshDevIoStatus();
@@ -817,6 +870,30 @@ public partial class SystemOptView : UserControl
         bool isCurrentlyOptimized = _winOptimizerService.IsHungAppTimeoutOptimized();
         var res = _winOptimizerService.SetHungAppTimeoutOptimized(!isCurrentlyOptimized);
         MessageBox.Show(res.Message, "进程超时与卡死处理", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        RefreshDevIoStatus();
+    }
+
+    private void BtnToggleAutoEndTasks_Click(object sender, RoutedEventArgs e)
+    {
+        bool isCurrentlyEnabled = _winOptimizerService.IsAutoEndTasksEnabled();
+        if (!isCurrentlyEnabled)
+        {
+            var confirm = MessageBox.Show(
+                "【⚠️ 高风险数据丢失警告】\n\n" +
+                "您正在尝试开启【关机/注销静默强杀未响应任务 (AutoEndTasks=1)】。\n\n" +
+                "⚠️ 潜在风险与严重后果：\n" +
+                "• 开启后，关机或注销时系统将【不再弹出阻止关机询问窗口】，直接强制终止未响应进程。\n" +
+                "• 如果您的 IDE（VS Code / Visual Studio 等）存在未保存源码，或进程处于调试断点挂起状态，将被直接强杀并导致未保存工作彻底丢失！\n" +
+                "• 强烈建议日常开发环境保持【关闭】。\n\n" +
+                "确定仍要开启静默强杀吗？",
+                "高风险警告：开启静默强杀",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes) return;
+        }
+
+        var res = _winOptimizerService.SetAutoEndTasksEnabled(!isCurrentlyEnabled);
+        MessageBox.Show(res.Message, "关机任务处理策略", MessageBoxButton.OK, res.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
         RefreshDevIoStatus();
     }
 

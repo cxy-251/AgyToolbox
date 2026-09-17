@@ -1562,7 +1562,8 @@ Add-MpPreference -ExclusionProcess $procs -ErrorAction SilentlyContinue
     }
 
     /// <summary>
-    /// 优化系统卡死超时 (HungAppTimeout 1s, WaitToKill 2s，关机或重启时不被卡死进程死锁)
+    /// 优化系统卡死超时 (HungAppTimeout 1s, WaitToKillApp 2s, WaitToKillService 2s)
+    /// 【安全策略】：严格保持 AutoEndTasks = 0，确保关机时弹出未保存工作提示，绝不静默强杀！
     /// </summary>
     public (bool Success, string Message) SetHungAppTimeoutOptimized(bool optimize)
     {
@@ -1572,7 +1573,8 @@ Add-MpPreference -ExclusionProcess $procs -ErrorAction SilentlyContinue
             {
                 userKey.SetValue("HungAppTimeout", optimize ? "1000" : "5000", RegistryValueKind.String);
                 userKey.SetValue("WaitToKillAppTimeout", optimize ? "2000" : "20000", RegistryValueKind.String);
-                userKey.SetValue("AutoEndTasks", optimize ? "1" : "0", RegistryValueKind.String);
+                // 确保安全基线：绝不静默强杀，保持 AutoEndTasks = 0 允许关机前保存
+                userKey.SetValue("AutoEndTasks", "0", RegistryValueKind.String);
             }
 
             using (var machKey = Registry.LocalMachine.CreateSubKey(@"SYSTEM\CurrentControlSet\Control"))
@@ -1581,10 +1583,41 @@ Add-MpPreference -ExclusionProcess $procs -ErrorAction SilentlyContinue
             }
 
             return (true, optimize
-                ? "已启用进程挂起超时与秒级释放优化！\n未响应应用判定缩至 1 秒，关机/重启服务终止等待缩至 2 秒，杜绝关机卡死。"
-                : "已恢复系统默认未响应与关机等待时长。");
+                ? "已启用进程挂起超时与快速响应优化！\n未响应应用判定缩至 1 秒，关机服务超时缩至 2 秒。\n【安全承诺】保持 AutoEndTasks=0，关机遇未保存工作仍会弹窗询问，绝不静默强杀。"
+                : "已恢复系统默认未响应判定 (5s) 与关机等待时长 (5s/20s)。");
         }
         catch (Exception ex) { return (false, $"配置超时失败: {ex.Message}"); }
+    }
+
+    /// <summary>
+    /// 检测关机/注销时是否启用静默强杀未响应任务 (AutoEndTasks = 1)
+    /// </summary>
+    public bool IsAutoEndTasksEnabled()
+    {
+        try
+        {
+            using var userKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop");
+            string? val = userKey?.GetValue("AutoEndTasks") as string;
+            return val == "1";
+        }
+        catch { return false; }
+    }
+
+    /// <summary>
+    /// 开启或关闭关机静默强杀未响应任务 (AutoEndTasks)
+    /// ⚠️ 高危操作：若 IDE 或文档有未保存内容，将被直接杀掉导致丢失！
+    /// </summary>
+    public (bool Success, string Message) SetAutoEndTasksEnabled(bool enable)
+    {
+        try
+        {
+            using var userKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Desktop");
+            userKey.SetValue("AutoEndTasks", enable ? "1" : "0", RegistryValueKind.String);
+            return (true, enable
+                ? "⚠️ 已开启关机静默强杀任务 (AutoEndTasks=1)！\n关机或注销时，系统将不再弹窗询问，直接强制杀死所有未响应进程（存在未保存工作丢失风险）。"
+                : "已恢复关机安全防护 (AutoEndTasks=0)。关机遇未响应或未保存程序将正常弹窗提示。");
+        }
+        catch (Exception ex) { return (false, $"配置 AutoEndTasks 失败: {ex.Message}"); }
     }
 
     /// <summary>
