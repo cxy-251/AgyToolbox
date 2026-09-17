@@ -1,7 +1,7 @@
 <Window x:Class="AgyToolbox.Gui.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Windows 新机开荒与原生开发工具箱 (GUI / TUI 双模)" Height="760" Width="1140" MinWidth="1000" MinHeight="660"
+        Title="Windows 新机开荒与原生开发工具箱 v0.2.1 (GUI / TUI 双模)" Height="760" Width="1140" MinWidth="1000" MinHeight="660"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BrushWindowBg}" Foreground="{DynamicResource BrushTextPrimary}" FontFamily="Segoe UI, Microsoft YaHei">
 
@@ -151,7 +151,7 @@
                 <!-- 底部元信息 -->
                 <Border Grid.Row="2" Background="{DynamicResource BrushWindowBg}" Padding="14,10" BorderBrush="{DynamicResource BrushSidebarBorder}" BorderThickness="0,1,0,0">
                     <StackPanel>
-                        <TextBlock Text="AgyToolbox · Windows 极客开荒体系" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextPrimary}"/>
+                        <TextBlock Text="AgyToolbox v0.2.1 · Windows 极客开荒体系" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource BrushTextPrimary}"/>
                         <TextBlock Text="纯原生 C# / .NET 8 / 零第三方框架依赖" FontSize="10" Foreground="{DynamicResource BrushTextMuted}" Margin="0,2,0,0"/>
                     </StackPanel>
                 </Border>
